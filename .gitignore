@@ -1,2 +1,6 @@
 node_modules
 .env
+
+access-token.token
+refresh_token.token
+.DS_Store
