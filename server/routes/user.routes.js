@@ -1,0 +1,11 @@
+import { Router } from "express";
+import { getUser, createUser } from "../controllers/user.controller.js";
+import catchAsync from "../utils/catchAsync.js";
+const router = Router();
+import validate from "../utils/validator.js";
+import { validateUser } from "../models/user.model.js";
+
+router.get("/", catchAsync(getUser));
+router.post("/", validate(validateUser), catchAsync(createUser));
+
+export default router;

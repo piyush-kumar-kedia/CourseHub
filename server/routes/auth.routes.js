@@ -14,7 +14,7 @@ const redirect_uri = "http://localhost:8080/login/redirect/";
 
 router.get("/login", (req, res) => {
 	res.redirect(
-		`https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.read%20mail.read&state=12345&prompt=consent`
+		`https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.read&state=12345&prompt=consent`
 	);
 });
 
@@ -59,7 +59,7 @@ router.get(
 				throw new AppError(500, "Failed to write Refresh Token" + err);
 		});
 
-		return res.redirect("/homepage");
+		return res.redirect("/api/user");
 	})
 );
 

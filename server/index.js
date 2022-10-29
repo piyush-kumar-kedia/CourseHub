@@ -1,47 +1,26 @@
 import "dotenv/config";
 import cors from "cors";
-import axios from "axios";
 import express from "express";
 import AppError from "./utils/appError.js";
-import catchAsync from "./utils/catchAsync.js";
 import logger from "./utils/logger.js";
 import config from "./config/default.js";
 import authRoutes from "./routes/auth.routes.js";
-import fs from "fs";
+import userRoutes from "./routes/user.routes.js";
+
+import connectDatabase from "./services/connectDB.js";
+connectDatabase();
 
 const app = express();
 const PORT = config.port;
 
+app.use(express.json());
+
 app.use("/", authRoutes);
-
-app.use(
-	"/homepage",
-	catchAsync(async (req, res, next) => {
-		let access_token;
-		access_token = fs.readFileSync("./access-token.token", "utf-8");
-
-		var config = {
-			method: "get",
-			url: "https://graph.microsoft.com/v1.0/me",
-			headers: {
-				Authorization: `Bearer ${access_token}`,
-			},
-		};
-
-		const response = await axios.get(config.url, {
-			headers: config.headers,
-		});
-		// console.log(response);
-
-		if (!response.data) throw new AppError(401, "Access Denied");
-
-		res.json(response.data);
-	})
-);
+app.use("/api/user", userRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
-	logger.error(err);
+	logger.error(err.message);
 	const { status = 500, message = "Something went wrong!" } = err;
 	return res.status(status).json({
 		error: true,
