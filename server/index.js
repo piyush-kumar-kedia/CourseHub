@@ -6,6 +6,7 @@ import logger from "./utils/logger.js";
 import config from "./config/default.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import cookieParser from "cookie-parser";
 
 import connectDatabase from "./services/connectDB.js";
 connectDatabase();
@@ -14,7 +15,8 @@ const app = express();
 const PORT = config.port;
 
 app.use(express.json());
-
+app.use(cookieParser());
+app.use(cors());
 app.use("/", authRoutes);
 app.use("/api/user", userRoutes);
 

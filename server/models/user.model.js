@@ -1,5 +1,8 @@
 import { model, Schema } from "mongoose";
 import Joi from "joi";
+import axios from "axios";
+import jwt from "jsonwebtoken";
+import config from "../config/default.js";
 
 const userSchema = Schema({
 	name: { type: String, required: true },
@@ -9,6 +12,27 @@ const userSchema = Schema({
 	semester: { type: Number, reqiured: true },
 	degree: { type: String, required: true },
 });
+
+userSchema.methods.generateJWT = function () {
+	var user = this;
+	var token = jwt.sign({ user: user._id }, config.jwtSecret, {
+		expiresIn: "1h",
+	});
+	return token;
+};
+
+userSchema.statics.findByJWT = async function (token) {
+	try {
+		var user = this;
+		var decoded = jwt.verify(token, config.jwtSecret);
+		const id = decoded.user;
+		const fetchedUser = user.findOne({ _id: id });
+		if (!fetchedUser) return false;
+		return fetchedUser;
+	} catch (error) {
+		return false;
+	}
+};
 
 const User = model("User", userSchema);
 export default User;
@@ -23,4 +47,29 @@ export const validateUser = function (obj) {
 		degree: Joi.string().required(),
 	});
 	return joiSchema.validate(obj);
+};
+
+export const getUserFromToken = async function (access_token) {
+	try {
+		var config = {
+			method: "get",
+			url: "https://graph.microsoft.com/v1.0/me",
+			headers: {
+				Authorization: `Bearer ${access_token}`,
+			},
+		};
+		const response = await axios.get(config.url, {
+			headers: config.headers,
+		});
+
+		return response;
+	} catch (error) {
+		return false;
+	}
+};
+
+export const findUserWithRollNumber = async function (rollNumber) {
+	const user = await User.findOne({ rollNumber: rollNumber });
+	if (!user) return false;
+	return user;
 };
