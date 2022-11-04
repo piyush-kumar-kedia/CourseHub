@@ -4,59 +4,69 @@ import qs from "querystring";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import cheerio from "cheerio";
+import isAuthenticated from "../middleware/isAuthenticated.js";
 
 const router = express.Router();
 
-router.get("/loadcourses", catchAsync(async (req, res) => {
-    var config = {
-        method: "post",
-        url: "https://academic.iitg.ac.in/sso/gen/student2.jsp",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-            "Host": "academic.iitg.ac.in",
-            "Content-Length": "13",
+router.get(
+	"/loadcourses",
+	isAuthenticated,
+	catchAsync(async (req, res) => {
+		var config = {
+			method: "post",
+			url: "https://academic.iitg.ac.in/sso/gen/student2.jsp",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+				Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+				Host: "academic.iitg.ac.in",
+				"Content-Length": "13",
+			},
+			data: qs.stringify({
+				rno: req.user.rollNumber,
+			}),
+		};
+		const response = await axios.post(config.url, config.data, {
+			headers: config.headers,
+		});
 
-        },
-        data: qs.stringify({
-            "rno": "210101001",
-        }),
-    };
-    const response = await axios.post(config.url, config.data, {
-        headers: config.headers,
-    });
+		if (!response.data) throw new AppError(500, "Something went wrong");
 
-    if (!response.data) throw new AppError(500, "Something went wrong");
+		const $ = cheerio.load(response.data);
 
-    console.log(response.data);
+		const courses = [];
 
-    const $ = cheerio.load(response.data);
+		$("tbody")
+			.first()
+			.find("tr")
+			.each((i, tr) => {
+				const details = $(tr).children("td");
+				var code = $(details[0]).text().trim().replace(" ", "");
+				const name = $(details[1]).text().trim();
+				const year = $(details[6]).text().trim();
+				const session = $(details[7]).text().trim();
 
-    const courses = [];
+				if (
+					year === "2022" &&
+					session.includes("July") &&
+					code.length >= 5 &&
+					code.length <= 6 &&
+					!code.includes("SA")
+				) {
+					var code = code.substring(0, 5);
+					courses.push({
+						code,
+						name,
+					});
+				}
+			});
 
-    $("tbody").first().find("tr").each((i, tr) => {
-        const details = $(tr).children("td");
-        var code = $(details[0]).text().trim().replace(" ", "");
-        const name = $(details[1]).text().trim();
-        const year = $(details[6]).text().trim();
-        const session = $(details[7]).text().trim();
+		console.log(courses);
 
-        if(year === "2022" && session.includes("July")
-        && code.length >= 5 && code.length <= 6 
-        && !code.includes("SA")) {
-            var code = code.substring(0, 5);
-            courses.push({
-                code,
-                name,
-            });
-        }        
-    });
-
-    console.log(courses);
-
-    res.status(200).json({
-        status: "success",
-    });
-}));
+		res.status(200).json({
+			status: "success",
+			courses: courses,
+		});
+	})
+);
 
 export default router;

@@ -91,3 +91,8 @@ export const redirectHandler = async (req, res, next) => {
 
 	return res.redirect(appConfig.clientURL);
 };
+
+export const logoutHandler = (req, res, next) => {
+	res.clearCookie("token");
+	res.redirect(appConfig.clientURL);
+};
