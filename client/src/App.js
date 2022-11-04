@@ -50,6 +50,7 @@ const App = () => {
 					</button>
 					<ul>
 						<li>{user.rollNumber}</li>
+						<li>{user.branch}</li>
 						<li>{user.degree}</li>
 					</ul>
 					{courses.length === 0 && (

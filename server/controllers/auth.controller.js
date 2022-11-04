@@ -8,6 +8,7 @@ const clientid = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_VALUE;
 const redirect_uri = "http://localhost:8080/login/redirect/";
 
+import calculateBranch from "../utils/calculateBranch.js";
 import {
 	findUserWithRollNumber,
 	getUserFromToken,
@@ -69,7 +70,7 @@ export const redirectHandler = async (req, res, next) => {
 			degree: userFromToken.data.jobTitle,
 			rollNumber: userFromToken.data.surname,
 			email: userFromToken.data.mail,
-			branch: "calculate branch", //calculate branch
+			branch: calculateBranch(roll), //calculate branch
 			semester: 2, //calculate sem
 		};
 
