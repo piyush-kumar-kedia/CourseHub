@@ -11,6 +11,9 @@ const userSchema = Schema({
 	branch: { type: String, required: true },
 	semester: { type: Number, reqiured: true },
 	degree: { type: String, required: true },
+	// courses
+	// contri
+	// favs
 });
 
 userSchema.methods.generateJWT = function () {

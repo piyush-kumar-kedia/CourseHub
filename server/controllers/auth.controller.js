@@ -20,7 +20,7 @@ import User from "../models/user.model.js";
 //not used
 export const loginHandler = (req, res) => {
 	res.redirect(
-		`https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.read&state=12345&prompt=consent`
+		`https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.profile&state=12345&prompt=consent`
 	);
 };
 
@@ -48,7 +48,7 @@ export const redirectHandler = async (req, res, next) => {
 	const response = await axios.post(config.url, config.data, {
 		headers: config.headers,
 	});
-
+	console.log(response.data);
 	if (!response.data) throw new AppError(500, "Something went wrong");
 
 	const AccessToken = response.data.access_token;
@@ -84,7 +84,7 @@ export const redirectHandler = async (req, res, next) => {
 	const token = existingUser.generateJWT();
 
 	res.cookie("token", token, {
-		maxAge: 900000,
+		maxAge: 3600000,
 		sameSite: "lax",
 		secure: false,
 		httpOnly: true,
