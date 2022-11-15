@@ -15,6 +15,9 @@ connectDatabase();
 import onedriveRoutes from "./routes/onedrive/onedrive.routes.js";
 import coursesRoutes from "./routes/courses.routes.js";
 
+// test
+import courseTestRoutes from "./routes/coursetest.routes.js";
+
 const app = express();
 const PORT = config.port;
 
@@ -24,7 +27,8 @@ app.use(cors());
 app.use("/", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/onedrive/", onedriveRoutes);
-app.use("/", coursesRoutes);
+// app.use("/", coursesRoutes);
+app.use("/course", courseTestRoutes);
 
 app.use(
 	"/homepage",
@@ -35,34 +39,6 @@ app.use(
 		res.json(user);
 	})
 );
-// app.get("/", async (req, res, next) => {
-// 	const file = await FileModel.create({
-// 		name: "Lecture 2 CH212",
-// 		type: "video",
-// 		data: "hehe",
-// 	});
-// 	const file3 = await FileModel.create({
-// 		name: "Lecture 3 CH212",
-// 		type: "video",
-// 		data: "hehe",
-// 	});
-// 	const file2 = await FileModel.create({
-// 		name: "slide lec 2 CH212",
-// 		type: "pdf",
-// 		data: "hoho",
-// 	});
-// 	const folder = await FolderModel.create({ data: [file._id, file3._id] });
-// 	const folder2 = await FolderModel.create({ data: [file2._id] });
-
-// 	const c = await CourseModel.create({
-// 		name: "CH212",
-// 		folders: [
-// 			{ name: "lectures", data: folder._id },
-// 			{ name: "slides", data: folder2._id },
-// 		],
-// 	});
-// 	res.json(c);
-// });
 
 // Error handler
 app.use((err, req, res, next) => {
