@@ -1,27 +1,72 @@
 import { model, Schema } from "mongoose";
 
 const FolderSchema = Schema({
-	data: [{ type: Schema.Types.ObjectId, ref: "File" }],
+	name: { type: String, required: true },
+	childType: { type: String, enum: ["File", "Folder"], required: true },
+	children: [{ type: Schema.Types.ObjectId, refPath: "childType" }],
 });
 export const FolderModel = model("Folder", FolderSchema);
 
 const FileSchema = Schema({
 	name: { type: String, required: true },
 	type: { type: String, required: true },
-	data: { type: String, required: true },
+	url: { type: String, required: true },
 });
 
 export const FileModel = model("File", FileSchema);
 
+const YearSchema = Schema({
+	year: { type: Number, required: true },
+	folders: [{ type: Schema.Types.ObjectId, ref: "Folder" }],
+});
+
 const CourseSchema = Schema({
 	name: { type: String, required: true },
-	folders: [
-		{
-			name: String,
-			data: { type: Schema.Types.ObjectId, ref: "Folder" },
-		},
-	],
+	code: { type: String, required: true },
+	year: [YearSchema],
+	books: [{ type: String }],
 });
 
 const CourseModel = model("Course", CourseSchema);
 export default CourseModel;
+
+// 2 problems
+// separate collection for folder and files
+// creation complexity { file -> folder (-> folder) -> course }
+//
+// {
+// 	code: 'MA201',
+//  name:"Mathematics 201 Course"
+// 	year : [{
+// 		year: 2022,
+// 		folders: [
+// 			{
+// 				name: 'Slides',
+// 				childType: 'File',
+// 				children: [
+// 					...Files
+// 				]
+// 			},
+// 			{
+// 				name: 'Past Papers',
+// 				childType: 'Folder',
+// 				children: [
+// 					{
+// 						name: 'Question Papers',
+// 						childType: 'File',
+// 						children: [
+// 							...Files
+// 						]
+// 					},
+// 					{
+// 						name: 'Answers',
+// 						childType: 'File',
+// 						children: [
+// 							...Files
+// 						]
+// 					},
+// 				]
+// 			}
+// 		]
+// 	}]
+// }

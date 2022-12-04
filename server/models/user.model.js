@@ -71,8 +71,15 @@ export const getUserFromToken = async function (access_token) {
 	}
 };
 
-export const findUserWithRollNumber = async function (rollNumber) {
-	const user = await User.findOne({ rollNumber: rollNumber });
+// export const findUserWithRollNumber = async function (rollNumber) {
+// 	const user = await User.findOne({ rollNumber: rollNumber });
+// 	if (!user) return false;
+// 	return user;
+// };
+
+export const findUserWithEmail = async function (email) {
+	const user = await User.findOne({ email: email });
+	// console.log("found user with email", user);
 	if (!user) return false;
 	return user;
 };

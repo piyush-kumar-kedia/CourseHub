@@ -10,7 +10,7 @@ const redirect_uri = "http://localhost:8080/login/redirect/";
 
 import calculateBranch from "../utils/calculateBranch.js";
 import {
-	findUserWithRollNumber,
+	findUserWithEmail,
 	getUserFromToken,
 	validateUser,
 } from "../models/user.model.js";
@@ -48,7 +48,7 @@ export const redirectHandler = async (req, res, next) => {
 	const response = await axios.post(config.url, config.data, {
 		headers: config.headers,
 	});
-	console.log(response.data);
+
 	if (!response.data) throw new AppError(500, "Something went wrong");
 
 	const AccessToken = response.data.access_token;
@@ -62,7 +62,7 @@ export const redirectHandler = async (req, res, next) => {
 	const roll = userFromToken.data.surname;
 	if (!roll) throw new AppError(401, "Sign in using Institute Account");
 
-	let existingUser = await findUserWithRollNumber(roll);
+	let existingUser = await findUserWithEmail(userFromToken.data.mail); //find with email
 
 	if (!existingUser) {
 		const userData = {
