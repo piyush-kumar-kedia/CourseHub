@@ -5,7 +5,7 @@
 ```
 <Heading
 	text={"Hello World!"}
-	type={"bold"} //"light" or "regular"
+	type={"bold"} //"light" or "thin"
 	color={"light"} // or "dark"
 />
 ```
@@ -15,7 +15,7 @@
 ```
 <SubHeading
 	text={"Subheading here"}
-	type={"bold"} //"light" or "regular"
+	type={"bold"} //"thin" or "regular"
 	color={"light"} // or "dark"
 />
 ```

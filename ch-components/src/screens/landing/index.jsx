@@ -1,4 +1,5 @@
-import MicrosoftSignIn from "../../components/microsoftbutton";
+import MicrosoftSignIn from "./components/microsoftbutton";
+import SearchCourseButton from "./components/searchcoursebtn";
 import "./styles.scss";
 const LandingPage = ({ setClicked }) => {
 	return (
@@ -20,7 +21,7 @@ const LandingPage = ({ setClicked }) => {
 					<div className="btn-container">
 						<MicrosoftSignIn setClicked={setClicked} />
 						<div className="line"></div>
-						<MicrosoftSignIn />
+						<SearchCourseButton />
 					</div>
 				</div>
 			</div>

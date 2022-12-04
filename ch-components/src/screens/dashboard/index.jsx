@@ -1,15 +1,15 @@
 import Container from "../../components/container";
-import ExamCard from "../../components/examcard";
+import ExamCard from "./components/examcard";
 import Heading from "../../components/heading";
 import Space from "../../components/space";
 import NavBar from "../../components/navbar";
 import SubHeading from "../../components/subheading";
 
 import "./styles.scss";
-import CourseCard from "../../components/coursecard";
-import ContributionBanner from "../../components/contributionbanner";
+import CourseCard from "./components/coursecard";
+import ContributionBanner from "./components/contributionbanner";
 import Footer from "../../components/footer";
-import FavouriteCard from "../../components/favouritecard";
+import FavouriteCard from "./components/favouritecard";
 
 const Dashboard = () => {
 	return (

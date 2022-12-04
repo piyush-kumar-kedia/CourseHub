@@ -9,9 +9,7 @@ const SearchBar = () => {
 					class="searchTerm"
 					placeholder="Search Courses"
 				/>
-				<div>
-					<i class="fa fa-search abs"></i>
-				</div>
+				<div className="search-img"></div>
 			</div>
 		</div>
 	);

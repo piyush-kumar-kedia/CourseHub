@@ -86,12 +86,12 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 			)}
 			<div className="content">
 				<div className="top">
-					<p className="path">{path ? path : "Exams"}</p>
-					<p className="name">{name ? name : "Quiz 1"}</p>
+					<p className="path">{path ? path : "Path"}</p>
+					<p className="name">{name ? name : "Name"}</p>
 				</div>
 				<div className="bottom">
 					<p className="subject">
-						{subject ? subject : "Green Chemistry"}
+						{subject ? subject : "Subject Here"}
 					</p>
 				</div>
 			</div>

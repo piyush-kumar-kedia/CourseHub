@@ -1,0 +1,31 @@
+.search-course-btn{
+    width: 280px;
+    height: 50px;
+    .search-icon{
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        background-color: red;
+        margin: 10px;
+        background: url(./searchicon.svg), none;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    input{
+        width: 100%;
+        height: 100%;
+        border: 1.5px solid #000;
+        padding: 0px 50px;
+        background-color: rgba(255, 255, 255, 0);
+        font-family: 'Bold';
+        font-size: 1rem;
+        &::placeholder{
+            font-family: 'Bold';
+            color: #000;
+            font-size: 1rem;
+        }
+        &:focus{
+            outline-width: 0;
+        }
+    }
+}
