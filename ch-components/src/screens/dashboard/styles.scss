@@ -1,7 +1,7 @@
 .split{
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .exam-card-container{
@@ -21,4 +21,15 @@
     display: flex;
     flex-wrap: wrap;
     padding: 20px 0px;
+}
+
+@media screen and (max-width: 680px) {
+    .split{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .exam-card-container{
+        justify-content: flex-start;
+    }
+    
 }

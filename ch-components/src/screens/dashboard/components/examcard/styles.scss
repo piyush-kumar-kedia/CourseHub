@@ -17,4 +17,11 @@
     .name{
         text-align: right;
     }
+    @media screen and (max-width: 680px) {
+        margin-left: 0;
+        margin-right: 10px;
+        margin-top: 10px;
+        width: 200px;
+        height: 120px;
+    }
 }

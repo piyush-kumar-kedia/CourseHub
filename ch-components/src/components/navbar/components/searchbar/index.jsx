@@ -1,8 +1,8 @@
 import React from "react";
 import "./styles.scss";
-const SearchBar = () => {
+const SearchBar = ({ type }) => {
 	return (
-		<div class="wrap">
+		<div class={`wrap ${type}`}>
 			<div class="search">
 				<input
 					type="text"

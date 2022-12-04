@@ -10,6 +10,7 @@
         background: url(./searchicon.svg), none;
         background-repeat: no-repeat;
         background-position: center;
+        background-size: contain;
     }
     input{
         width: 100%;
@@ -26,6 +27,24 @@
         }
         &:focus{
             outline-width: 0;
+        }
+    }
+    @media screen and (max-width: 750px) {
+        width: 200px;
+        height: 40px;
+
+        .search-icon{
+            width: 20px;
+            height: 20px;
+        }
+        input{
+            font-size: 0.8rem;
+            padding: 0px 0px 0px 50px;
+            &::placeholder{
+                font-family: 'Bold';
+                color: #000;
+                font-size: 0.8rem;
+            }
         }
     }
 }

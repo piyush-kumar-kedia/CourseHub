@@ -1,6 +1,14 @@
 .wrap{
     width: 100%;
     max-width: 650px;
+    &.passive{
+        margin: 0px;
+        .search{
+            margin: 0;
+            width: 100%;
+            max-width: 300px;
+        }
+    }
     .search{
         margin: 0 20px;
         display: flex;
