@@ -13,10 +13,7 @@ import User from "./models/user.model.js";
 import connectDatabase from "./services/connectDB.js";
 connectDatabase();
 import onedriveRoutes from "./routes/onedrive/onedrive.routes.js";
-import coursesRoutes from "./routes/courses.routes.js";
-
-// test
-import courseTestRoutes from "./routes/coursetest.routes.js";
+import courseRoutes from "./routes/course.routes.js";
 
 const app = express();
 const PORT = config.port;
@@ -27,8 +24,7 @@ app.use(cors());
 app.use("/", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/onedrive/", onedriveRoutes);
-// app.use("/", coursesRoutes);
-app.use("/course", courseTestRoutes);
+app.use("/course", courseRoutes);
 
 app.use(
 	"/homepage",
