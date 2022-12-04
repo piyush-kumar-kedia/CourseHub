@@ -1,0 +1,57 @@
+.landing{
+    height: 100vh;
+    width: 100%;
+    background: url(./collage.svg), none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    
+    .top{
+        height: 85%;
+        display: flex;
+        justify-content: flex-end;
+        .right{
+            width: 300px;
+            height: 100%;
+            background: url(./right.svg), none;
+            background-position: right;
+            background-repeat: no-repeat;
+            background-size: contain;
+
+        }
+    }
+    .bottom{
+        background-color: #FECF6F;
+        .content{
+            max-width: 1400px;
+            margin: auto;
+            height: 10%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em;
+            .text{
+                flex: 1;
+                p{
+                    font-family: 'Bold';
+                    font-size: 1rem;
+                }
+            }
+            .btn-container{
+                flex: 1;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                .line{
+                    width: 28px;
+                    height: 90px;
+                    margin: 0 10px;
+                    background: url(./line.svg), none;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                }
+            }
+        }
+    }
+}

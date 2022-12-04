@@ -1,0 +1,26 @@
+.microsoft-signin-btn{
+    max-width: 350px;
+    max-height: 60px;
+    color: #fff;
+    background-color: #000;
+    display: inline-block;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .logo{
+        background: url(./logo.svg), none;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 40px;
+        height: 40px;
+    }
+    span{
+        display: block;
+        margin-left: 10px;
+        font-family: 'Bold';
+    }
+    &:hover{
+        cursor: pointer;
+    }
+}
