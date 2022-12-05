@@ -2,9 +2,9 @@ import AppError from "../utils/appError.js";
 import CourseModel, { FolderModel, FileModel } from "../models/course.model.js";
 
 export const getCourse = async (req, res, next) => {
-	const { courseId } = req.params;
-	if (!courseId) throw new AppError(400, "Missing Course Id");
-	const course = await CourseModel.findById(courseId)
+	const { code } = req.params;
+	if (!code) throw new AppError(400, "Missing Course Id");
+	const course = await CourseModel.findOne({ code: code.toLowerCase() })
 		.populate({
 			path: "children",
 			select: "-__v",
@@ -25,13 +25,25 @@ export const getCourse = async (req, res, next) => {
 		})
 		.select("-__v");
 
-	if (!course) throw new AppError(500, "sd");
+	if (!course) throw new AppError(404, "Coming Soon!");
 
 	res.json(course);
 };
 
+export const deleteCourseByCode = async (req, res, next) => {
+	const { code } = req.params;
+	if (!code) throw new AppError(400, "Missing Course Id");
+	await FolderModel.deleteMany({ course: code });
+	await FileModel.deleteMany({ course: code });
+	await CourseModel.deleteOne({ code: code });
+	res.sendStatus(200);
+};
+
+// update course
+// delete existing course -> fetch new structure from onedrive
+
 export const getAllCourses = async (req, res, next) => {
-	const allCourse = await CourseModel.find().select("_id name");
+	const allCourse = await CourseModel.find().select("_id name code");
 
 	res.json(allCourse);
 };

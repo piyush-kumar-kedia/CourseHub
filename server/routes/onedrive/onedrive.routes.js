@@ -75,12 +75,43 @@ router.get(
 );
 
 router.get(
-	"/getfiles",
+	"/makeAllCourses",
 	catchAsync(async (req, res) => {
 		var data = await visitAllFiles();
-		res.status(200).json(data);
+		res.sendStatus(200);
 	})
 );
+
+router.get(
+	"/makeCourseById/:id",
+	catchAsync(async (req, res, next) => {
+		var data = await visitCourseById(req.params.id);
+		res.sendStatus(200);
+	})
+);
+
+router.get(
+	"/getCourseIds",
+	catchAsync(async (req, res, next) => {
+		var data = await getAllCourseIds();
+		res.send(data);
+	})
+);
+async function getAllCourseIds() {
+	var access_token = await getAccessToken();
+	var headers = {
+		Authorization: `Bearer ${access_token}`,
+		Host: "graph.microsoft.com",
+	};
+	var url = `https://graph.microsoft.com/v1.0/me/drive/items/${coursehub_id}/children`;
+	var data = await getRequest(url, headers);
+	var children = data.value;
+	const resp = [];
+	children.map((child) => {
+		resp.push({ name: child.name, id: child.id });
+	});
+	return resp;
+}
 
 async function visitAllFiles() {
 	var access_token = await getAccessToken();
@@ -92,21 +123,46 @@ async function visitAllFiles() {
 	var data = await getRequest(url, headers);
 	var children = data.value;
 	const folders = children.map(async (child, idx) => {
-		const folder_data = await visitFolder(child);
+		const folder_data = await visitFolder(child, child.name.toLowerCase());
 		return folder_data;
 	});
 	const resolved_folders = await Promise.all(folders);
 	resolved_folders.map(async (folder) => {
 		await CourseModel.create({
 			name: folder.name,
-			code: folder.name,
+			code: folder.name.toLowerCase(),
 			children: folder.children,
 		});
 	});
 	return "ok";
 }
 
-async function visitFolder(folder) {
+async function visitCourseById(id) {
+	var access_token = await getAccessToken();
+	var headers = {
+		Authorization: `Bearer ${access_token}`,
+		Host: "graph.microsoft.com",
+	};
+	var url = `https://graph.microsoft.com/v1.0/me/drive/items/${coursehub_id}/children`;
+	var data = await getRequest(url, headers);
+	var children = data.value;
+	const required_course = children.find((course) => course.id === id);
+	if (!required_course) throw new AppError(404, "Not Found!");
+	const folder_data = await visitFolder(
+		required_course,
+		required_course.name.toLowerCase()
+	);
+
+	await CourseModel.create({
+		name: folder_data.name,
+		code: folder_data.name.toLowerCase(),
+		children: folder_data.children,
+	});
+
+	return "ok";
+}
+
+async function visitFolder(folder, currCourse) {
 	var access_token = await getAccessToken();
 	var headers = {
 		Authorization: `Bearer ${access_token}`,
@@ -120,10 +176,10 @@ async function visitFolder(folder) {
 	const folders = children.map(async function (child) {
 		if (child.folder) {
 			childType = "Folder";
-			let data = await visitFolder(child);
+			let data = await visitFolder(child, currCourse);
 			return data;
 		} else {
-			let data = await visitFile(child);
+			let data = await visitFile(child, currCourse);
 			return data;
 		}
 	});
@@ -131,6 +187,7 @@ async function visitFolder(folder) {
 	let res = await Promise.all(folders);
 	//make mongoose folder
 	const NewFolder = await FolderModel.create({
+		course: currCourse,
 		name: folder.name,
 		childType: childType,
 		children: res,
@@ -138,7 +195,7 @@ async function visitFolder(folder) {
 	return NewFolder;
 }
 
-async function visitFile(file) {
+async function visitFile(file, currCourse) {
 	//var previewUrl = await getFilePreviewLink(file.id);
 
 	var file_urls = {
@@ -149,6 +206,7 @@ async function visitFile(file) {
 
 	//make mongoose file
 	const NewFile = await FileModel.create({
+		course: currCourse,
 		name: file.name,
 		id: file.id,
 		webUrl: file.webUrl,
