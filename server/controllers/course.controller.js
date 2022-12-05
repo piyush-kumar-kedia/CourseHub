@@ -6,7 +6,7 @@ export const getCourse = async (req, res, next) => {
 	if (!courseId) throw new AppError(400, "Missing Course Id");
 	const course = await CourseModel.findById(courseId)
 		.populate({
-			path: "year.folders",
+			path: "children",
 			select: "-__v",
 			populate: {
 				path: "children",
@@ -15,6 +15,11 @@ export const getCourse = async (req, res, next) => {
 					strictPopulate: false,
 					path: "children",
 					select: "-__v",
+					populate: {
+						strictPopulate: false,
+						path: "children",
+						select: "-__v",
+					},
 				},
 			},
 		})

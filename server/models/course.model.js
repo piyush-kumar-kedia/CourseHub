@@ -9,21 +9,23 @@ export const FolderModel = model("Folder", FolderSchema);
 
 const FileSchema = Schema({
 	name: { type: String, required: true },
-	type: { type: String, required: true },
-	url: { type: String, required: true },
+	// type: { type: String, required: true },
+	id: { type: String, required: true },
+	webUrl: { type: String, required: true },
+	downloadUrl: { type: String, required: true },
 });
 
 export const FileModel = model("File", FileSchema);
 
-const YearSchema = Schema({
-	year: { type: Number, required: true },
-	folders: [{ type: Schema.Types.ObjectId, ref: "Folder" }],
-});
+// const YearSchema = Schema({
+// 	name: { type: Number, required: true },
+// 	folders: [{ type: Schema.Types.ObjectId, ref: "Folder" }],
+// });
 
 const CourseSchema = Schema({
 	name: { type: String, required: true },
 	code: { type: String, required: true },
-	year: [YearSchema],
+	children: [{ type: Schema.Types.ObjectId, ref: "Folder" }],
 	books: [{ type: String }],
 });
 
