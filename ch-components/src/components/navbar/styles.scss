@@ -1,0 +1,42 @@
+nav{
+    background-color: #000;
+    margin-bottom: -2px;
+    .active{
+        .nav-content{
+            max-width: 1400px;
+            margin: auto;
+            padding: 30px 64px 10px 64px;
+            display: flex;
+            color: #fff;
+            align-items: center;
+            justify-content: space-between;
+            .navlinks{
+                display: flex;
+            }
+        }
+    }
+    .passive{
+        display: none;
+    }
+    @media screen and (max-width: 850px) {
+        .passive{
+            display: block;
+            max-width: 1400px;
+            margin: auto;
+            padding-left: 30px;
+            padding-right: 30px;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .active{
+            .nav-content{
+                .wrap{
+                    display: none;
+                    &.passive{
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}

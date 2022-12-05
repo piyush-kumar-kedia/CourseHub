@@ -1,0 +1,13 @@
+.subheading{
+    font-family: 'Regular';
+    font-size: 1.5rem;
+    &.bold{
+        font-family: 'Bold';
+    }
+    &.thin{
+        font-family: 'Light';
+    }
+    &.light{
+        color: #fff;
+    }
+}

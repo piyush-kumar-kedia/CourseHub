@@ -1,0 +1,42 @@
+.microsoft-signin-btn{
+    width: 280px;
+    height: 50px;
+    color: #fff;
+    background-color: #000;
+    display: inline-block;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    .logo{
+        background: url(./logo.svg), none;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 35px;
+        height: 35px;
+    }
+    span{
+        display: block;
+        margin-left: 10px;
+        font-family: 'Bold';
+        font-size: 1rem;
+    }
+    cursor: pointer;
+    transition: 200ms ease;
+    &:hover{
+        transform: scale(1.02);
+    }
+    @media screen and (max-width: 750px) {
+        width: 200px;
+        height: 40px;
+        padding: 5px;
+        .logo{
+            width: 20px;
+            height: 20px;
+        }
+        span{
+            font-size: 0.8rem;
+        }
+    }
+}
