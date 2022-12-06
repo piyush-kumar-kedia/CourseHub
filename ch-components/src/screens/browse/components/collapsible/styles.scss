@@ -3,7 +3,7 @@
     user-select: none;
     .main{
         cursor: pointer;
-        justify-content: space-between;
+        // justify-content: space-between;
         display: flex;
         .color{
             height: 100px;
@@ -11,9 +11,10 @@
         }
         .content{
             padding-left: 10px;
+            width: 100%;
             border-bottom: 1px solid rgba(0, 0, 0, 0.33);
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             .text{
                 max-width: 90%;

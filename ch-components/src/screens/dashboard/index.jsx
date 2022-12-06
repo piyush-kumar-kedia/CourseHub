@@ -11,7 +11,19 @@ import ContributionBanner from "./components/contributionbanner";
 import Footer from "../../components/footer";
 import FavouriteCard from "./components/favouritecard";
 
+import { ChangeCurrentCourse } from "../../actions/filebrowser_actions";
+import { useDispatch, useSelector } from "react-redux";
+
 const Dashboard = ({ setClicked }) => {
+	const dispatch = useDispatch();
+	// const s = useSelector((state) => state.fileBrowser);
+	const user = useSelector((state) => state.user);
+
+	const handleClick = (code) => {
+		dispatch(ChangeCurrentCourse(code));
+		// console.log(s);
+	};
+
 	return (
 		<div className="App">
 			<NavBar />
@@ -48,7 +60,48 @@ const Dashboard = ({ setClicked }) => {
 				<SubHeading text={"MY COURSES"} color={"light"} type={"bold"} />
 				<Space amount={20} />
 				<div className="coursecard-container">
-					<CourseCard
+					{user.myCourses.map((course) => (
+						<CourseCard
+							code={course.code}
+							name={course.name}
+							color={course.color}
+							setClicked={() => handleClick(course.code)}
+						/>
+					))}
+					<CourseCard type={"ADD"} />
+				</div>
+				<Space amount={50} />
+			</Container>
+			<ContributionBanner />
+			<Space amount={50} />
+			<Container>
+				<SubHeading text={"MY FAVOURITES"} type={"bold"} />
+				<div className="fav-container">
+					<FavouriteCard type={"folder"} color={""} />
+					<FavouriteCard
+						type={"file"}
+						color={""}
+						path={"Exams > Quiz 1"}
+						name={"Quiz 1 QP.pdf"}
+						subject={"Chemical Reaction Engineering"}
+					/>
+					<FavouriteCard
+						type={"folder"}
+						color={"#EDF492"}
+						path={"Lecture Slides"}
+						name={"Premidsem"}
+						subject={"Green Chemistry"}
+					/>
+				</div>
+			</Container>
+			<Footer />
+		</div>
+	);
+};
+
+export default Dashboard;
+{
+	/* <CourseCard
 						code={"CL 309"}
 						color={"#DBCEFF"}
 						name={"Process Control and Instrumentation"}
@@ -59,9 +112,11 @@ const Dashboard = ({ setClicked }) => {
 						color={"#FFA7D4"}
 						name={"Mass Trasfer II"}
 						setClicked={setClicked}
-					/>
+					/> */
+}
 
-					<CourseCard
+{
+	/* <CourseCard
 						code={"CL 309"}
 						color={"#6F8FFE"}
 						name={"Chemical Reaction Engineering"}
@@ -96,36 +151,5 @@ const Dashboard = ({ setClicked }) => {
 						color={"#EDF492"}
 						name={"Techncal Report Wrting and Presentation"}
 						setClicked={setClicked}
-					/>
-					<CourseCard type={"ADD"} />
-				</div>
-				<Space amount={50} />
-			</Container>
-			<ContributionBanner />
-			<Space amount={50} />
-			<Container>
-				<SubHeading text={"MY FAVOURITES"} type={"bold"} />
-				<div className="fav-container">
-					<FavouriteCard type={"folder"} color={""} />
-					<FavouriteCard
-						type={"file"}
-						color={""}
-						path={"Exams > Quiz 1"}
-						name={"Quiz 1 QP.pdf"}
-						subject={"Chemical Reaction Engineering"}
-					/>
-					<FavouriteCard
-						type={"folder"}
-						color={"#EDF492"}
-						path={"Lecture Slides"}
-						name={"Premidsem"}
-						subject={"Green Chemistry"}
-					/>
-				</div>
-			</Container>
-			<Footer />
-		</div>
-	);
-};
-
-export default Dashboard;
+					/> */
+}

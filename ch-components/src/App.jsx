@@ -8,13 +8,14 @@ const App = () => {
 	const setClicked = () => {
 		setClickedInt(clicked + 1);
 	};
-	return clicked === 0 ? (
-		<LandingPage setClicked={setClicked} />
-	) : clicked === 1 ? (
-		<Dashboard setClicked={setClicked} />
-	) : (
-		<BrowseScreen />
-	);
+	// return clicked === 0 ? (
+	// 	<LandingPage setClicked={setClicked} />
+	// ) : clicked === 1 ? (
+	// 	<Dashboard setClicked={setClicked} />
+	// ) : (
+	// 	<BrowseScreen />
+	// );
+	return <BrowseScreen />;
 };
 
 export default App;

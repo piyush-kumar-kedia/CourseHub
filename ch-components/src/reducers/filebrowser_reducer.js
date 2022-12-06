@@ -8,6 +8,21 @@ const FileBroserReducer = (
 	action
 ) => {
 	switch (action.type) {
+		case "CHANGE_CURRENT_COURSE":
+			// state.currentCourse = action.payload.currentCourse;
+			return { ...state, currentCourse: action.payload.currentCourse };
+		case "UPDATE_COURSES":
+			// state.allCourseData.push(action.payload.currentCourse);
+			let arr = state.allCourseData;
+			arr.push(action.payload.currentCourse);
+			// console.log(arr);
+			console.log(action);
+			return {
+				...state,
+				allCourseData: [...arr],
+			};
+		case "CHANGE_CURRENT_FOLDER":
+			return { ...state, currentFolder: action.payload.currentFolder };
 		default:
 			return state;
 	}
