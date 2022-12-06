@@ -1,0 +1,91 @@
+.folder-info{
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    width: 100%;
+    background-color: #FECF6F;
+    padding: 10px 24px;
+    .info{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .curr-folder{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            .folder-name{
+                font-family: 'Bold';
+                font-size: 1.5rem;
+            }
+            .folder-actions{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .folder-action-icon{
+                    width: 20px;
+                    height: 20px;
+                    display: block;
+                    cursor: pointer;
+                    &.share{
+                        background: url(./assets/Share.svg), none;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: contain;
+                    }
+                    &.favs{
+                        background: url(./assets/Favorites.svg), none;
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        background-position: center;
+                        margin: 0px 6px;
+                    }
+                }
+            }
+        }
+    }
+    .btn-container{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .btn{
+            text-align: center;
+            padding: 10px 15px;
+            font-size: 0.68rem;
+            color: #fff;
+            background-color: #000;
+            border: none;
+            margin-left: 5px;
+            cursor: pointer;
+            transition: 120ms;
+            .text{
+                display: block;
+                margin-top: 5px;
+            }
+            &:hover{
+                transform: scale(1.02);
+            }
+        }
+        .icon{
+            display: block;
+            width: 20px;
+            margin: auto;
+            height: 20px;
+            &.download-icon{
+                background: url(./assets/download.svg);
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+
+            }
+            &.plus-icon{
+                background: url(./assets/plus.svg);
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+
+            }
+        }
+    }
+}

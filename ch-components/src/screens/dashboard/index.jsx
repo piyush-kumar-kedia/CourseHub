@@ -1,3 +1,4 @@
+import "./styles.scss";
 import Container from "../../components/container";
 import ExamCard from "./components/examcard";
 import Heading from "../../components/heading";
@@ -5,13 +6,12 @@ import Space from "../../components/space";
 import NavBar from "../../components/navbar";
 import SubHeading from "../../components/subheading";
 
-import "./styles.scss";
 import CourseCard from "./components/coursecard";
 import ContributionBanner from "./components/contributionbanner";
 import Footer from "../../components/footer";
 import FavouriteCard from "./components/favouritecard";
 
-const Dashboard = () => {
+const Dashboard = ({ setClicked }) => {
 	return (
 		<div className="App">
 			<NavBar />
@@ -52,42 +52,50 @@ const Dashboard = () => {
 						code={"CL 309"}
 						color={"#DBCEFF"}
 						name={"Process Control and Instrumentation"}
+						setClicked={setClicked}
 					/>
 					<CourseCard
 						code={"CL 303"}
 						color={"#FFA7D4"}
 						name={"Mass Trasfer II"}
+						setClicked={setClicked}
 					/>
 
 					<CourseCard
 						code={"CL 309"}
 						color={"#6F8FFE"}
 						name={"Chemical Reaction Engineering"}
+						setClicked={setClicked}
 					/>
 					<CourseCard
 						code={"CL 309"}
 						color={"#EDF492"}
 						name={"Green Chemistry"}
+						setClicked={setClicked}
 					/>
 					<CourseCard
 						code={"CL 309"}
 						color={"#DBCEFF"}
 						name={"Economic Theroy"}
+						setClicked={setClicked}
 					/>
 					<CourseCard
 						code={"CL 309"}
 						color={"#FFA7D4"}
 						name={"Scientific Computing"}
+						setClicked={setClicked}
 					/>
 					<CourseCard
 						code={"CL 309"}
 						color={"#6F8FFE"}
 						name={"Solid Fluid Operations Lab"}
+						setClicked={setClicked}
 					/>
 					<CourseCard
 						code={"CL 309"}
 						color={"#EDF492"}
 						name={"Techncal Report Wrting and Presentation"}
+						setClicked={setClicked}
 					/>
 					<CourseCard type={"ADD"} />
 				</div>

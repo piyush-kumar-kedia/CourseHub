@@ -10,4 +10,10 @@
     &.light{
         background-color: #fff;
     }
+    &.fluid{
+        .container-content{
+            max-width: 100%;
+            padding: 0px;
+        }
+    }
 }

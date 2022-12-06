@@ -1,5 +1,5 @@
 import "./styles.scss";
-const CourseCard = ({ code, color, name, type }) => {
+const CourseCard = ({ code, color, name, type, setClicked }) => {
 	return type === "ADD" ? (
 		<div className="coursecard ADD">
 			<div className="content">
@@ -8,7 +8,11 @@ const CourseCard = ({ code, color, name, type }) => {
 			</div>
 		</div>
 	) : (
-		<div className="coursecard" style={{ backgroundColor: color }}>
+		<div
+			className="coursecard"
+			style={{ backgroundColor: color }}
+			onClick={setClicked}
+		>
 			<p className="code">{code ? code : "code"}</p>
 			<div className="name">
 				<p>{name ? name : "name"}</p>

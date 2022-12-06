@@ -1,0 +1,82 @@
+.file-display{
+    width: 200px;
+    height: 220px;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.32);
+    margin-right: 14px;
+    margin-bottom: 15px;
+    .img-preview{
+        width: 100%;
+        height: 140px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.32);
+        background-color: antiquewhite;
+        background: url(./assets/bgImg.svg), none;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top;
+        .top,.view{
+            transition: opacity 200ms ease;
+            opacity: 0;
+        }
+        .top{
+            .share{
+                background: url(./assets/Share.svg), none;
+            }
+            .download{
+                background: url(./assets/Download.svg), none;
+            }
+            .star{
+                background: url(./assets/Favorites.svg), none;
+            }
+            height: 30%;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .share, .download, .star{
+                display: block;
+                width: 24px;
+                height: 24px;
+                margin: 10px;
+                cursor: pointer;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+            }
+        }
+        .view{
+            cursor: pointer;
+            height: 70%;
+            width: 100%;
+            background-color: #BABABA;
+            display: flex;
+            color: #fff;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    .content{
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        flex-direction: column;
+        text-align: center;
+        .title{
+            font-size: 1.05rem;
+        }
+        .info, .contributor{
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.68);
+        }
+    }
+    &:hover{
+        border: 1px solid #000;
+        .img-preview{
+            .top, .view{
+                opacity: 100;
+            }
+        }
+    }
+}
