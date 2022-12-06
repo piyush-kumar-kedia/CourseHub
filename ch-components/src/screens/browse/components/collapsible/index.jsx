@@ -2,11 +2,18 @@ import { useState } from "react";
 import Folder from "./components/folder";
 import FolderController from "./components/folder-controller";
 import "./styles.scss";
+
+import { useSelector } from "react-redux";
+
 const Collapsible = ({ color, state }) => {
 	const [open, setOpen] = useState(state ? state : false);
 	const onClick = () => {
 		setOpen(!open);
 	};
+	const allCourseData = useSelector(
+		(state) => state.fileBrowser.allCourseData
+	);
+	console.log(allCourseData);
 	return (
 		<div className={`collapsible ${open}`}>
 			<div className="main" onClick={onClick}>
@@ -25,70 +32,7 @@ const Collapsible = ({ color, state }) => {
 				</div>
 			</div>
 			<div className="collapsible-content">
-				<FolderController
-					folders={[
-						{
-							name: "Slides2",
-							childType: "File",
-							children: [
-								{
-									name: "Slide12",
-								},
-								{
-									name: "Slide22",
-								},
-							],
-						},
-						{
-							name: "Tutorial",
-							childType: "Folder",
-							children: [
-								{
-									name: "Questions",
-									childType: "File",
-									children: [
-										{
-											name: "t1",
-										},
-										{
-											name: "t2",
-										},
-										{
-											name: "t3",
-										},
-									],
-								},
-								{
-									name: "Answers",
-									childType: "File",
-									children: [
-										{
-											name: "a1",
-										},
-										{
-											name: "a2",
-										},
-										{
-											name: "a3",
-										},
-									],
-								},
-							],
-						},
-						{
-							name: "Slides",
-							childType: "File",
-							children: [
-								{
-									name: "Slide1",
-								},
-								{
-									name: "Slide2",
-								},
-							],
-						},
-					]}
-				/>
+				<FolderController folders={allCourseData} />
 			</div>
 		</div>
 	);
