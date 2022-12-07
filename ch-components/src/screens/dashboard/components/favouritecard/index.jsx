@@ -35,7 +35,7 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 					<path
 						d="M200.6 1L236.6 37H200.6V1Z"
 						fill={"#CDCDCD"}
-						fill-opacity="0.5"
+						fillOpacity="0.5"
 					/>
 					<line
 						x1="18.2002"
@@ -43,8 +43,8 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 						x2="223.4"
 						y2="65.8"
 						stroke="black"
-						stroke-opacity="0.25"
-						stroke-width="1.2"
+						strokeOpacity="0.25"
+						strokeWidth="1.2"
 					/>
 					<line
 						x1="18.2002"
@@ -52,8 +52,8 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 						x2="223.4"
 						y2="95.8"
 						stroke="black"
-						stroke-opacity="0.25"
-						stroke-width="1.2"
+						strokeOpacity="0.25"
+						strokeWidth="1.2"
 					/>
 					<line
 						x1="18.2002"
@@ -61,8 +61,8 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 						x2="224.6"
 						y2="123.4"
 						stroke="black"
-						stroke-opacity="0.25"
-						stroke-width="1.2"
+						strokeOpacity="0.25"
+						strokeWidth="1.2"
 					/>
 					<line
 						x1="18.2002"
@@ -70,8 +70,8 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 						x2="224.6"
 						y2="151"
 						stroke="black"
-						stroke-opacity="0.25"
-						stroke-width="1.2"
+						strokeOpacity="0.25"
+						strokeWidth="1.2"
 					/>
 					<line
 						x1="18.2002"
@@ -79,8 +79,8 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 						x2="224.6"
 						y2="178.6"
 						stroke="black"
-						stroke-opacity="0.25"
-						stroke-width="1.2"
+						strokeOpacity="0.25"
+						strokeWidth="1.2"
 					/>
 				</svg>
 			)}

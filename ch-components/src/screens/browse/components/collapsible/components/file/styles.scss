@@ -1,0 +1,27 @@
+.file{
+    padding-left: 18px;
+    // border-left: 1px solid #000;
+    display: flex;
+    align-items: center;
+    .vertical-line{
+        height: 26px;
+        width: 1px;
+        background-color: #000;
+
+    }
+    .horizontal-line{
+        width: 20px;
+        height: 1px;
+        background-color: #000;
+        margin-right: 10px;
+    }
+    &:last-child{
+        align-items: flex-start;
+        .vertical-line{
+            height: 13px;
+        }
+        .horizontal-line{
+            margin-top: 12px;
+        }
+    }
+}
