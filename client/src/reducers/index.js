@@ -1,12 +1,9 @@
 import { combineReducers } from "redux";
-import displayReducer from "./displayReducer";
-import courseReducer from "./courseReducer";
-import userReducer from "./userReducer";
-
+import FileBroserReducer from "./filebrowser_reducer";
+import UserReducer from "./user_reducer";
 const reducers = combineReducers({
-	user: userReducer,
-	display: displayReducer,
-	course: courseReducer,
+	fileBrowser: FileBroserReducer,
+	user: UserReducer,
 });
 
 export default reducers;
