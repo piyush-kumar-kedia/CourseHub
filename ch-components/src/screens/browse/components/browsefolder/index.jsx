@@ -1,8 +1,21 @@
 import "./styles.scss";
-
-const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
+import { useDispatch } from "react-redux";
+import { ChangeFolder } from "../../../../actions/filebrowser_actions";
+const BrowseFolder = ({
+	type = "file",
+	color,
+	path,
+	name,
+	subject,
+	folderData,
+}) => {
+	const dispatch = useDispatch();
+	const onClick = (folderData) => {
+		// return;
+		dispatch(ChangeFolder(folderData));
+	};
 	return (
-		<div className="fav-card">
+		<div className="browse-folder" onClick={() => onClick(folderData)}>
 			{type === "folder" ? (
 				<svg
 					width="200"
@@ -13,7 +26,7 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 				>
 					<path
 						d="M0.200195 186.4V0.400024H105.924L121.027 15.5034H197.857L212.96 0.400024H236.6V186.4H0.200195Z"
-						fill={color ? color : "#7DDEFF"}
+						fill={color ? color : "#fece6fb3"}
 					/>
 					<path
 						d="M205.4 8.20007H114.2L121.4 16.0001H198.8L205.4 8.20007Z"
@@ -30,7 +43,7 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 				>
 					<path
 						d="M0.800293 186.4V0.400024H200.6L237.2 37.2377V186.4H0.800293Z"
-						fill={color ? color : "#F1F3DA"}
+						fill={color ? color : "#f3f0da"}
 					/>
 					<path
 						d="M200.6 1L236.6 37H200.6V1Z"
@@ -86,12 +99,12 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 			)}
 			<div className="content">
 				<div className="top">
-					<p className="path">{path ? path : "Path"}</p>
+					<p className="path">{""}</p>
 					<p className="name">{name ? name : "Name"}</p>
 				</div>
 				<div className="bottom">
 					<p className="subject">
-						{subject ? subject : "Subject Here"}
+						{subject ? subject.toUpperCase() : "Subject Here"}
 					</p>
 				</div>
 			</div>
@@ -99,4 +112,4 @@ const FavouriteCard = ({ type = "file", color, path, name, subject }) => {
 	);
 };
 
-export default FavouriteCard;
+export default BrowseFolder;

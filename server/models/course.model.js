@@ -4,6 +4,7 @@ const FolderSchema = Schema({
 	course: { type: String, required: true },
 	name: { type: String, required: true },
 	childType: { type: String, enum: ["File", "Folder"], required: true },
+	path: { type: String, required: true },
 	children: [{ type: Schema.Types.ObjectId, refPath: "childType" }],
 });
 export const FolderModel = model("Folder", FolderSchema);
@@ -13,8 +14,9 @@ const FileSchema = Schema({
 	name: { type: String, required: true },
 	// type: { type: String, required: true },
 	id: { type: String, required: true },
-	webUrl: { type: String, required: true },
-	downloadUrl: { type: String, required: true },
+	size: { type: String, required: true },
+	// webUrl: { type: String, required: true },
+	// downloadUrl: { type: String, required: true },
 });
 
 export const FileModel = model("File", FileSchema);

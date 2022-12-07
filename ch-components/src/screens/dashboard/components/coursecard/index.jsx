@@ -3,7 +3,7 @@ const CourseCard = ({ code, color, name, type, setClicked }) => {
 	return type === "ADD" ? (
 		<div className="coursecard ADD">
 			<div className="content">
-				<i class="fa fa-xl fa-plus" aria-hidden="true"></i>
+				<i className="fa fa-xl fa-plus" aria-hidden="true"></i>
 				<p>Add Course</p>
 			</div>
 		</div>

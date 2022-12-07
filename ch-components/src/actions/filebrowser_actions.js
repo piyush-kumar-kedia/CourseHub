@@ -23,3 +23,11 @@ export const ChangeFolder = (folder) => {
 		},
 	};
 };
+export const LoadCourses = (data) => {
+	return {
+		type: "LOAD_COURSES",
+		payload: {
+			allCourseData: data,
+		},
+	};
+};

@@ -10,6 +10,7 @@ import CourseModel, {
 	FolderModel,
 	FileModel,
 } from "../../models/course.model.js";
+import path from "path";
 
 const router = express.Router();
 
@@ -97,6 +98,30 @@ router.get(
 		res.send(data);
 	})
 );
+
+router.get(
+	"/file/:id",
+	catchAsync(async (req, res, next) => {
+		const resp = await getFileDownloadLink(req.params.id);
+		res.json(resp);
+		// res.json({
+		// 	downloadUrl: resp["@microsoft.graph.downloadUrl"],
+		// 	webUrl: resp.webUrl,
+		// });
+	})
+);
+
+async function getFileDownloadLink(file_id) {
+	var access_token = await getAccessToken();
+	var headers = {
+		Authorization: `Bearer ${access_token}`,
+		Host: "graph.microsoft.com",
+	};
+	var url = `https://graph.microsoft.com/v1.0/me/drive/items/${file_id}`;
+	var data = await getRequest(url, headers);
+	return data;
+}
+
 async function getAllCourseIds() {
 	var access_token = await getAccessToken();
 	var headers = {
@@ -162,7 +187,7 @@ async function visitCourseById(id) {
 	return "ok";
 }
 
-async function visitFolder(folder, currCourse) {
+async function visitFolder(folder, currCourse, prevFolder) {
 	var access_token = await getAccessToken();
 	var headers = {
 		Authorization: `Bearer ${access_token}`,
@@ -175,8 +200,11 @@ async function visitFolder(folder, currCourse) {
 
 	const folders = children.map(async function (child) {
 		if (child.folder) {
+			const prevFolderName = prevFolder ? `${prevFolder}/` : "";
+			const passName = prevFolderName + folder.name;
+			// console.log(passName);
 			childType = "Folder";
-			let data = await visitFolder(child, currCourse);
+			let data = await visitFolder(child, currCourse, passName);
 			return data;
 		} else {
 			let data = await visitFile(child, currCourse);
@@ -185,12 +213,14 @@ async function visitFolder(folder, currCourse) {
 	});
 
 	let res = await Promise.all(folders);
-	//make mongoose folder
+	const prevFolderName = prevFolder ? `${prevFolder}/` : "root/";
+	// console.log(prevFolderName + folder.name);
 	const NewFolder = await FolderModel.create({
 		course: currCourse,
 		name: folder.name,
 		childType: childType,
 		children: res,
+		path: prevFolderName + folder.name,
 	});
 	return NewFolder;
 }
@@ -209,8 +239,9 @@ async function visitFile(file, currCourse) {
 		course: currCourse,
 		name: file.name,
 		id: file.id,
-		webUrl: file.webUrl,
-		downloadUrl: file["@microsoft.graph.downloadUrl"],
+		// webUrl: file.webUrl,
+		size: file.size * 0.000001,
+		// downloadUrl: file["@microsoft.graph.downloadUrl"],
 	});
 	return NewFile._id;
 }

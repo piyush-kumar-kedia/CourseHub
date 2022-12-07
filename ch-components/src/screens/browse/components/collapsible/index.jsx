@@ -2,11 +2,11 @@ import { useState } from "react";
 import Folder from "./components/folder";
 import FolderController from "./components/folder-controller";
 import "./styles.scss";
-import axios from "axios";
+import axios, { all } from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { UpdateCourses } from "../../../../actions/filebrowser_actions";
-
+import { LoadCourses } from "../../../../actions/filebrowser_actions";
 const Collapsible = ({ course, color, state }) => {
 	const [open, setOpen] = useState(state ? state : false);
 	const [loading, setLoading] = useState(true);
@@ -18,20 +18,27 @@ const Collapsible = ({ course, color, state }) => {
 			const t = await getCurrentCourse(course.code);
 			if (t) {
 				setData(t.children);
+				localStorage.setItem(
+					"AllCourses",
+					JSON.stringify(allCourseData)
+				);
 			}
 		};
 		run();
 	};
 
-	// useEffect(() => {
-	// 	const run = async () => {
-	// 		const t = await getCurrentCourse(course.code);
-	// 		if (t) {
-	// 			setData(t.children);
-	// 		}
-	// 	};
-	// 	run();
-	// }, []);
+	useEffect(() => {
+		if (localStorage.getItem("AllCourses") !== null) {
+			try {
+				dispatch(
+					LoadCourses(JSON.parse(localStorage.getItem("AllCourses")))
+				);
+			} catch (error) {
+				dispatch(LoadCourses([]));
+				console.log("load error");
+			}
+		}
+	}, []);
 	const onClick = () => {
 		setOpen(!open);
 	};
@@ -43,10 +50,16 @@ const Collapsible = ({ course, color, state }) => {
 	);
 
 	const getCurrentCourse = async (code) => {
-		console.log(code);
-		console.log(allCourseData);
-		let currCourse = allCourseData.find((course) => course.code === code);
-		// if (currCourse) console.log("Already present...");
+		// console.log(code);
+		// console.log(allCourseData);
+		let currCourse = null;
+		try {
+			currCourse = allCourseData.find((course) => course.code === code);
+		} catch (error) {
+			localStorage.removeItem("AllCourses");
+			location.reload();
+		}
+		if (currCourse) console.log("Already present...");
 		if (!currCourse) {
 			try {
 				currCourse = await axios.get(

@@ -25,5 +25,25 @@
     }
     .right{
         flex: 1;
+        max-width: 200px;
+        background-color: #000;
+        color:#fff;
+        .year-content{
+            display: flex;
+            flex-direction: column;
+            .year-title{
+                padding: 10px 20px;
+                font-family: 'Bold';
+                font-size: 1.2rem;
+            }
+            .year{
+                padding: 10px 20px;
+                font-size: 1.14rem;
+                &.selected{
+                    color: #000;
+                    background-color: #fff;
+                }
+            }
+        }
     }
 }

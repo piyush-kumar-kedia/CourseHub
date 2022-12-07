@@ -20,6 +20,7 @@ const Dashboard = ({ setClicked }) => {
 	const user = useSelector((state) => state.user);
 
 	const handleClick = (code) => {
+		setClicked();
 		dispatch(ChangeCurrentCourse(code));
 		// console.log(s);
 	};
@@ -62,7 +63,8 @@ const Dashboard = ({ setClicked }) => {
 				<div className="coursecard-container">
 					{user.myCourses.map((course) => (
 						<CourseCard
-							code={course.code}
+							key={course.name}
+							code={course?.code?.toUpperCase()}
 							name={course.name}
 							color={course.color}
 							setClicked={() => handleClick(course.code)}

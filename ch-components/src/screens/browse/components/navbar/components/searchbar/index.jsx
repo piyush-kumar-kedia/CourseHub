@@ -2,11 +2,11 @@ import React from "react";
 import "./styles.scss";
 const SearchBar = ({ type }) => {
 	return (
-		<div className={`wrap ${type}`}>
-			<div className="search">
+		<div class={`wrap ${type}`}>
+			<div class="search">
 				<input
 					type="text"
-					className="searchTerm"
+					class="searchTerm"
 					placeholder="Search Courses"
 				/>
 				<div className="search-img"></div>

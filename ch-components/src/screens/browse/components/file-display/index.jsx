@@ -1,15 +1,25 @@
 import "./styles.scss";
 
 const FileDisplay = ({ file }) => {
+	const fileSize =
+		parseFloat(file.size) > 1
+			? parseFloat(file.size).toFixed(0) + "MB"
+			: (parseFloat(file.size) * 1000).toFixed(0) + "KB";
+
+	const fileType = (file?.name.slice(file?.name.length - 4).split("."))[0]
+		? (file?.name.slice(file?.name.length - 4).split("."))[0]
+		: (file?.name.slice(file?.name.length - 4).split("."))[1];
+
 	const name =
 		file?.name.length > 20
-			? file?.name.slice(0, 18) +
+			? file?.name.slice(0, 16) +
 			  "..." +
 			  file?.name.slice(file?.name.length - 4)
 			: file?.name;
 
 	const handleDownload = () => {
-		window.open(file.downloadUrl);
+		return;
+		// window.open(file.downloadUrl);
 	};
 	return (
 		<div className="file-display">
@@ -26,7 +36,9 @@ const FileDisplay = ({ file }) => {
 					{file?.name ? name : "Quiz 1 Answer Key"}
 				</p>
 				<div className="file-metadata">
-					<p className="info">PDF 4.2MB</p>
+					<p className="info">
+						{fileType.toUpperCase()} {fileSize}
+					</p>
 					<p className="contributor">Atharva Tagalpallewar</p>
 				</div>
 			</div>
