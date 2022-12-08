@@ -20,7 +20,7 @@ const PORT = config.port;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use("/", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/onedrive/", onedriveRoutes);
@@ -38,7 +38,7 @@ app.use(
 
 // Error handler
 app.use((err, req, res, next) => {
-	logger.error(err);
+	// logger.error(err);
 	const { status = 500, message = "Something went wrong!" } = err;
 	return res.status(status).json({
 		error: true,

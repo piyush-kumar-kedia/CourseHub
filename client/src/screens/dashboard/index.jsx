@@ -5,7 +5,6 @@ import Heading from "../../components/heading";
 import Space from "../../components/space";
 import NavBar from "../../components/navbar";
 import SubHeading from "../../components/subheading";
-
 import CourseCard from "./components/coursecard";
 import ContributionBanner from "./components/contributionbanner";
 import Footer from "../../components/footer";
@@ -13,16 +12,20 @@ import FavouriteCard from "./components/favouritecard";
 
 import { ChangeCurrentCourse } from "../../actions/filebrowser_actions";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const Dashboard = ({ setClicked }) => {
+import formatName from "../../utils/formatName";
+import formatBranch from "../../utils/formatBranch";
+
+const Dashboard = () => {
 	const dispatch = useDispatch();
-	// const s = useSelector((state) => state.fileBrowser);
+	const navigate = useNavigate();
 	const user = useSelector((state) => state.user);
 
 	const handleClick = (code) => {
-		setClicked();
 		dispatch(ChangeCurrentCourse(code));
-		// console.log(s);
+		localStorage.setItem("page", "browse");
+		navigate("/browse");
 	};
 
 	return (
@@ -34,12 +37,15 @@ const Dashboard = ({ setClicked }) => {
 					<div>
 						<Heading text={"Welcome,"} type={""} color={"light"} />
 						<Heading
-							text={"Atharva Tagalpallewar!"}
+							text={formatName(user?.user?.name)}
 							type={"bold"}
 							color={"light"}
 						/>
 						<SubHeading
-							text={"B.Tech. Chemical Engineering"}
+							text={formatBranch(
+								user?.user?.degree,
+								user?.user?.branch
+							)}
 							color={"light"}
 						/>
 					</div>
