@@ -14,11 +14,10 @@ const FileBroserReducer = (
 			// state.currentCourse = action.payload.currentCourse;
 			return { ...state, currentCourse: action.payload.currentCourse };
 		case "UPDATE_COURSES":
-			// state.allCourseData.push(action.payload.currentCourse);
 			let arr = state.allCourseData;
 			arr.push(action.payload.currentCourse);
-			// console.log(arr);
-			console.log(action);
+			console.log(arr);
+			localStorage.setItem("AllCourses", JSON.stringify(arr));
 			return {
 				...state,
 				allCourseData: [...arr],

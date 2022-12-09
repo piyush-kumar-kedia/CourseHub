@@ -24,7 +24,6 @@ const Dashboard = () => {
 
 	const handleClick = (code) => {
 		dispatch(ChangeCurrentCourse(code));
-		localStorage.setItem("page", "browse");
 		navigate("/browse");
 	};
 

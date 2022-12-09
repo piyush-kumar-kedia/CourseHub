@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { UpdateCourses } from "../../../../actions/filebrowser_actions";
 import { LoadCourses } from "../../../../actions/filebrowser_actions";
+import { ChangeFolder } from "../../../../actions/filebrowser_actions";
 const Collapsible = ({ course, color, state }) => {
 	const [open, setOpen] = useState(state ? state : false);
 	const [loading, setLoading] = useState(true);
@@ -18,27 +19,13 @@ const Collapsible = ({ course, color, state }) => {
 			const t = await getCurrentCourse(course.code);
 			if (t) {
 				setData(t.children);
-				localStorage.setItem(
-					"AllCourses",
-					JSON.stringify(allCourseData)
-				);
+				dispatch(ChangeFolder(t));
+				console.log(t);
 			}
 		};
 		run();
 	};
 
-	useEffect(() => {
-		if (localStorage.getItem("AllCourses") !== null) {
-			try {
-				dispatch(
-					LoadCourses(JSON.parse(localStorage.getItem("AllCourses")))
-				);
-			} catch (error) {
-				dispatch(LoadCourses([]));
-				console.log("load error");
-			}
-		}
-	}, []);
 	const onClick = () => {
 		setOpen(!open);
 	};
@@ -50,8 +37,6 @@ const Collapsible = ({ course, color, state }) => {
 	);
 
 	const getCurrentCourse = async (code) => {
-		// console.log(code);
-		// console.log(allCourseData);
 		let currCourse = null;
 		try {
 			currCourse = allCourseData.find((course) => course.code === code);

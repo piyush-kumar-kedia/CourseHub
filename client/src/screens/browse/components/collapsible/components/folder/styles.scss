@@ -1,15 +1,15 @@
 .main-folder{
     max-width: 300px;
     overflow: hidden;
-    border-left: 1px solid #000;
+    border-left: 2px solid rgba(0, 0, 0, 0.642);
     margin-left: 20px;
     .folder{
         display: flex;
         align-items: center;
         .horizontal-line{
             width: 20px;
-            height: 1px;
-            background-color: #000;
+            height: 2px;
+            background-color: rgba(0, 0, 0, 0.648);
             margin-right: 10px;
         }
         .text{
@@ -39,7 +39,7 @@
         .children{
             display: block;
             // max-height: 200px;
-            padding-left: 20px;
+            padding-left: 15px;
         }
     }
     &.false{
@@ -54,23 +54,23 @@
             }
         }
     }
-    // &:last-child{
-    //     display: flex;
-    //     border-left: none;
-    //     .text{
-    //         width: 300px;
-    //         overflow: hidden;
-    //     }
-    //     .folder-vertical-line{
-    //         .up{
-    //             display: block;
-    //             height: 15px;
-    //             width: 1px;
-    //             background-color: #000;
-    //         }
-    //         .down{
+    &:last-child{
+        display: flex;
+        border-left: none;
+        .text{
+            width: 300px;
+            overflow: hidden;
+        }
+        .folder-vertical-line{
+            .up{
+                display: block;
+                height: 15px;
+                width: 2px;
+                background-color: #000;
+            }
+            .down{
 
-    //         }
-    //     }
-    // }
+            }
+        }
+    }
 }

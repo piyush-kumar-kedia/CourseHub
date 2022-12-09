@@ -12,11 +12,7 @@ const Folder = ({ folder, state }) => {
 	const dispatch = useDispatch();
 	const _state = useSelector((state) => state.fileBrowser);
 	const [open, setOpen] = useState(state ? state : false);
-	// const [selected, setSelected] = useState("");
-	// useEffect(() => {
-	// 	console.log("rerender");
-	// 	setSelected(_state.currentFolder?._id === folder._id ? "selected" : "");
-	// }, [_state?.currentFolder]);
+
 	const onClick = (folderData) => {
 		dispatch(ChangeFolder(folderData));
 		setOpen(!open);

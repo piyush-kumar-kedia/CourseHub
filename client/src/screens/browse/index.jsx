@@ -5,11 +5,28 @@ import Navbar from "../../components/navbar";
 import FolderInfo from "./components/folder-info";
 import FileDisplay from "./components/file-display";
 import BrowseFolder from "./components/browsefolder";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import NavBarBrowseScreen from "./components/navbar";
+import { useEffect } from "react";
+import { LoadCourses } from "../../actions/filebrowser_actions";
 const BrowseScreen = () => {
 	const user = useSelector((state) => state.user);
+
 	const folderData = useSelector((state) => state.fileBrowser.currentFolder);
+
+	const dispatch = useDispatch();
+	useEffect(() => {
+		if (localStorage.getItem("AllCourses") !== null) {
+			try {
+				dispatch(
+					LoadCourses(JSON.parse(localStorage.getItem("AllCourses")))
+				);
+			} catch (error) {
+				dispatch(LoadCourses([]));
+				console.log("load error");
+			}
+		}
+	}, []);
 
 	return (
 		<Container color={"light"} type={"fluid"}>
