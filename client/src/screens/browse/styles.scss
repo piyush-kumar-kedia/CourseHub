@@ -5,13 +5,16 @@
     color: #fff;
 }
 .controller{
+    &::-webkit-scrollbar{
+        display: none;
+    }
     display: flex;
     height: 92vh;
     .left{
         flex: 3;
         max-width: 300px;
         border-right: 1px solid rgba(0, 0, 0, 0.33);
-        overflow: scroll;
+        overflow-y: auto;
     }
     .middle{
         flex: 6;
@@ -22,8 +25,12 @@
             display: flex;
             flex-wrap: wrap;
         }
+        &::-webkit-scrollbar{
+            display: none;
+        }
     }
     .right{
+        
         flex: 1;
         max-width: 200px;
         background-color: #000;

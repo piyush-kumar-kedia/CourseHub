@@ -1,5 +1,5 @@
 import data from "../data";
-const FileBroserReducer = (
+const FileBrowserReducer = (
 	state = {
 		currentCourse: null,
 		currentFolder: null,
@@ -11,7 +11,6 @@ const FileBroserReducer = (
 		case "LOAD_COURSES":
 			return { ...state, allCourseData: action.payload.allCourseData };
 		case "CHANGE_CURRENT_COURSE":
-			// state.currentCourse = action.payload.currentCourse;
 			return { ...state, currentCourse: action.payload.currentCourse };
 		case "UPDATE_COURSES":
 			let arr = state.allCourseData;
@@ -29,4 +28,4 @@ const FileBroserReducer = (
 	}
 };
 
-export default FileBroserReducer;
+export default FileBrowserReducer;

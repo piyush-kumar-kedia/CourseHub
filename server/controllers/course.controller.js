@@ -4,6 +4,7 @@ import logger from "../utils/logger.js";
 export const getCourse = async (req, res, next) => {
 	const { code } = req.params;
 	logger.info(`GET /course/${code}`);
+
 	if (!code) throw new AppError(400, "Missing Course Id");
 	const course = await CourseModel.findOne({ code: code.toLowerCase() })
 		.populate({
