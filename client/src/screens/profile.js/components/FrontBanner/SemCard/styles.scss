@@ -1,0 +1,37 @@
+.semCard {
+    padding: 11px;
+    background-color: #FECF6F;
+    width: 150px;
+    color: white;
+    height: 112px;
+    position: absolute;
+    top: 5vh;
+    right: 0;
+    color: black;
+
+
+    .inner1 {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+
+        p {
+            font-family: 'Bold';
+            font-size: 1.8rem;
+        }
+    }
+
+    .inner2 {
+        width: 100%;
+        height: 50%;
+        font-family: 'Regular';
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+}

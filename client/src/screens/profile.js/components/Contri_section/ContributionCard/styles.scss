@@ -1,0 +1,84 @@
+.main_card {
+    background-color: #FECF6F;
+    font-family: 'Regular';
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .path {
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+
+        :nth-child(1) {
+            font-family: 'Regular';
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+        }
+
+        :nth-child(2) {
+            font-family: 'Bold';
+            font-size: 1.2rem;
+        }
+    }
+
+    .content {
+
+        justify-content: start;
+        align-self: flex-start;
+        width: 50%;
+        margin: 0px 8px 0px 8px;
+    }
+
+}
+
+@media screen and (max-width:600px) {
+    .main_card {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+
+        .path {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            width: 100%;
+            margin: 0px 4px 30px 4px;
+
+        }
+
+        .btn {
+            align-self: center;
+        }
+
+    }
+}
+
+@media screen and (max-width:760px) {
+    .main_card {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+
+        .path {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            width: 100%;
+            margin: 0px 4px 30px 4px;
+
+        }
+
+        .btn {
+            align-self: center;
+        }
+
+    }
+
+}

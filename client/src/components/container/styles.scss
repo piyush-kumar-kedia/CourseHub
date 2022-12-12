@@ -1,17 +1,22 @@
-.container{
-    .container-content{
+.container {
+    position: relative;
+
+    .container-content {
         max-width: 1400px;
         margin: auto;
         padding: 10px 64px;
     }
-    &.dark{
+
+    &.dark {
         background-color: #000;
     }
-    &.light{
+
+    &.light {
         background-color: #fff;
     }
-    &.fluid{
-        .container-content{
+
+    &.fluid {
+        .container-content {
             max-width: 100%;
             padding: 0px;
         }

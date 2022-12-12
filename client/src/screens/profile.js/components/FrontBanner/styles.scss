@@ -1,0 +1,35 @@
+.front_banner {
+    position: relative;
+    height: 45vh;
+    padding-top: 5vh;
+
+    .banner_text {
+        color: white;
+        width: fit-content;
+
+        .sub_head {
+            margin-bottom: 20px;
+        }
+    }
+
+    .svg_profile {
+        position: absolute;
+        bottom: 0px;
+        right: 12vw;
+        z-index: 2;
+    }
+}
+
+.svg_wave {
+    position: absolute;
+    left: 0;
+    bottom: 6vh;
+    z-index: 1;
+    width: 100vw;
+}
+
+@media screen and (max-width:1050px) {
+    .svg_profile {
+        display: none;
+    }
+}
