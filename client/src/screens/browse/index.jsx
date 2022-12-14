@@ -24,9 +24,7 @@ const BrowseScreen = () => {
     useEffect(() => {
         if (localStorage.getItem("AllCourses") !== null) {
             try {
-                dispatch(
-                    LoadCourses(JSON.parse(localStorage.getItem("AllCourses")))
-                );
+                dispatch(LoadCourses(JSON.parse(localStorage.getItem("AllCourses"))));
             } catch (error) {
                 dispatch(LoadCourses([]));
                 console.log("load error");
@@ -42,27 +40,14 @@ const BrowseScreen = () => {
             <div className="controller">
                 <div className="left">
                     {user.myCourses.map((course, idx) => {
-                        return (
-                            <Collapsible
-                                color={course.color}
-                                key={idx}
-                                course={course}
-                            />
-                        );
+                        return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
                 </div>
                 <div className="middle">
                     <FolderInfo
-                        path={
-                            folderData?.path
-                                ? folderData.path
-                                : "Select a folder..."
-                        }
-                        name={
-                            folderData?.name
-                                ? folderData.name
-                                : "Select a folder"
-                        }
+                        path={folderData?.path ? folderData.path : "Select a folder..."}
+                        name={folderData?.name ? folderData.name : "Select a folder"}
+                        canDownload={folderData?.childType === "File"}
                     />
                     <div className="files">
                         {folderData?.childType === "File"
@@ -89,19 +74,12 @@ const BrowseScreen = () => {
                                 // console.log(course);
                                 return (
                                     <span
-                                        className={`year ${
-                                            currYear === idx ? "selected" : ""
-                                        }`}
+                                        className={`year ${currYear === idx ? "selected" : ""}`}
                                         onClick={() => {
                                             dispatch(
-                                                ChangeCurrentYearData(
-                                                    idx,
-                                                    currCourse[idx].children
-                                                )
+                                                ChangeCurrentYearData(idx, currCourse[idx].children)
                                             );
-                                            dispatch(
-                                                ChangeFolder(currCourse[idx])
-                                            );
+                                            dispatch(ChangeFolder(currCourse[idx]));
                                         }}
                                         key={idx}
                                     >

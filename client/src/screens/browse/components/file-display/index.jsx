@@ -1,10 +1,6 @@
 import "./styles.scss";
-import {
-    formatFileName,
-    formatFileSize,
-    formatFileType,
-} from "../../../../utils/formatFile";
-
+import { formatFileName, formatFileSize, formatFileType } from "../../../../utils/formatFile";
+import { toast } from "react-toastify";
 const FileDisplay = ({ file }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
@@ -26,14 +22,17 @@ const FileDisplay = ({ file }) => {
                 <div className="top">
                     <span className="share"></span>
                     <span className="download" onClick={handleDownload}></span>
-                    <span className="star"></span>
+                    <span
+                        className="star"
+                        onClick={() => {
+                            toast("Added to favourites.");
+                        }}
+                    ></span>
                 </div>
                 <div className="view">View</div>
             </div>
             <div className="content">
-                <p className="title">
-                    {file?.name ? name : "Quiz 1 Answer Key"}
-                </p>
+                <p className="title">{file?.name ? name : "Quiz 1 Answer Key"}</p>
                 <div className="file-metadata">
                     <p className="info">
                         {fileType.toUpperCase()} {fileSize}
