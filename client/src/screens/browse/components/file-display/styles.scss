@@ -10,8 +10,8 @@
         height: 140px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.32);
         background-color: antiquewhite;
-        background: url(./assets/bgImg.svg), none;
-        background-size: cover;
+        // background: url(./assets/bgImg.svg), none;
+        background-size:contain;
         background-repeat: no-repeat;
         background-position: top;
         .top,.view{

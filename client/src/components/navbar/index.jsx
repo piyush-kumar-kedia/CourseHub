@@ -8,32 +8,38 @@ import { useNavigate } from "react-router-dom";
 
 import { LogoutUser } from "../../actions/user_actions";
 const NavBar = () => {
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
-	const handleLogout = () => {
-		dispatch(LogoutUser());
-		window.location = "http://localhost:8080/logout";
-	};
-	return (
-		<nav className="navbar">
-			<div className="active">
-				<div className="nav-content">
-					<span onClick={() => navigate("/dashboard")}>
-						<Logo />
-					</span>
-					<SearchBar />
-					<div className="navlinks">
-						<NavLink text={"Dashboard"} onClick={() => navigate("/dashboard")} />
-						<NavLink text={"Profile"} onClick={() => navigate("/profile")} />
-						<NavLink text={"Log Out"} onClick={handleLogout} />
-					</div>
-				</div>
-			</div>
-			<div className="passive">
-				<SearchBar type={"passive"} />
-			</div>
-		</nav>
-	);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const handleLogout = () => {
+        dispatch(LogoutUser());
+        window.location = "http://localhost:8080/logout";
+    };
+    return (
+        <nav className="navbar">
+            <div className="active">
+                <div className="nav-content">
+                    <span onClick={() => navigate("/dashboard")}>
+                        <Logo />
+                    </span>
+                    <SearchBar />
+                    <div className="navlinks">
+                        <NavLink
+                            text={"Dashboard"}
+                            onClick={() => navigate("/dashboard")}
+                        />
+                        <NavLink
+                            text={"Profile"}
+                            onClick={() => navigate("/profile")}
+                        />
+                        <NavLink text={"Log Out"} onClick={handleLogout} />
+                    </div>
+                </div>
+            </div>
+            <div className="passive">
+                <SearchBar type={"passive"} />
+            </div>
+        </nav>
+    );
 };
 
 export default NavBar;
