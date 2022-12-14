@@ -1,6 +1,7 @@
 .wrap{
     width: 100%;
-    max-width: 650px;
+    max-width: 600px;
+;
     &.passive{
         margin: 0px;
         .search{
@@ -34,6 +35,16 @@
             background: url(./Search.svg);
             margin: 8px;
         }
+        
+    }
+    @media screen and (max-width: 1240px) {
+        max-width: 500px;
+        // display: none;
+        
+    }
+    @media screen and (max-width: 1140px) {
+        max-width: 350px;
+        // display: none;
         
     }
 }

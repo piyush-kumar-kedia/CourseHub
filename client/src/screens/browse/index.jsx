@@ -8,93 +8,118 @@ import BrowseFolder from "./components/browsefolder";
 import { useSelector, useDispatch } from "react-redux";
 import NavBarBrowseScreen from "./components/navbar";
 import { useEffect } from "react";
-import { LoadCourses } from "../../actions/filebrowser_actions";
+import {
+    ChangeCurrentYearData,
+    ChangeFolder,
+    LoadCourses,
+} from "../../actions/filebrowser_actions";
 const BrowseScreen = () => {
-	const user = useSelector((state) => state.user);
+    const user = useSelector((state) => state.user);
+    const folderData = useSelector((state) => state.fileBrowser.currentFolder);
+    const currCourse = useSelector((state) => state.fileBrowser.currentCourse);
 
-	const folderData = useSelector((state) => state.fileBrowser.currentFolder);
+    const currYear = useSelector((state) => state.fileBrowser.currentYear);
 
-	const dispatch = useDispatch();
-	useEffect(() => {
-		if (localStorage.getItem("AllCourses") !== null) {
-			try {
-				dispatch(
-					LoadCourses(JSON.parse(localStorage.getItem("AllCourses")))
-				);
-			} catch (error) {
-				dispatch(LoadCourses([]));
-				console.log("load error");
-			}
-		}
-	}, []);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (localStorage.getItem("AllCourses") !== null) {
+            try {
+                dispatch(
+                    LoadCourses(JSON.parse(localStorage.getItem("AllCourses")))
+                );
+            } catch (error) {
+                dispatch(LoadCourses([]));
+                console.log("load error");
+            }
+        }
+    }, []);
 
-	return (
-		<Container color={"light"} type={"fluid"}>
-			<div className="navbar-browse-screen">
-				<NavBarBrowseScreen />
-			</div>
-			<div className="controller">
-				<div className="left">
-					{user.myCourses.map((course, idx) => {
-						return (
-							<Collapsible
-								color={course.color}
-								key={idx}
-								course={course}
-							/>
-						);
-					})}
-				</div>
-				<div className="middle">
-					<FolderInfo
-						path={
-							folderData?.path
-								? folderData.path
-										.split("/")
-										.map((folder) => folder + " > ")
-								: "root"
-						}
-						name={
-							folderData?.name
-								? folderData.name
-								: "Select a folder"
-						}
-					/>
-					<div className="files">
-						{folderData?.childType === "File"
-							? folderData?.children.map((file) => (
-									<FileDisplay file={file} key={file._id} />
-							  ))
-							: folderData?.children.map((folder) => (
-									<BrowseFolder
-										type="folder"
-										key={folder._id}
-										path={folder.path}
-										name={folder.name}
-										subject={folder.course}
-										folderData={folder}
-									/>
-							  ))}
-					</div>
-				</div>
-				<div className="right">
-					<div className="year-content">
-						<span className="year-title">YEAR</span>
-						<span className="year">2022</span>
-						<span className="year selected">2021</span>
-						<span className="year">2020</span>
-						<span className="year">2019</span>
-					</div>
-				</div>
-			</div>
-		</Container>
-	);
+    return (
+        <Container color={"light"} type={"fluid"}>
+            <div className="navbar-browse-screen">
+                <NavBarBrowseScreen />
+            </div>
+            <div className="controller">
+                <div className="left">
+                    {user.myCourses.map((course, idx) => {
+                        return (
+                            <Collapsible
+                                color={course.color}
+                                key={idx}
+                                course={course}
+                            />
+                        );
+                    })}
+                </div>
+                <div className="middle">
+                    <FolderInfo
+                        path={
+                            folderData?.path
+                                ? folderData.path
+                                : "Select a folder..."
+                        }
+                        name={
+                            folderData?.name
+                                ? folderData.name
+                                : "Select a folder"
+                        }
+                    />
+                    <div className="files">
+                        {folderData?.childType === "File"
+                            ? folderData?.children.map((file) => (
+                                  <FileDisplay file={file} key={file._id} />
+                              ))
+                            : folderData?.children.map((folder) => (
+                                  <BrowseFolder
+                                      type="folder"
+                                      key={folder._id}
+                                      path={folder.path}
+                                      name={folder.name}
+                                      subject={folder.course}
+                                      folderData={folder}
+                                  />
+                              ))}
+                    </div>
+                </div>
+                <div className="right">
+                    {/* <span className="year-title">YEAR</span> */}
+                    <div className="year-content">
+                        {currCourse &&
+                            currCourse.map((course, idx) => {
+                                // console.log(course);
+                                return (
+                                    <span
+                                        className={`year ${
+                                            currYear === idx ? "selected" : ""
+                                        }`}
+                                        onClick={() => {
+                                            dispatch(
+                                                ChangeCurrentYearData(
+                                                    idx,
+                                                    currCourse[idx].children
+                                                )
+                                            );
+                                            dispatch(
+                                                ChangeFolder(currCourse[idx])
+                                            );
+                                        }}
+                                        key={idx}
+                                    >
+                                        {course.name}
+                                    </span>
+                                );
+                            })}
+                    </div>
+                </div>
+            </div>
+        </Container>
+    );
 };
 
 export default BrowseScreen;
 
 {
-	/* <Collapsible color={"#7DDEFF"} />
+    /* <Collapsible color={"#7DDEFF"} />
 					<Collapsible color={"#EDF492"} />
 					<Collapsible color={"#FFA7D4"} state={true} />
 					<Collapsible color={"#6F8FFE"} />
