@@ -20,6 +20,10 @@ const BrowseScreen = () => {
 
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
 
+    // useEffect(() => {
+    //     console.log(user);
+    // }, [user]);
+
     const dispatch = useDispatch();
     useEffect(() => {
         if (localStorage.getItem("AllCourses") !== null) {
@@ -52,7 +56,11 @@ const BrowseScreen = () => {
                     <div className="files">
                         {folderData?.childType === "File"
                             ? folderData?.children.map((file) => (
-                                  <FileDisplay file={file} key={file._id} />
+                                  <FileDisplay
+                                      file={file}
+                                      key={file._id}
+                                      path={folderData?.path ? folderData.path : "root"}
+                                  />
                               ))
                             : folderData?.children.map((folder) => (
                                   <BrowseFolder

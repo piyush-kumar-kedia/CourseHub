@@ -41,25 +41,14 @@ const Dashboard = () => {
                             color={"light"}
                         />
                         <SubHeading
-                            text={formatBranch(
-                                user?.user?.degree,
-                                user?.user?.branch
-                            )}
+                            text={formatBranch(user?.user?.degree, user?.user?.branch)}
                             color={"light"}
                         />
                     </div>
 
                     <div className="exam-card-container">
-                        <ExamCard
-                            days={22}
-                            name={"Mid-Sem Exam"}
-                            color={"#FECF6F"}
-                        />
-                        <ExamCard
-                            days={45}
-                            name={"End-Sem Exam"}
-                            color={"#FECF6F"}
-                        />
+                        <ExamCard days={22} name={"Mid-Sem Exam"} color={"#FECF6F"} />
+                        <ExamCard days={45} name={"End-Sem Exam"} color={"#FECF6F"} />
                     </div>
                 </div>
                 <Space amount={50} />
@@ -84,7 +73,7 @@ const Dashboard = () => {
             <Container>
                 <SubHeading text={"MY FAVOURITES"} type={"bold"} />
                 <div className="fav-container">
-                    <FavouriteCard type={"folder"} color={""} />
+                    {/* <FavouriteCard type={"folder"} color={""} />
                     <FavouriteCard
                         type={"file"}
                         color={""}
@@ -98,7 +87,16 @@ const Dashboard = () => {
                         path={"Lecture Slides"}
                         name={"Premidsem"}
                         subject={"Green Chemistry"}
-                    />
+                    /> */}
+                    {user?.favourites?.length > 0
+                        ? user.favourites.map((favourite) => (
+                              <FavouriteCard
+                                  name={favourite.name}
+                                  path={favourite.path}
+                                  key={favourite.id}
+                              />
+                          ))
+                        : "no favs"}
                 </div>
             </Container>
             <Footer />
