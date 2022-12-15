@@ -6,17 +6,15 @@ import AppError from "../../utils/appError.js";
 import settings from "../../config/onedrive.js";
 import fs from "fs";
 
-import CourseModel, {
-    FolderModel,
-    FileModel,
-} from "../../models/course.model.js";
+import CourseModel, { FolderModel, FileModel } from "../../models/course.model.js";
 import path from "path";
 
 const router = express.Router();
 
-const drive_id =
-    "b!pxmuhRkkIESn1NJOh3iVay2m314xO8NGtXVieZjVnTQBFLWQU0FfSqSeomGkWOvO";
+const drive_id = "b!pxmuhRkkIESn1NJOh3iVay2m314xO8NGtXVieZjVnTQBFLWQU0FfSqSeomGkWOvO";
 const coursehub_id = "01OXYV37Y64PLOWXJRRBGKGSMVOFLO3OPZ";
+
+import { UploadImage } from "../../services/UploadImage.js";
 
 router.get(
     "/generatedevicecode",
@@ -43,11 +41,7 @@ router.get(
 
         console.log(response.data.user_code);
 
-        fs.writeFileSync(
-            "./onedrive-device-code.token",
-            response.data.device_code,
-            "utf-8"
-        );
+        fs.writeFileSync("./onedrive-device-code.token", response.data.device_code, "utf-8");
         fs.unlinkSync("./onedrive-access-token.token");
         fs.unlinkSync("./onedrive-refresh-token.token");
 
@@ -120,17 +114,17 @@ router.get(
     })
 );
 
-async function getThumbnail(item_id) {
-    var access_token = await getAccessToken();
-    var headers = {
-        Authorization: `Bearer ${access_token}`,
-        Host: "graph.microsoft.com",
-    };
-    var url = `https://graph.microsoft.com/v1.0/me/drive/items/${item_id}/thumbnails`;
-    var data = await getRequest(url, headers);
-    // console.log(data);
-    return data;
-}
+// async function getThumbnail(item_id) {
+//     var access_token = await getAccessToken();
+//     var headers = {
+//         Authorization: `Bearer ${access_token}`,
+//         Host: "graph.microsoft.com",
+//     };
+//     var url = `https://graph.microsoft.com/v1.0/me/drive/items/${item_id}/thumbnails`;
+//     var data = await getRequest(url, headers);
+//     // console.log(data);
+//     return data;
+// }
 
 async function getFileDownloadLink(file_id) {
     var access_token = await getAccessToken();
@@ -194,10 +188,7 @@ async function visitCourseById(id) {
     var children = data.value;
     const required_course = children.find((course) => course.id === id);
     if (!required_course) throw new AppError(404, "Not Found!");
-    const folder_data = await visitFolder(
-        required_course,
-        required_course.name.toLowerCase()
-    );
+    const folder_data = await visitFolder(required_course, required_course.name.toLowerCase());
 
     await CourseModel.create({
         name: folder_data.name,
@@ -214,7 +205,7 @@ async function visitFolder(folder, currCourse, prevFolder) {
         Authorization: `Bearer ${access_token}`,
         Host: "graph.microsoft.com",
     };
-    var url = `https://graph.microsoft.com/v1.0/me/drive/items/${folder.id}/children`;
+    var url = `https://graph.microsoft.com/v1.0/me/drive/items/${folder.id}/children?$expand=thumbnails`;
     var data = await getRequest(url, headers);
     var children = data.value;
     var childType = "File";
@@ -254,8 +245,9 @@ async function visitFile(file, currCourse) {
         downloadUrl: file["@microsoft.graph.downloadUrl"],
         webUrl: file.webUrl,
     };
-    const thumbnail = await getThumbnail(file.id);
+    // const thumbnail = await getThumbnail(file.id);
 
+    const uploadedImage = await UploadImage(file?.thumbnails[0]?.medium?.url, file.id);
     //make mongoose file
     const NewFile = await FileModel.create({
         course: currCourse,
@@ -263,9 +255,7 @@ async function visitFile(file, currCourse) {
         id: file.id,
         // webUrl: file.webUrl,
         size: file.size * 0.000001,
-        thumbnail: thumbnail?.value[0]?.large?.url
-            ? thumbnail?.value[0]?.large?.url
-            : "null",
+        thumbnail: uploadedImage?.url ? uploadedImage.url : "null",
         // downloadUrl: file["@microsoft.graph.downloadUrl"],
     });
     return NewFile._id;
@@ -302,10 +292,7 @@ async function refreshAccessToken() {
     var data = qs.stringify({
         tenant: settings.tenantId,
         client_id: settings.clientId,
-        refresh_token: `${fs.readFileSync(
-            "./onedrive-refresh-token.token",
-            "utf-8"
-        )}`,
+        refresh_token: `${fs.readFileSync("./onedrive-refresh-token.token", "utf-8")}`,
         grant_type: "refresh_token",
     });
 
@@ -324,16 +311,8 @@ async function refreshAccessToken() {
 
     if (!response.data) throw new AppError(500, "Something went wrong");
 
-    fs.writeFileSync(
-        "./onedrive-access-token.token",
-        response.data.access_token,
-        "utf-8"
-    );
-    fs.writeFileSync(
-        "./onedrive-refresh-token.token",
-        response.data.refresh_token,
-        "utf-8"
-    );
+    fs.writeFileSync("./onedrive-access-token.token", response.data.access_token, "utf-8");
+    fs.writeFileSync("./onedrive-refresh-token.token", response.data.refresh_token, "utf-8");
 
     return response.data;
 }
@@ -342,10 +321,7 @@ async function generateAccessToken() {
     var data = qs.stringify({
         tenant: settings.tenantId,
         client_id: settings.clientId,
-        device_code: `${fs.readFileSync(
-            "./onedrive-device-code.token",
-            "utf-8"
-        )}`,
+        device_code: `${fs.readFileSync("./onedrive-device-code.token", "utf-8")}`,
         grant_type: "urn:ietf:params:oauth:grant-type:device_code",
     });
 
@@ -364,16 +340,8 @@ async function generateAccessToken() {
     if (!response.data) throw new AppError(500, "Something went wrong");
     //console.log(response.data);
 
-    fs.writeFileSync(
-        "./onedrive-access-token.token",
-        response.data.access_token,
-        "utf-8"
-    );
-    fs.writeFileSync(
-        "./onedrive-refresh-token.token",
-        response.data.refresh_token,
-        "utf-8"
-    );
+    fs.writeFileSync("./onedrive-access-token.token", response.data.access_token, "utf-8");
+    fs.writeFileSync("./onedrive-refresh-token.token", response.data.refresh_token, "utf-8");
 
     return response.data;
 }
