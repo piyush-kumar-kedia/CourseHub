@@ -98,33 +98,25 @@ router.get(
     catchAsync(async (req, res, next) => {
         const resp = await getFileDownloadLink(req.params.id);
         res.json(resp);
-        // res.json({
-        // 	downloadUrl: resp["@microsoft.graph.downloadUrl"],
-        // 	webUrl: resp.webUrl,
-        // });
     })
 );
 
 router.get(
-    "/thumbnails/:fileID",
+    "/weburl/:fileID",
     catchAsync(async (req, res, next) => {
         const { fileID } = req.params;
-        const resp = await getThumbnail(fileID);
-        res.json(resp);
+        const resp = await getFileWebUrl(fileID);
+        res.json({ url: resp });
     })
 );
-
-// async function getThumbnail(item_id) {
-//     var access_token = await getAccessToken();
-//     var headers = {
-//         Authorization: `Bearer ${access_token}`,
-//         Host: "graph.microsoft.com",
-//     };
-//     var url = `https://graph.microsoft.com/v1.0/me/drive/items/${item_id}/thumbnails`;
-//     var data = await getRequest(url, headers);
-//     // console.log(data);
-//     return data;
-// }
+router.get(
+    "/download/:fileID",
+    catchAsync(async (req, res, next) => {
+        const { fileID } = req.params;
+        const resp = await getFileDownloadLink(fileID);
+        res.json({ url: resp });
+    })
+);
 
 async function getFileDownloadLink(file_id) {
     var access_token = await getAccessToken();
@@ -134,7 +126,19 @@ async function getFileDownloadLink(file_id) {
     };
     var url = `https://graph.microsoft.com/v1.0/me/drive/items/${file_id}`;
     var data = await getRequest(url, headers);
-    return data;
+    return data["@microsoft.graph.downloadUrl"];
+}
+async function getFileWebUrl(file_id) {
+    var access_token = await getAccessToken();
+    var headers = {
+        Authorization: `Bearer ${access_token}`,
+        Host: "graph.microsoft.com",
+    };
+
+    var url = `https://graph.microsoft.com/v1.0/me/drive/items/${file_id}/createLink`;
+
+    var data = await postRequest(url, headers);
+    return data.link.webUrl;
 }
 
 async function getAllCourseIds() {

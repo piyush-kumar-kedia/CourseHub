@@ -1,6 +1,15 @@
 import "./styles.scss";
-
-const FavouriteCard = ({ type = "file", color, path, name, subject, code }) => {
+import { previewFile } from "../../../../api/File";
+import { toast } from "react-toastify";
+const FavouriteCard = ({ type = "file", color, path, name, subject, code, id }) => {
+    const handlePreview = async () => {
+        const response = await toast.promise(previewFile(id), {
+            pending: "Generating preview link...",
+            success: "Success!.",
+            error: "Something went wrong!",
+        });
+        window.open(response.url, "_blank");
+    };
     return (
         <div className="fav-card">
             {type === "folder" ? (
@@ -80,7 +89,7 @@ const FavouriteCard = ({ type = "file", color, path, name, subject, code }) => {
                     />
                 </svg>
             )}
-            <div className="content">
+            <div className="content" onClick={handlePreview}>
                 <div className="top">
                     <p className="path">{path ? path : "Path"}</p>
                     <p className="name">{name ? name : "Name"}</p>

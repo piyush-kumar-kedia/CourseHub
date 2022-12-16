@@ -4,6 +4,8 @@ import { AddToFavourites } from "../../../../api/User";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { UpdateFavourites } from "../../../../actions/user_actions";
+import { donwloadFile, previewFile } from "../../../../api/File";
+
 const FileDisplay = ({ file, path, code }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
@@ -11,8 +13,22 @@ const FileDisplay = ({ file, path, code }) => {
 
     const dispatch = useDispatch();
 
-    const handleDownload = () => {
-        return;
+    const handleDownload = async () => {
+        const response = await toast.promise(donwloadFile(file.id), {
+            pending: "Generating download link...",
+            success: "Downloading file....",
+            error: "Something went wrong!",
+        });
+        window.open(response.url, "_blank");
+    };
+
+    const handlePreview = async () => {
+        const response = await toast.promise(previewFile(file.id), {
+            pending: "Generating preview link...",
+            success: "Success!",
+            error: "Something went wrong!",
+        });
+        window.open(response.url, "_blank");
     };
 
     const handleAddToFavourites = async () => {
@@ -43,7 +59,9 @@ const FileDisplay = ({ file, path, code }) => {
                         }}
                     ></span>
                 </div>
-                <div className="view">View</div>
+                <div className="view" onClick={handlePreview}>
+                    View
+                </div>
             </div>
             <div className="content">
                 <p className="title">{file?.name ? name : "Quiz 1 Answer Key"}</p>

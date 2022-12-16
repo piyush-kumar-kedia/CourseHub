@@ -10,12 +10,13 @@ import ContributionBanner from "./components/contributionbanner";
 import Footer from "../../components/footer";
 import FavouriteCard from "./components/favouritecard";
 
-import { ChangeCurrentCourse } from "../../actions/filebrowser_actions";
+import { ChangeCurrentCourse, ResetFileBrowserState } from "../../actions/filebrowser_actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import formatName from "../../utils/formatName";
 import formatBranch from "../../utils/formatBranch";
+import { useEffect } from "react";
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -26,6 +27,10 @@ const Dashboard = () => {
         // dispatch(ChangeCurrentCourse(code));
         navigate("/browse");
     };
+
+    useEffect(() => {
+        dispatch(ResetFileBrowserState());
+    }, []);
 
     return (
         <div className="App">
@@ -95,6 +100,7 @@ const Dashboard = () => {
                                   path={favourite.path}
                                   key={favourite.id}
                                   code={favourite.code}
+                                  id={favourite.id}
                               />
                           ))
                         : "no favs"}

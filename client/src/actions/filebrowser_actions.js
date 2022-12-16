@@ -42,3 +42,8 @@ export const ChangeCurrentYearData = (_currYear, _folderStructure) => {
         },
     };
 };
+export const ResetFileBrowserState = () => {
+    return {
+        type: "RESET_FILE_BROWSER_STATE",
+    };
+};

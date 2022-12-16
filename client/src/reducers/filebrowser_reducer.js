@@ -36,6 +36,14 @@ const FileBrowserReducer = (
                 currentYear: action.payload.currentYear,
                 currentYearFolderStructure: [...action.payload.currentYearFolderStructure],
             };
+        case "RESET_FILE_BROWSER_STATE":
+            return {
+                ...state,
+                currentCourse: null,
+                currentCourseCode: null,
+                currentFolder: null,
+                currentYear: null,
+            };
         default:
             return state;
     }
