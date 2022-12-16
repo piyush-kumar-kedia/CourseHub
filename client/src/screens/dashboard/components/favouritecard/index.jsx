@@ -1,6 +1,7 @@
 import "./styles.scss";
 import { previewFile } from "../../../../api/File";
 import { toast } from "react-toastify";
+import { formatFileName } from "../../../../utils/formatFile";
 const FavouriteCard = ({ type = "file", color, path, name, subject, code, id }) => {
     const handlePreview = async () => {
         const response = await toast.promise(previewFile(id), {
@@ -92,7 +93,7 @@ const FavouriteCard = ({ type = "file", color, path, name, subject, code, id }) 
             <div className="content" onClick={handlePreview}>
                 <div className="top">
                     <p className="path">{path ? path : "Path"}</p>
-                    <p className="name">{name ? name : "Name"}</p>
+                    <p className="name">{name ? formatFileName(name) : "Name"}</p>
                 </div>
                 <div className="bottom">
                     <p className="subject">{code ? code : ""}</p>
