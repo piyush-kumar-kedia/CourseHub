@@ -15,9 +15,15 @@ export const createUser = async (req, res) => {
 
 export const addToFavouriteController = async (req, res, next) => {
     const data = req.body;
-    if (!data.id || !data.name || !data.path) return res.sendStatus(400);
+    if (!data.id || !data.name || !data.path || !data.code) return res.sendStatus(400);
     //validate
-    const updatedUser = await addToFavourites(req.user._id, data.name, data.id, data.path);
+    const updatedUser = await addToFavourites(
+        req.user._id,
+        data.name,
+        data.id,
+        data.path,
+        data.code
+    );
     return res.status(200).json(updatedUser);
 };
 

@@ -18,6 +18,7 @@ const userSchema = Schema({
             name: { type: String, required: true },
             id: { type: String, required: true, unique: true },
             path: { type: String, required: true },
+            code: { type: String, required: true },
         },
     ],
 });
@@ -90,7 +91,7 @@ export const findUserWithEmail = async function (email) {
     return user;
 };
 
-export const addToFavourites = async (userid, name, id, path) => {
+export const addToFavourites = async (userid, name, id, path, code) => {
     const UserData = await User.findById(userid);
     const favs = UserData.favourites;
     const found = favs.find((item) => item.id === id);
@@ -99,6 +100,7 @@ export const addToFavourites = async (userid, name, id, path) => {
         name: name,
         id: id,
         path: path,
+        code: code,
     });
     const updatedUser = await UserData.save();
     return updatedUser;
