@@ -1,14 +1,43 @@
 import "./styles.scss";
 import { formatFileName, formatFileSize, formatFileType } from "../../../../utils/formatFile";
+import { AddToFavourites } from "../../../../api/User";
 import { toast } from "react-toastify";
-const FileDisplay = ({ file }) => {
+import { useDispatch } from "react-redux";
+import { UpdateFavourites } from "../../../../actions/user_actions";
+import { donwloadFile, previewFile } from "../../../../api/File";
+
+const FileDisplay = ({ file, path, code }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
     const name = formatFileName(file.name);
 
-    const handleDownload = () => {
-        return;
+    const dispatch = useDispatch();
+
+    const handleDownload = async () => {
+        const response = await toast.promise(donwloadFile(file.id), {
+            pending: "Generating download link...",
+            success: "Downloading file....",
+            error: "Something went wrong!",
+        });
+        window.open(response.url, "_blank");
     };
+
+    const handlePreview = async () => {
+        const response = await toast.promise(previewFile(file.id), {
+            pending: "Generating preview link...",
+            success: "Success!",
+            error: "Something went wrong!",
+        });
+        window.open(response.url, "_blank");
+    };
+
+    const handleAddToFavourites = async () => {
+        const resp = await AddToFavourites(file.id, file.name, path, code);
+        if (resp?.data?.favourites) {
+            dispatch(UpdateFavourites(resp?.data?.favourites));
+        }
+    };
+
     return (
         <div className="file-display">
             <div
@@ -25,11 +54,14 @@ const FileDisplay = ({ file }) => {
                     <span
                         className="star"
                         onClick={() => {
+                            handleAddToFavourites();
                             toast("Added to favourites.");
                         }}
                     ></span>
                 </div>
-                <div className="view">View</div>
+                <div className="view" onClick={handlePreview}>
+                    View
+                </div>
             </div>
             <div className="content">
                 <p className="title">{file?.name ? name : "Quiz 1 Answer Key"}</p>

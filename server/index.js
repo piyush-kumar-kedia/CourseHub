@@ -27,25 +27,25 @@ app.use("/onedrive/", onedriveRoutes);
 app.use("/course", courseRoutes);
 
 app.use(
-	"/homepage",
-	catchAsync(async (req, res, next) => {
-		let jwtToken = req.cookies.token;
-		const user = await User.findByJWT(jwtToken);
-		if (!user) return res.redirect(config.clientURL);
-		res.json(user);
-	})
+    "/homepage",
+    catchAsync(async (req, res, next) => {
+        let jwtToken = req.cookies.token;
+        const user = await User.findByJWT(jwtToken);
+        if (!user) return res.redirect(config.clientURL);
+        res.json(user);
+    })
 );
 
 // Error handler
 app.use((err, req, res, next) => {
-	// logger.error(err);
-	const { status = 500, message = "Something went wrong!" } = err;
-	return res.status(status).json({
-		error: true,
-		message: message,
-	});
+    logger.error(err);
+    const { status = 500, message = "Something went wrong!" } = err;
+    return res.status(status).json({
+        error: true,
+        message: message,
+    });
 });
 
 app.listen(PORT, () => {
-	logger.info(`Server on PORT ${PORT}`);
+    logger.info(`Server on PORT ${PORT}`);
 });

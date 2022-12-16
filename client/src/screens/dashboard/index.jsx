@@ -10,12 +10,13 @@ import ContributionBanner from "./components/contributionbanner";
 import Footer from "../../components/footer";
 import FavouriteCard from "./components/favouritecard";
 
-import { ChangeCurrentCourse } from "../../actions/filebrowser_actions";
+import { ChangeCurrentCourse, ResetFileBrowserState } from "../../actions/filebrowser_actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import formatName from "../../utils/formatName";
 import formatBranch from "../../utils/formatBranch";
+import { useEffect } from "react";
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -26,6 +27,10 @@ const Dashboard = () => {
         // dispatch(ChangeCurrentCourse(code));
         navigate("/browse");
     };
+
+    useEffect(() => {
+        dispatch(ResetFileBrowserState());
+    }, []);
 
     return (
         <div className="App">
@@ -41,25 +46,14 @@ const Dashboard = () => {
                             color={"light"}
                         />
                         <SubHeading
-                            text={formatBranch(
-                                user?.user?.degree,
-                                user?.user?.branch
-                            )}
+                            text={formatBranch(user?.user?.degree, user?.user?.branch)}
                             color={"light"}
                         />
                     </div>
 
                     <div className="exam-card-container">
-                        <ExamCard
-                            days={22}
-                            name={"Mid-Sem Exam"}
-                            color={"#FECF6F"}
-                        />
-                        <ExamCard
-                            days={45}
-                            name={"End-Sem Exam"}
-                            color={"#FECF6F"}
-                        />
+                        <ExamCard days={22} name={"Mid-Sem Exam"} color={"#FECF6F"} />
+                        <ExamCard days={45} name={"End-Sem Exam"} color={"#FECF6F"} />
                     </div>
                 </div>
                 <Space amount={50} />
@@ -84,7 +78,7 @@ const Dashboard = () => {
             <Container>
                 <SubHeading text={"MY FAVOURITES"} type={"bold"} />
                 <div className="fav-container">
-                    <FavouriteCard type={"folder"} color={""} />
+                    {/* <FavouriteCard type={"folder"} color={""} />
                     <FavouriteCard
                         type={"file"}
                         color={""}
@@ -98,7 +92,18 @@ const Dashboard = () => {
                         path={"Lecture Slides"}
                         name={"Premidsem"}
                         subject={"Green Chemistry"}
-                    />
+                    /> */}
+                    {user?.favourites?.length > 0
+                        ? user.favourites.map((favourite) => (
+                              <FavouriteCard
+                                  name={favourite.name}
+                                  path={favourite.path}
+                                  key={favourite.id}
+                                  code={favourite.code}
+                                  id={favourite.id}
+                              />
+                          ))
+                        : "no favs"}
                 </div>
             </Container>
             <Footer />

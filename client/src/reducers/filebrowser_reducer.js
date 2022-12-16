@@ -22,7 +22,7 @@ const FileBrowserReducer = (
         case "UPDATE_COURSES":
             let arr = state.allCourseData;
             arr.push(action.payload.currentCourse);
-            console.log(arr);
+
             localStorage.setItem("AllCourses", JSON.stringify(arr));
             return {
                 ...state,
@@ -34,9 +34,15 @@ const FileBrowserReducer = (
             return {
                 ...state,
                 currentYear: action.payload.currentYear,
-                currentYearFolderStructure: [
-                    ...action.payload.currentYearFolderStructure,
-                ],
+                currentYearFolderStructure: [...action.payload.currentYearFolderStructure],
+            };
+        case "RESET_FILE_BROWSER_STATE":
+            return {
+                ...state,
+                currentCourse: null,
+                currentCourseCode: null,
+                currentFolder: null,
+                currentYear: null,
             };
         default:
             return state;
