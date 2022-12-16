@@ -94,6 +94,7 @@ const Dashboard = () => {
                                   name={favourite.name}
                                   path={favourite.path}
                                   key={favourite.id}
+                                  code={favourite.code}
                               />
                           ))
                         : "no favs"}

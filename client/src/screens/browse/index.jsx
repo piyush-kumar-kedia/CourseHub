@@ -17,6 +17,7 @@ const BrowseScreen = () => {
     const user = useSelector((state) => state.user);
     const folderData = useSelector((state) => state.fileBrowser.currentFolder);
     const currCourse = useSelector((state) => state.fileBrowser.currentCourse);
+    const currCourseCode = useSelector((state) => state.fileBrowser.currentCourseCode);
 
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
 
@@ -60,6 +61,7 @@ const BrowseScreen = () => {
                                       file={file}
                                       key={file._id}
                                       path={folderData?.path ? folderData.path : "root"}
+                                      code={currCourseCode}
                                   />
                               ))
                             : folderData?.children.map((folder) => (

@@ -4,7 +4,7 @@ import { AddToFavourites } from "../../../../api/User";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { UpdateFavourites } from "../../../../actions/user_actions";
-const FileDisplay = ({ file, path }) => {
+const FileDisplay = ({ file, path, code }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
     const name = formatFileName(file.name);
@@ -16,7 +16,7 @@ const FileDisplay = ({ file, path }) => {
     };
 
     const handleAddToFavourites = async () => {
-        const resp = await AddToFavourites(file.id, file.name, path);
+        const resp = await AddToFavourites(file.id, file.name, path, code);
         if (resp?.data?.favourites) {
             dispatch(UpdateFavourites(resp?.data?.favourites));
         }
