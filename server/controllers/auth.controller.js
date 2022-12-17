@@ -72,6 +72,22 @@ const fetchCourses = async (rollNumber) => {
         });
     return courses;
 };
+const getDepartment = async (access_token) => {
+    var config = {
+        method: "get",
+        url: "https://graph.microsoft.com/beta/me/profile",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+            Host: "graph.microsoft.com",
+            Authorization: `Bearer ${access_token}`,
+        },
+    };
+    const response = await axios.get(config.url, {
+        headers: config.headers,
+    });
+    return response.data.positions[0].detail.company.department;
+};
 
 export const redirectHandler = async (req, res, next) => {
     const { code } = req.query;
@@ -114,6 +130,8 @@ export const redirectHandler = async (req, res, next) => {
 
     if (!existingUser) {
         const courses = await fetchCourses(userFromToken.data.surname);
+        const department = await getDepartment(AccessToken);
+
         const userData = {
             name: userFromToken.data.displayName,
             degree: userFromToken.data.jobTitle,
@@ -122,6 +140,7 @@ export const redirectHandler = async (req, res, next) => {
             branch: calculateBranch(roll), //calculate branch
             semester: 2, //calculate sem
             courses: courses,
+            department: department,
         };
 
         const { error } = validateUser(userData);

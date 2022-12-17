@@ -13,6 +13,7 @@ const userSchema = Schema({
     degree: { type: String, required: true },
     courses: { type: Array, default: [], required: true },
     // contri
+    department: { type: String, required: true },
     favourites: [
         {
             name: { type: String, required: true },
@@ -56,6 +57,7 @@ export const validateUser = function (obj) {
         semester: Joi.number().required(),
         degree: Joi.string().required(),
         courses: Joi.array().required(),
+        department: Joi.string().required(),
     });
     return joiSchema.validate(obj);
 };
