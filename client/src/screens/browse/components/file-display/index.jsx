@@ -17,11 +17,14 @@ const FileDisplay = ({ file, path, code }) => {
     const urls = useSelector((state) => state.URLS);
 
     const handleDownload = async () => {
+        const openedWindow = window.open("", "_blank");
+        openedWindow.document.write("Downloading...");
         const existingUrl = urls.downloadUrls.find((data) => data.id === file.id);
         // console.log(existingUrl);
         if (existingUrl) {
-            toast.success("Downloading...");
-            window.open(existingUrl.url, "_blank");
+            // toast.success("Downloading...");
+            // window.open(existingUrl.url, "_blank");
+            openedWindow.location.href = existingUrl.url;
             return;
         }
         const response = await toast.promise(donwloadFile(file.id), {
@@ -30,14 +33,18 @@ const FileDisplay = ({ file, path, code }) => {
             error: "Something went wrong!",
         });
         dispatch(AddDownloadUrl(file.id, response.url));
-        window.open(response.url, "_blank");
+        // window.open(response.url, "_blank");
+        openedWindow.location.href = response.url;
     };
 
     const handlePreview = async () => {
+        const openedWindow = window.open("", "_blank");
+        openedWindow.document.write("Loading preview...");
         const existingUrl = urls.previewUrls.find((data) => data.id === file.id);
         // console.log(existingUrl);
         if (existingUrl) {
-            window.open(existingUrl.url, "_blank");
+            // window.open(existingUrl.url, "_blank");
+            openedWindow.location.href = existingUrl.url;
             return;
         }
         const response = await toast.promise(previewFile(file.id), {
@@ -46,7 +53,8 @@ const FileDisplay = ({ file, path, code }) => {
             error: "Something went wrong!",
         });
         dispatch(AddPreviewUrl(file.id, response.url));
-        window.open(response.url, "_blank");
+        // window.open(response.url, "_blank");
+        openedWindow.location.href = response.url;
     };
 
     const handleAddToFavourites = async () => {
