@@ -21,6 +21,12 @@ const BrowseScreen = () => {
 
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
 
+    // const urls = useSelector((state) => state.URLS);
+
+    // useEffect(() => {
+    //     console.log(urls);
+    // }, [urls]);
+    // console.log(urls);
     // useEffect(() => {
     //     console.log(user);
     // }, [user]);
