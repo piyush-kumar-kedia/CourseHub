@@ -1,9 +1,9 @@
-export const ChangeCurrentCourse = (courseCode, courseCodeCode) => {
+export const ChangeCurrentCourse = (courseData, courseCode) => {
     return {
         type: "CHANGE_CURRENT_COURSE",
         payload: {
-            currentCourse: courseCode,
-            currentCourseCode: courseCodeCode,
+            currentCourse: courseData,
+            currentCourseCode: courseCode,
         },
     };
 };

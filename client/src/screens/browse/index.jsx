@@ -18,7 +18,7 @@ const BrowseScreen = () => {
     const folderData = useSelector((state) => state.fileBrowser.currentFolder);
     const currCourse = useSelector((state) => state.fileBrowser.currentCourse);
     const currCourseCode = useSelector((state) => state.fileBrowser.currentCourseCode);
-
+    // console.log(currCourse);
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
 
     // const urls = useSelector((state) => state.URLS);
@@ -32,16 +32,6 @@ const BrowseScreen = () => {
     // }, [user]);
 
     const dispatch = useDispatch();
-    useEffect(() => {
-        if (localStorage.getItem("AllCourses") !== null) {
-            try {
-                dispatch(LoadCourses(JSON.parse(localStorage.getItem("AllCourses"))));
-            } catch (error) {
-                dispatch(LoadCourses([]));
-                console.log("load error");
-            }
-        }
-    }, []);
 
     return (
         <Container color={"light"} type={"fluid"}>

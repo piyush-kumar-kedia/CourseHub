@@ -17,16 +17,29 @@ import { useNavigate } from "react-router-dom";
 import formatName from "../../utils/formatName";
 import formatBranch from "../../utils/formatBranch";
 import { useEffect } from "react";
-
+import { getColors } from "../../utils/colors";
+import { LoadCourses } from "../../actions/filebrowser_actions";
 const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
 
+    useEffect(() => {
+        if (localStorage.getItem("AllCourses") !== null) {
+            try {
+                dispatch(LoadCourses(JSON.parse(localStorage.getItem("AllCourses"))));
+            } catch (error) {
+                dispatch(LoadCourses([]));
+                console.log("load error");
+            }
+        }
+    }, []);
+
     const handleClick = (code) => {
-        // dispatch(ChangeCurrentCourse(code));
+        dispatch(ChangeCurrentCourse(null, code.toUpperCase()));
         navigate("/browse");
     };
+    // console.log(user);
 
     useEffect(() => {
         dispatch(ResetFileBrowserState());
@@ -66,6 +79,15 @@ const Dashboard = () => {
                             code={course?.code?.toUpperCase()}
                             name={course.name}
                             color={course.color}
+                            setClicked={() => handleClick(course.code)}
+                        />
+                    ))}
+                    {user.user.courses.map((course, index) => (
+                        <CourseCard
+                            key={course.name}
+                            code={course?.code?.toUpperCase()}
+                            name={course.name}
+                            color={getColors(index)}
                             setClicked={() => handleClick(course.code)}
                         />
                     ))}
