@@ -46,7 +46,7 @@ const Dashboard = () => {
                             color={"light"}
                         />
                         <SubHeading
-                            text={formatBranch(user?.user?.degree, user?.user?.branch)}
+                            text={formatBranch(user?.user?.degree, user?.user?.department)}
                             color={"light"}
                         />
                     </div>

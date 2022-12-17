@@ -16,10 +16,10 @@ const userSchema = Schema({
     department: { type: String, required: true },
     favourites: [
         {
-            name: { type: String, required: true },
-            id: { type: String, required: true, unique: true },
-            path: { type: String, required: true },
-            code: { type: String, required: true },
+            name: { type: String },
+            id: { type: String, unique: true },
+            path: { type: String },
+            code: { type: String },
         },
     ],
 });
