@@ -18,43 +18,49 @@ const FileDisplay = ({ file, path, code }) => {
 
     const handleDownload = async () => {
         const openedWindow = window.open("", "_blank");
-        openedWindow.document.write("Downloading...");
+        openedWindow.document.write("Please close this window after download starts.");
         const existingUrl = urls.downloadUrls.find((data) => data.id === file.id);
-        // console.log(existingUrl);
         if (existingUrl) {
-            // toast.success("Downloading...");
-            // window.open(existingUrl.url, "_blank");
             openedWindow.location.href = existingUrl.url;
             return;
         }
-        const response = await toast.promise(donwloadFile(file.id), {
+        const response = donwloadFile(file.id);
+        toast.promise(response, {
             pending: "Generating download link...",
             success: "Downloading file....",
             error: "Something went wrong!",
         });
-        dispatch(AddDownloadUrl(file.id, response.url));
-        // window.open(response.url, "_blank");
-        openedWindow.location.href = response.url;
+        response
+            .then((data) => {
+                dispatch(AddDownloadUrl(file.id, data.url));
+                openedWindow.location.href = data.url;
+            })
+            .catch(() => {
+                openedWindow.close();
+            });
     };
 
     const handlePreview = async () => {
         const openedWindow = window.open("", "_blank");
         openedWindow.document.write("Loading preview...");
         const existingUrl = urls.previewUrls.find((data) => data.id === file.id);
-        // console.log(existingUrl);
         if (existingUrl) {
-            // window.open(existingUrl.url, "_blank");
             openedWindow.location.href = existingUrl.url;
             return;
         }
-        const response = await toast.promise(previewFile(file.id), {
-            pending: "Generating preview link...",
-            success: "Success!",
+        const response = previewFile(file.id);
+        toast.promise(response, {
+            pending: "Loading preview...",
             error: "Something went wrong!",
         });
-        dispatch(AddPreviewUrl(file.id, response.url));
-        // window.open(response.url, "_blank");
-        openedWindow.location.href = response.url;
+        response
+            .then((data) => {
+                dispatch(AddPreviewUrl(file.id, data.url));
+                openedWindow.location.href = data.url;
+            })
+            .catch(() => {
+                openedWindow.close();
+            });
     };
 
     const handleAddToFavourites = async () => {
