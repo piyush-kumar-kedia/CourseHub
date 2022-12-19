@@ -1,5 +1,5 @@
-$small: 750px;
-$medium: 1050px;
+$small: 850px;
+$medium: 1250px;
 .contributionbanner{
     background-color: #FECF6F;
     background-image: url(contribute.svg), none;
@@ -35,14 +35,14 @@ $medium: 1050px;
             justify-content: center;
             align-items: center;
             .upwings{
-                height: 60px;
+                height: 40px;
                 background: url(./components/button/up.svg), none;
                 background-repeat: no-repeat;
                 background-position: center;
                 width: 100%;
             }
             .downwings{
-                height: 60px;
+                height: 40px;
                 background: url(./components/button/down.svg), none;
                 background-repeat: no-repeat;
                 background-position: center;
@@ -50,15 +50,10 @@ $medium: 1050px;
             }
         }
     }
-    @media screen and (max-width: $small) {
-        .content{
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-    }
     @media screen and (max-width: $medium) {
-        background-image: none;
+        
+        background-image: url(contribute_smallscreen.svg), none;
+        
         .content{
             height: 100%;
             justify-content: center;
@@ -74,6 +69,16 @@ $medium: 1050px;
                     display: none;
                 }
             }
+        }
+    }
+    @media screen and (max-width: 950px) {
+        background-image: unset;
+    }
+    @media screen and (max-width: $small) {
+        .content{
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
         }
     }
 }
