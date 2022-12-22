@@ -43,7 +43,7 @@ const Contributions = () => {
                                 class="w-6 h-6"
                             >
                                 <path
-                                    stroke-linecap="round"
+                                    strokeLinecap="round"
                                     stroke-linejoin="round"
                                     d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                                 />

@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { getColors } from "../../utils/colors";
 import { LoadCourses } from "../../actions/filebrowser_actions";
 import Contributions from "../contributions";
+import { AddNewCourseLocal } from "../../actions/user_actions";
 const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -45,7 +46,7 @@ const Dashboard = () => {
         dispatch(ChangeCurrentCourse(null, code.toUpperCase()));
         navigate("/browse");
     };
-    // console.log(user);
+    console.log(user);
 
     useEffect(() => {
         dispatch(ResetFileBrowserState());
@@ -79,15 +80,6 @@ const Dashboard = () => {
                 <SubHeading text={"MY COURSES"} color={"light"} type={"bold"} />
                 <Space amount={20} />
                 <div className="coursecard-container">
-                    {user.myCourses.map((course) => (
-                        <CourseCard
-                            key={course.name}
-                            code={course?.code?.toUpperCase()}
-                            name={course.name}
-                            color={course.color}
-                            setClicked={() => handleClick(course.code)}
-                        />
-                    ))}
                     {user.user.courses.map((course, index) => (
                         <CourseCard
                             key={course.name}
@@ -97,7 +89,22 @@ const Dashboard = () => {
                             setClicked={() => handleClick(course.code)}
                         />
                     ))}
-                    <CourseCard type={"ADD"} />
+                    {user.localCourses.map((course) => (
+                        <CourseCard
+                            key={course.name}
+                            code={course?.code?.toUpperCase()}
+                            name={course.name}
+                            color={course.color}
+                            setClicked={() => handleClick(course.code)}
+                        />
+                    ))}
+                    <CourseCard
+                        type={"ADD"}
+                        setClicked={() => {
+                            dispatch(AddNewCourseLocal());
+                            console.log(user);
+                        }}
+                    />
                 </div>
                 <Space amount={50} />
             </Container>
@@ -106,21 +113,6 @@ const Dashboard = () => {
             <Container>
                 <SubHeading text={"MY FAVOURITES"} type={"bold"} />
                 <div className="fav-container">
-                    {/* <FavouriteCard type={"folder"} color={""} />
-                    <FavouriteCard
-                        type={"file"}
-                        color={""}
-                        path={"Exams > Quiz 1"}
-                        name={"Quiz 1 QP.pdf"}
-                        subject={"Chemical Reaction Engineering"}
-                    />
-                    <FavouriteCard
-                        type={"folder"}
-                        color={"#EDF492"}
-                        path={"Lecture Slides"}
-                        name={"Premidsem"}
-                        subject={"Green Chemistry"}
-                    /> */}
                     {user?.favourites?.length > 0
                         ? user.favourites.map((favourite) => (
                               <FavouriteCard
@@ -131,7 +123,7 @@ const Dashboard = () => {
                                   id={favourite.id}
                               />
                           ))
-                        : "no favs"}
+                        : "No favourites added yet."}
                 </div>
             </Container>
             <Footer />

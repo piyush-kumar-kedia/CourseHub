@@ -7,6 +7,8 @@ import { ChangeCurrentYearData, UpdateCourses } from "../../../../actions/filebr
 import { ChangeFolder, ChangeCurrentCourse } from "../../../../actions/filebrowser_actions";
 import { getCourse } from "../../../../api/Course";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import searchFolderById from "../../../../utils/searchFolderById";
 
 const Collapsible = ({ course, color, state }) => {
     const [open, setOpen] = useState(state ? state : false);
@@ -16,10 +18,12 @@ const Collapsible = ({ course, color, state }) => {
     const folderData = useSelector((state) => state.fileBrowser.currentYearFolderStructure);
     const currCourseCode = useSelector((state) => state.fileBrowser.currentCourseCode);
     const currentYear = useSelector((state) => state.fileBrowser.currentYear);
+    const currentCourse = useSelector((state) => state.fileBrowser.currentCourse);
     const dispatch = useDispatch();
 
     const onClick = () => {
-        setOpen(true);
+        if (initial) triggerGetCourse();
+        setOpen(!open);
     };
 
     const getCurrentCourse = async (code) => {
@@ -33,7 +37,7 @@ const Collapsible = ({ course, color, state }) => {
         if (currCourse) console.log("Already present...");
         if (!currCourse) {
             try {
-                currCourse = await getCourse(code);
+                currCourse = await getCourse(code.toLowerCase());
                 let temp = currCourse;
                 currCourse = temp.data;
             } catch (error) {
@@ -64,7 +68,6 @@ const Collapsible = ({ course, color, state }) => {
                     setInitial(false);
                 } else {
                     try {
-                        // console.log(currentYear);
                         dispatch(
                             ChangeCurrentYearData(currentYear, t.children?.[currentYear].children)
                         );
@@ -81,7 +84,6 @@ const Collapsible = ({ course, color, state }) => {
                         setInitial(false);
                     }
                 }
-                // console.log("t", t);
                 dispatch(ChangeCurrentCourse(t.children, t.name));
             }
         };
@@ -89,12 +91,10 @@ const Collapsible = ({ course, color, state }) => {
     };
 
     const allCourseData = useSelector((state) => state.fileBrowser.allCourseData);
-    // console.log(allCourseData);
 
     useEffect(() => {
-        // console.log(currCourseCode);
-        if (currCourseCode !== course.code.toUpperCase()) setOpen(false);
-        if (currCourseCode === course.code.toUpperCase()) {
+        if (currCourseCode?.toLowerCase() !== course.code.toLowerCase()) setOpen(false);
+        if (currCourseCode?.toLowerCase() === course.code.toLowerCase()) {
             triggerGetCourse();
             setOpen(true);
         }
@@ -107,18 +107,37 @@ const Collapsible = ({ course, color, state }) => {
         }
     }, [currentYear]);
 
+    const { code, folderId } = useParams();
+
+    useEffect(() => {
+        if (initial) return;
+        if (folderId && code === course.code) {
+            console.log(course);
+            try {
+                let searchedFolder = searchFolderById(currentCourse, folderId);
+                console.log(searchedFolder);
+                if (searchedFolder) {
+                    dispatch(ChangeFolder(searchedFolder));
+                    console.log(searchedFolder);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }, [initial]);
+
     return (
         <div className={`collapsible ${open}`}>
             <div className="main" onClick={onClick}>
                 <div className="color" style={{ backgroundColor: color ? color : "#6F8FFE" }}></div>
-                <div className="content" onClick={triggerGetCourse}>
-                    <div className="text">
+                <div className="content">
+                    <div className="text" onClick={triggerGetCourse}>
                         <p className="code">{course.code ? course.code.toUpperCase() : "CL 301"}</p>
                         <p className="name">
                             {course.name ? course.name : "Process Control and Instrumentation"}
                         </p>
                     </div>
-                    <div className="arrow" onClick={() => {}}></div>
+                    <div className="arrow"></div>
                 </div>
             </div>
             <div className="collapsible-content">

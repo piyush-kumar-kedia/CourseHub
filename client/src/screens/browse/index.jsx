@@ -8,37 +8,114 @@ import BrowseFolder from "./components/browsefolder";
 import { useSelector, useDispatch } from "react-redux";
 import NavBarBrowseScreen from "./components/navbar";
 import Contributions from "../contributions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
+    ChangeCurrentCourse,
     ChangeCurrentYearData,
     ChangeFolder,
     LoadCourses,
+    UpdateCourses,
 } from "../../actions/filebrowser_actions";
+import { getColors } from "../../utils/colors";
+import { AddNewCourseLocal, LoginUser, LogoutUser } from "../../actions/user_actions";
+import { getUser } from "../../api/User";
+import { useParams } from "react-router-dom";
+import { getCourse } from "../../api/Course";
+
 const BrowseScreen = () => {
     const user = useSelector((state) => state.user);
     const folderData = useSelector((state) => state.fileBrowser.currentFolder);
     const currCourse = useSelector((state) => state.fileBrowser.currentCourse);
     const currCourseCode = useSelector((state) => state.fileBrowser.currentCourseCode);
-    // console.log(currCourse);
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
     const contributionHandler = (event) => {
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
         contributionSection.classList.add("show");
     };
-
-    // const urls = useSelector((state) => state.URLS);
-
-    // useEffect(() => {
-    //     console.log(urls);
-    // }, [urls]);
-    // console.log(urls);
-    // useEffect(() => {
-    //     console.log(user);
-    // }, [user]);
-
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(true);
+    const { code, folderId } = useParams();
+    const fb = useSelector((state) => state.fileBrowser);
 
+    useEffect(() => {
+        if (localStorage.getItem("AllCourses") !== null) {
+            try {
+                dispatch(LoadCourses(JSON.parse(localStorage.getItem("AllCourses"))));
+            } catch (error) {
+                dispatch(LoadCourses([]));
+                console.log("load error");
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        async function getAuth() {
+            try {
+                const { data } = await getUser();
+                if (!data) {
+                    dispatch(LogoutUser());
+                    setLoading(false);
+                    return;
+                }
+                dispatch(LoginUser(data));
+                setLoading(false);
+            } catch (error) {
+                dispatch(LogoutUser());
+                console.log(error.message);
+                setLoading(false);
+            }
+        }
+        if (!user?.loggedIn) getAuth();
+    }, []);
+
+    useEffect(() => {
+        if (loading || !code) return;
+        const run = async () => {
+            let localStorageCourses = null;
+            let fetchedData = null;
+
+            try {
+                localStorageCourses = JSON.parse(localStorage.getItem("AllCourses"));
+            } catch (error) {
+                localStorageCourses = null;
+            }
+
+            const present = localStorageCourses?.find(
+                (course) => course.code.toLowerCase() === code.toLowerCase()
+            );
+            let root = [];
+            if (present) {
+                console.log("found in localstorage");
+                fetchedData = present;
+                // console.log(fetchedData);
+                root = fetchedData;
+                dispatch(AddNewCourseLocal(fetchedData));
+            } else {
+                fetchedData = await getCourse(code);
+                dispatch(UpdateCourses(fetchedData.data));
+                dispatch(AddNewCourseLocal(fetchedData.data));
+                root = fetchedData.data;
+            }
+            dispatch(ChangeCurrentCourse(null, code));
+            // if (folderId) {
+            //     try {
+            //         let searchedFolder = searchFolderById(root, folderId);
+            //         if (searchedFolder) {
+            //             dispatch(ChangeFolder(searchedFolder));
+            //             console.log(searchedFolder);
+            //         }
+            //     } catch (error) {}
+            // }
+            // console.log(user);
+        };
+        run();
+    }, [loading]);
+
+    useEffect(() => {
+        // console.log(fb);
+        // console.log(user);
+    }, [fb, user]);
     return (
         <Container color={"light"} type={"fluid"}>
             <div className="navbar-browse-screen">
@@ -46,7 +123,10 @@ const BrowseScreen = () => {
             </div>
             <div className="controller">
                 <div className="left">
-                    {user.myCourses.map((course, idx) => {
+                    {user.user?.courses?.map((course, idx) => {
+                        return <Collapsible color={getColors(idx)} key={idx} course={course} />;
+                    })}
+                    {user.localCourses?.map((course, idx) => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
                 </div>
@@ -59,7 +139,7 @@ const BrowseScreen = () => {
                     />
                     <div className="files">
                         {folderData?.childType === "File"
-                            ? folderData?.children.map((file) => (
+                            ? folderData?.children?.map((file) => (
                                   <FileDisplay
                                       file={file}
                                       key={file._id}
@@ -80,11 +160,9 @@ const BrowseScreen = () => {
                     </div>
                 </div>
                 <div className="right">
-                    {/* <span className="year-title">YEAR</span> */}
                     <div className="year-content">
                         {currCourse &&
                             currCourse.map((course, idx) => {
-                                // console.log(course);
                                 return (
                                     <span
                                         className={`year ${currYear === idx ? "selected" : ""}`}
@@ -109,15 +187,3 @@ const BrowseScreen = () => {
 };
 
 export default BrowseScreen;
-
-{
-    /* <Collapsible color={"#7DDEFF"} />
-					<Collapsible color={"#EDF492"} />
-					<Collapsible color={"#FFA7D4"} state={true} />
-					<Collapsible color={"#6F8FFE"} />
-					<Collapsible color={"#EDF492"} />
-					<Collapsible color={"#7DDEFF"} />
-					<Collapsible color={"#6F8FFE"} />
-					<Collapsible color={"#EDF492"} />
-					<Collapsible color={"#7DDEFF"} /> */
-}

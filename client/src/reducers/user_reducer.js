@@ -2,7 +2,7 @@ const UserReducer = (
     state = {
         loggedIn: false,
         user: {},
-        myCourses: [
+        localCourses: [
             {
                 _id: "638f1709897b3c84b7d8d32c",
                 name: "Introduction to Engineering Drawing",
@@ -32,6 +32,10 @@ const UserReducer = (
             return { ...state, loggedIn: false };
         case "UPDATE_FAVOURITES":
             return { ...state, favourites: action.payload.favourites };
+        case "ADD_COURSE_LOCAL":
+            if (state.localCourses.find((course) => course.code === action.payload.course.code))
+                return state;
+            return { ...state, localCourses: [...state.localCourses, action.payload.course] };
         default:
             return state;
     }

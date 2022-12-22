@@ -36,9 +36,13 @@ const App = () => {
             <Router>
                 <Routes>
                     <Route element={<PrivateRoutes />}>
-                        <Route element={<BrowseScreen />} path="/browse" exact />
-                        <Route element={<Dashboard />} path="/dashboard" exact />
-                        <Route element={<ProfilePage />} path="/profile" exact />
+                        <Route element={<Dashboard />} path="dashboard" exact />
+                        <Route element={<ProfilePage />} path="profile" exact />
+                    </Route>
+                    <Route element={<BrowseScreen />} path="browse">
+                        <Route element={<BrowseScreen />} path=":code">
+                            <Route element={<BrowseScreen />} path=":folderId" />
+                        </Route>
                     </Route>
                     <Route element={<LandingPage />} path="/" />
                 </Routes>

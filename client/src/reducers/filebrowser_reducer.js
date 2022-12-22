@@ -21,8 +21,15 @@ const FileBrowserReducer = (
             };
         case "UPDATE_COURSES":
             let arr = state.allCourseData;
-            arr.push(action.payload.currentCourse);
-
+            if (
+                !arr.find(
+                    (course) =>
+                        course.code.toLowerCase() ===
+                        action.payload.currentCourse.code.toLowerCase()
+                )
+            ) {
+                arr.push(action.payload.currentCourse);
+            }
             localStorage.setItem("AllCourses", JSON.stringify(arr));
             return {
                 ...state,

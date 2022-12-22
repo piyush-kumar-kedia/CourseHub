@@ -20,3 +20,12 @@ export const UpdateFavourites = (favourites) => {
         },
     };
 };
+
+export const AddNewCourseLocal = (course) => {
+    return {
+        type: "ADD_COURSE_LOCAL",
+        payload: {
+            course: course,
+        },
+    };
+};
