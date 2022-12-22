@@ -1,6 +1,6 @@
 import "./styles.scss";
 import { toast } from "react-toastify";
-const FolderInfo = ({ path, name, canDownload }) => {
+const FolderInfo = ({ path, name, canDownload, contributionHandler }) => {
     return (
         <div className="folder-info">
             <div className="info">
@@ -26,7 +26,7 @@ const FolderInfo = ({ path, name, canDownload }) => {
                     <span className="icon download-icon"></span>
                     <span className="text">Download All Files</span>
                 </button>
-                <button className="btn plus">
+                <button className="btn plus" onClick={contributionHandler}>
                     <span className="icon plus-icon"></span>
                     <span className="text">Contribute</span>
                 </button>

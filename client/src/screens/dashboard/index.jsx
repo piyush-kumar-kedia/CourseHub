@@ -19,10 +19,16 @@ import formatBranch from "../../utils/formatBranch";
 import { useEffect } from "react";
 import { getColors } from "../../utils/colors";
 import { LoadCourses } from "../../actions/filebrowser_actions";
+import Contributions from "../contributions";
 const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
+    const contributionHandler = (event) => {
+        const collection = document.getElementsByClassName("contri");
+        const contributionSection = collection[0];
+        contributionSection.classList.add("show");
+    };
 
     useEffect(() => {
         if (localStorage.getItem("AllCourses") !== null) {
@@ -95,7 +101,7 @@ const Dashboard = () => {
                 </div>
                 <Space amount={50} />
             </Container>
-            <ContributionBanner />
+            <ContributionBanner contributionHandler={contributionHandler} />
             <Space amount={50} />
             <Container>
                 <SubHeading text={"MY FAVOURITES"} type={"bold"} />
@@ -129,6 +135,7 @@ const Dashboard = () => {
                 </div>
             </Container>
             <Footer />
+            <Contributions />
         </div>
     );
 };

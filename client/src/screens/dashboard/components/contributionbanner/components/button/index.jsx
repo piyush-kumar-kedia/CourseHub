@@ -1,6 +1,10 @@
 import "./styles.scss";
-const ContributeButton = () => {
-	return <div className="contributebutton">Contribute to CourseHub</div>;
+const ContributeButton = (props) => {
+    return (
+        <div className="contributebutton" onClick={props.contributionHandler}>
+            Contribute to CourseHub
+        </div>
+    );
 };
 
 export default ContributeButton;

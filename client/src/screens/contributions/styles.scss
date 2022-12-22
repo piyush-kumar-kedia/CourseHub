@@ -1,0 +1,144 @@
+.head {
+    width: 100%;
+    text-align: center;
+    font-family: 'bold';
+    font-size: 2rem;
+
+}
+
+.course {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+
+    .label_course {
+        font-family: 'Bold';
+        font-size: 1.2rem;
+    }
+
+    .input_course {
+        width: 60%;
+        padding: 0.5rem;
+        font-size: 1rem;
+        font-weight: 400;
+    }
+}
+
+.section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .label_section {
+        font-family: 'Bold';
+        justify-content: start;
+        font-size: 1.2rem;
+
+    }
+
+    .select_section {
+        appearance: none;
+        background-image: url("../../../public/Expand\ Arrow.png");
+        background-repeat: no-repeat;
+        background-position-x: 100%;
+        width: 60%;
+        padding: 0.5rem;
+        font-weight: 400;
+        font-size: 1rem;
+    }
+}
+
+.year {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .label_year {
+        font-family: 'Bold';
+        font-size: 1.2rem;
+    }
+
+    .select_year {
+        appearance: none;
+        background-image: url("../../../public/Expand\ Arrow.png");
+        background-repeat: no-repeat;
+        background-position-x: 100%;
+        width: 60%;
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+}
+
+.description {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    .label_description {
+        font-family: 'Bold';
+        font-size: 1.2rem;
+    }
+
+    .input_description {
+        resize: none;
+        width: 60%;
+        padding: 0.5rem;
+        font-size: 1rem;
+        height: 10vh;
+    }
+}
+
+.file {
+    display: flex;
+    margin-top: 2rem;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .label_file {
+        background-image: repeating-linear-gradient(0deg, #333333, #333333 11px, transparent 11px, transparent 18px, #333333 18px), repeating-linear-gradient(90deg, #333333, #333333 11px, transparent 11px, transparent 18px, #333333 18px), repeating-linear-gradient(180deg, #333333, #333333 11px, transparent 11px, transparent 18px, #333333 18px), repeating-linear-gradient(270deg, #333333, #333333 11px, transparent 11px, transparent 18px, #333333 18px);
+        background-size: 2px 100%, 100% 2px, 2px 100%, 100% 2px;
+        background-position: 0 0, 0 0, 100% 0, 0 100%;
+
+        background-repeat: no-repeat;
+        font-family: 'Bold';
+        width: 100%;
+        text-align: center;
+        padding: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    input {
+        display: none;
+        font-size: 1rem;
+    }
+
+    .uploaded {
+        text-align: start;
+        width: 100%;
+        margin-top: 0.75rem;
+
+        span {
+            font-family: 'bold';
+            font-size: 1rem;
+        }
+    }
+
+}
+
+.button {
+    text-align: center;
+    background-color: #FECF6F;
+    padding: 1rem;
+    font-family: 'bold';
+    margin-top: 2rem
+}

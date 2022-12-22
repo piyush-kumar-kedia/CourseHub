@@ -7,6 +7,7 @@ import FileDisplay from "./components/file-display";
 import BrowseFolder from "./components/browsefolder";
 import { useSelector, useDispatch } from "react-redux";
 import NavBarBrowseScreen from "./components/navbar";
+import Contributions from "../contributions";
 import { useEffect } from "react";
 import {
     ChangeCurrentYearData,
@@ -20,6 +21,11 @@ const BrowseScreen = () => {
     const currCourseCode = useSelector((state) => state.fileBrowser.currentCourseCode);
     // console.log(currCourse);
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
+    const contributionHandler = (event) => {
+        const collection = document.getElementsByClassName("contri");
+        const contributionSection = collection[0];
+        contributionSection.classList.add("show");
+    };
 
     // const urls = useSelector((state) => state.URLS);
 
@@ -49,6 +55,7 @@ const BrowseScreen = () => {
                         path={folderData?.path ? folderData.path : "Select a folder..."}
                         name={folderData?.name ? folderData.name : "Select a folder"}
                         canDownload={folderData?.childType === "File"}
+                        contributionHandler={contributionHandler}
                     />
                     <div className="files">
                         {folderData?.childType === "File"
@@ -96,6 +103,7 @@ const BrowseScreen = () => {
                     </div>
                 </div>
             </div>
+            <Contributions />
         </Container>
     );
 };
