@@ -28,16 +28,27 @@ const Collapsible = ({ course, color, state }) => {
 
     const getCurrentCourse = async (code) => {
         let currCourse = null;
+        let inLocalStorage = null;
         try {
             currCourse = allCourseData.find((course) => course.code === code);
         } catch (error) {
             localStorage.removeItem("AllCourses");
             location.reload();
         }
-        if (currCourse) console.log("Already present...");
+        try {
+            const allLocal = JSON.parse(localStorage.getItem("AllCourses"));
+            inLocalStorage = allLocal?.find((course) => course.code === code);
+        } catch (error) {
+            localStorage.removeItem("AllCourses");
+            location.reload();
+        }
+        if (currCourse || inLocalStorage) {
+            console.log("Already present...");
+        }
         if (!currCourse) {
             try {
                 currCourse = await getCourse(code.toLowerCase());
+                console.log("req");
                 let temp = currCourse;
                 currCourse = temp.data;
             } catch (error) {
@@ -95,6 +106,7 @@ const Collapsible = ({ course, color, state }) => {
     useEffect(() => {
         if (currCourseCode?.toLowerCase() !== course.code.toLowerCase()) setOpen(false);
         if (currCourseCode?.toLowerCase() === course.code.toLowerCase()) {
+            console.log("called");
             triggerGetCourse();
             setOpen(true);
         }
@@ -111,7 +123,7 @@ const Collapsible = ({ course, color, state }) => {
 
     useEffect(() => {
         if (initial) return;
-        if (folderId && code === course.code) {
+        if (code && folderId && code === course.code) {
             console.log(course);
             try {
                 let searchedFolder = searchFolderById(currentCourse, folderId);
@@ -131,7 +143,7 @@ const Collapsible = ({ course, color, state }) => {
             <div className="main" onClick={onClick}>
                 <div className="color" style={{ backgroundColor: color ? color : "#6F8FFE" }}></div>
                 <div className="content">
-                    <div className="text" onClick={triggerGetCourse}>
+                    <div className="text">
                         <p className="code">{course.code ? course.code.toUpperCase() : "CL 301"}</p>
                         <p className="name">
                             {course.name ? course.name : "Process Control and Instrumentation"}

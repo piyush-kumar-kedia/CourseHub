@@ -28,6 +28,8 @@ const BrowseScreen = () => {
     const currCourse = useSelector((state) => state.fileBrowser.currentCourse);
     const currCourseCode = useSelector((state) => state.fileBrowser.currentCourseCode);
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
+    const allCourseData = useSelector((state) => state.fileBrowser.allCourseData);
+
     const contributionHandler = (event) => {
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
@@ -81,11 +83,18 @@ const BrowseScreen = () => {
                 localStorageCourses = null;
             }
 
+            let currCourse = null;
+            try {
+                currCourse = allCourseData?.find((course) => course.code === code);
+            } catch (error) {
+                localStorage.removeItem("AllCourses");
+                location.reload();
+            }
             const present = localStorageCourses?.find(
                 (course) => course.code.toLowerCase() === code.toLowerCase()
             );
             let root = [];
-            if (present) {
+            if (present || currCourse) {
                 console.log("found in localstorage");
                 fetchedData = present;
                 // console.log(fetchedData);
@@ -98,24 +107,14 @@ const BrowseScreen = () => {
                 root = fetchedData.data;
             }
             dispatch(ChangeCurrentCourse(null, code));
-            // if (folderId) {
-            //     try {
-            //         let searchedFolder = searchFolderById(root, folderId);
-            //         if (searchedFolder) {
-            //             dispatch(ChangeFolder(searchedFolder));
-            //             console.log(searchedFolder);
-            //         }
-            //     } catch (error) {}
-            // }
-            // console.log(user);
         };
         run();
     }, [loading]);
 
-    useEffect(() => {
-        // console.log(fb);
-        // console.log(user);
-    }, [fb, user]);
+    // useEffect(() => {
+    //     // console.log(fb);
+    //     // console.log(user);
+    // }, [fb, user]);
     return (
         <Container color={"light"} type={"fluid"}>
             <div className="navbar-browse-screen">

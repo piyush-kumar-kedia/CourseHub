@@ -10,7 +10,7 @@ const search = (folders, id) => {
     }
 };
 const searchFolderById = (root, id) => {
-    search(root.children, id);
+    search(root, id);
     return found;
 };
 
