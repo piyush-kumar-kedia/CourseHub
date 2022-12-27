@@ -29,6 +29,7 @@ export const addToFavouriteController = async (req, res, next) => {
 
 export const removeFromFavouritesController = async (req, res, next) => {
     const { id } = req.params;
+    if (!id) return res.sendStatus(400);
     //validate
     const updatedUser = await removeFromFavourites(req.user._id, id);
     return res.status(200).json(updatedUser);

@@ -109,6 +109,7 @@ const BrowseScreen = () => {
             dispatch(ChangeCurrentCourse(null, code));
         };
         run();
+        console.log("code search");
     }, [loading]);
 
     // useEffect(() => {
@@ -135,6 +136,8 @@ const BrowseScreen = () => {
                         name={folderData?.name ? folderData.name : "Select a folder"}
                         canDownload={folderData?.childType === "File"}
                         contributionHandler={contributionHandler}
+                        folderId={folderData?._id}
+                        courseCode={folderData?.course}
                     />
                     <div className="files">
                         {folderData?.childType === "File"

@@ -29,3 +29,11 @@ export const AddNewCourseLocal = (course) => {
         },
     };
 };
+export const LoadLocalCourses = (courses) => {
+    return {
+        type: "LOAD_LOCAL_COURSES",
+        payload: {
+            courses: courses,
+        },
+    };
+};

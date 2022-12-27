@@ -2,12 +2,28 @@
     width: 200px;
     height: 175px;
     margin: 10px;
-
-    cursor: pointer;
     transition: 200ms ease;
-
     &:hover {
-        transform: translateY(-3px);
+        // transform: translateY(-3px);
+        transform: scale(1.02);
+        .close{
+            cursor: pointer;
+            display: block;
+        }
+        .content{
+            .top{
+                .path{
+                    padding: 20px 50px 0px 15px;
+                }
+
+            }
+            .bottom{
+                .subject{
+                    padding: 0px 15px 30px 0px;
+
+                }
+            }
+        }
     }
 
     svg {
@@ -15,12 +31,22 @@
         z-index: -1;
     }
 
+    .close{
+
+        width: 10px;
+        height: 10px;
+        margin-left: auto;
+        background-color: #000;
+        // display: block;
+        display: none;
+
+    }
     .content {
+        cursor: pointer;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
-
         .top {
             .path {
                 padding: 30px 50px 0px 15px;

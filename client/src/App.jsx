@@ -10,10 +10,25 @@ import ProfilePage from "./screens/profile.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import ErrorScreen from "./screens/error";
+import { useDispatch } from "react-redux";
+import { LoadLocalCourses } from "./actions/user_actions";
 
 const App = () => {
     const [initial, setInitial] = useState(true);
     const isLoggedIn = useSelector((state) => state.user.loggedIn);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!initial) return;
+        try {
+            const localCourses = window.sessionStorage.getItem("LocalCourses");
+            if (!localCourses) return;
+            dispatch(LoadLocalCourses(JSON.parse(localCourses)));
+        } catch (error) {
+            window.sessionStorage.removeItem("LocalCourses");
+        }
+    }, []);
 
     useEffect(() => {
         if (initial && isLoggedIn) {
@@ -45,6 +60,7 @@ const App = () => {
                         </Route>
                     </Route>
                     <Route element={<LandingPage />} path="/" />
+                    <Route element={<ErrorScreen />} path="*" />
                 </Routes>
             </Router>
         </div>

@@ -13,3 +13,8 @@ export const getColors = (index) => {
     const idx = index % (colors.length - 1);
     return colors[idx];
 };
+
+export const getRandomColor = () => {
+    const idx = Math.floor(Math.random() * colors.length);
+    return colors[idx];
+};

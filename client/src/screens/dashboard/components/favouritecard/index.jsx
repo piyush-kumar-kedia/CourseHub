@@ -2,7 +2,15 @@ import "./styles.scss";
 import { previewFile } from "../../../../api/File";
 import { toast } from "react-toastify";
 import { formatFileName } from "../../../../utils/formatFile";
-const FavouriteCard = ({ type = "file", color, path, name, subject, code, id }) => {
+import { getRandomColor } from "../../../../utils/colors";
+import { useDispatch } from "react-redux";
+import { UpdateFavourites } from "../../../../actions/user_actions";
+import { RemoveFromFavourites } from "../../../../api/User";
+
+const FavouriteCard = ({ type = "file", color, path, name, subject, code, id, _id }) => {
+    color = color ? color : getRandomColor();
+    const dispatch = useDispatch();
+
     const handlePreview = async () => {
         const response = await toast.promise(previewFile(id), {
             pending: "Generating preview link...",
@@ -11,6 +19,23 @@ const FavouriteCard = ({ type = "file", color, path, name, subject, code, id }) 
         });
         window.open(response.url, "_blank");
     };
+
+    const handleRemoveFromFavourites = async () => {
+        const resp = RemoveFromFavourites(_id);
+        toast.promise(resp, {
+            pending: "Removing from favourites.",
+        });
+        resp.then((data) => {
+            console.log("data", data);
+            if (data?.data?.favourites) {
+                dispatch(UpdateFavourites(data.data.favourites));
+                toast.success("Removed.");
+            } else {
+                toast.error("Something went wrong!");
+            }
+        }).catch((e) => toast.error("Something went wrong!"));
+    };
+
     return (
         <div className="fav-card">
             {type === "folder" ? (
@@ -90,6 +115,7 @@ const FavouriteCard = ({ type = "file", color, path, name, subject, code, id }) 
                     />
                 </svg>
             )}
+            <span className="close" onClick={handleRemoveFromFavourites}></span>
             <div className="content" onClick={handlePreview}>
                 <div className="top">
                     <p className="path">{path ? path : "Path"}</p>

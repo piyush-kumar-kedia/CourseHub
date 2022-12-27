@@ -1,9 +1,10 @@
 import axios from "axios";
+import serverRoot from "./server";
 
 axios.defaults.withCredentials = true;
 
 export const getUser = async () => {
-    const resp = await axios.get("http://localhost:8080/api/user");
+    const resp = await axios.get(`${serverRoot}/api/user`);
     return resp;
 };
 
@@ -19,7 +20,12 @@ export const AddToFavourites = async (id, name, path, code) => {
         path: path,
         code: code,
     };
-    const resp = await axios.post("http://localhost:8080/api/user/favourites", data);
+    const resp = await axios.post(`${serverRoot}/api/user/favourites`, data);
+    console.log(resp);
+    return resp;
+};
+export const RemoveFromFavourites = async (id) => {
+    const resp = await axios.delete(`${serverRoot}/api/user/favourites/${id}`);
     console.log(resp);
     return resp;
 };

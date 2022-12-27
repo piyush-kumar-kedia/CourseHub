@@ -23,14 +23,8 @@ const NavBar = () => {
                     </span>
                     <SearchBar />
                     <div className="navlinks">
-                        <NavLink
-                            text={"Dashboard"}
-                            onClick={() => navigate("/dashboard")}
-                        />
-                        <NavLink
-                            text={"Profile"}
-                            onClick={() => navigate("/profile")}
-                        />
+                        <NavLink text={"Dashboard"} onClick={() => navigate("/dashboard")} />
+                        <NavLink text={"Profile"} onClick={() => navigate("/profile")} />
                         <NavLink text={"Log Out"} onClick={handleLogout} />
                     </div>
                 </div>

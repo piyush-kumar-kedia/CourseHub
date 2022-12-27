@@ -14,6 +14,7 @@ import connectDatabase from "./services/connectDB.js";
 connectDatabase();
 import onedriveRoutes from "./routes/onedrive/onedrive.routes.js";
 import courseRoutes from "./routes/course.routes.js";
+import searchRoutes from "./routes/search.routes.js";
 
 const app = express();
 const PORT = config.port;
@@ -25,6 +26,7 @@ app.use("/", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/onedrive/", onedriveRoutes);
 app.use("/course", courseRoutes);
+app.use("/search", searchRoutes);
 
 app.use(
     "/homepage",
@@ -38,7 +40,7 @@ app.use(
 
 // Error handler
 app.use((err, req, res, next) => {
-    // logger.error(err);
+    logger.error(err.message);
     const { status = 500, message = "Something went wrong!" } = err;
     return res.status(status).json({
         error: true,

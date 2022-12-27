@@ -21,6 +21,7 @@ import { getColors } from "../../utils/colors";
 import { LoadCourses } from "../../actions/filebrowser_actions";
 import Contributions from "../contributions";
 import { AddNewCourseLocal } from "../../actions/user_actions";
+
 const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -101,7 +102,28 @@ const Dashboard = () => {
                     <CourseCard
                         type={"ADD"}
                         setClicked={() => {
-                            dispatch(AddNewCourseLocal());
+                            dispatch(
+                                AddNewCourseLocal({
+                                    _id: "638f1709897b3c84b7d8d32d",
+                                    name: "Real Analysis",
+                                    code: "ma101",
+                                    color: "#6F8FFE",
+                                })
+                            );
+                            console.log(user);
+                        }}
+                    />
+                    <CourseCard
+                        type={"ADD"}
+                        setClicked={() => {
+                            dispatch(
+                                AddNewCourseLocal({
+                                    _id: "638f1709897b3c84b7d8d32c",
+                                    name: "Introduction to Engineering Drawing",
+                                    code: "ce101",
+                                    color: "#DBCEFF",
+                                })
+                            );
                             console.log(user);
                         }}
                     />
@@ -121,6 +143,7 @@ const Dashboard = () => {
                                   key={favourite.id}
                                   code={favourite.code}
                                   id={favourite.id}
+                                  _id={favourite._id}
                               />
                           ))
                         : "No favourites added yet."}

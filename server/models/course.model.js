@@ -8,7 +8,6 @@ const FolderSchema = Schema({
     children: [{ type: Schema.Types.ObjectId, refPath: "childType" }],
 });
 export const FolderModel = model("Folder", FolderSchema);
-
 const FileSchema = Schema({
     course: { type: String, required: true },
     name: { type: String, required: true },
