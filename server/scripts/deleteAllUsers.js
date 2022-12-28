@@ -5,7 +5,7 @@ import "dotenv/config";
 
 connectDatabase();
 const deleteAllUsers = async () => {
-	await UserModel.deleteMany({});
+    await UserModel.deleteMany({});
 };
 
 await deleteAllUsers();

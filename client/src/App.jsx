@@ -32,7 +32,7 @@ const App = () => {
 
     useEffect(() => {
         if (initial && isLoggedIn) {
-            toast.success("Logged In!");
+            // toast.success("Logged In!");
             setInitial(false);
         }
     }, [isLoggedIn]);
@@ -41,7 +41,7 @@ const App = () => {
         <div className="App">
             <ToastContainer
                 position="top-right"
-                autoClose={1500}
+                autoClose={1200}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick

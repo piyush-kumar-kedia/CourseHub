@@ -37,7 +37,12 @@ const UserReducer = (
                 return state;
             try {
                 let localCourses = JSON.parse(window.sessionStorage.getItem("LocalCourses"));
-                if (!localCourses?.find((course) => course.code === action.payload.course.code)) {
+                if (
+                    !localCourses?.find(
+                        (course) =>
+                            course.code.toLowerCase() === action.payload.course.code.toLowerCase()
+                    )
+                ) {
                     window.sessionStorage.setItem(
                         "LocalCourses",
                         JSON.stringify([...state.localCourses, action.payload.course])

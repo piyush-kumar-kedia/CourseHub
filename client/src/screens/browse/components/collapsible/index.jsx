@@ -9,12 +9,14 @@ import { getCourse } from "../../../../api/Course";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import searchFolderById from "../../../../utils/searchFolderById";
+import { toast } from "react-toastify";
 
 const Collapsible = ({ course, color, state }) => {
     const [open, setOpen] = useState(state ? state : false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [initial, setInitial] = useState(true);
+    const [notFound, setNotFound] = useState(false);
     const folderData = useSelector((state) => state.fileBrowser.currentYearFolderStructure);
     const currCourseCode = useSelector((state) => state.fileBrowser.currentCourseCode);
     const currentYear = useSelector((state) => state.fileBrowser.currentYear);
@@ -22,7 +24,7 @@ const Collapsible = ({ course, color, state }) => {
     const dispatch = useDispatch();
 
     const onClick = () => {
-        if (initial) triggerGetCourse();
+        if (initial && !open) triggerGetCourse();
         setOpen(!open);
     };
 
@@ -49,6 +51,15 @@ const Collapsible = ({ course, color, state }) => {
             try {
                 currCourse = await getCourse(code.toLowerCase());
                 console.log("req");
+                const { data } = currCourse;
+                if (!data.found) {
+                    setError(false);
+                    setNotFound(true);
+                    setLoading(false);
+                    toast.error("Course data not found!");
+                    return;
+                }
+                setNotFound(false);
                 let temp = currCourse;
                 currCourse = temp.data;
             } catch (error) {
@@ -153,13 +164,10 @@ const Collapsible = ({ course, color, state }) => {
                 </div>
             </div>
             <div className="collapsible-content">
-                {!loading && !error ? (
-                    <FolderController folders={folderData} />
-                ) : loading ? (
-                    "Loading Course Data, please wait..."
-                ) : (
-                    "Error loading course, please refresh!"
-                )}
+                {loading && "loading..."}
+                {error && "error"}
+                {notFound && "course not added yet"}
+                {!loading && !error && !notFound && <FolderController folders={folderData} />}
             </div>
         </div>
     );

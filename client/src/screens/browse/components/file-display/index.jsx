@@ -11,12 +11,17 @@ const FileDisplay = ({ file, path, code }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
     const name = formatFileName(file.name);
+    const isLoggedIn = useSelector((state) => state.user?.loggedIn);
 
     const dispatch = useDispatch();
 
     const urls = useSelector((state) => state.URLS);
 
     const handleDownload = async () => {
+        if (!isLoggedIn) {
+            toast.error("Please login to download.");
+            return;
+        }
         const openedWindow = window.open("", "_blank");
         openedWindow.document.write("Please close this window after download starts.");
         const existingUrl = urls.downloadUrls.find((data) => data.id === file.id);
@@ -41,6 +46,10 @@ const FileDisplay = ({ file, path, code }) => {
     };
 
     const handlePreview = async () => {
+        if (!isLoggedIn) {
+            toast.error("Please login to preview file.");
+            return;
+        }
         const openedWindow = window.open("", "_blank");
         openedWindow.document.write("Loading preview...");
         const existingUrl = urls.previewUrls.find((data) => data.id === file.id);
@@ -91,12 +100,14 @@ const FileDisplay = ({ file, path, code }) => {
                         }}
                     ></span>
                 </div>
-                <div className="view" onClick={handlePreview}>
+                <div className="view" onClick={handlePreview} title={file.name}>
                     View
                 </div>
             </div>
             <div className="content">
-                <p className="title">{file?.name ? name : "Quiz 1 Answer Key"}</p>
+                <p className="title" title={file.name}>
+                    {file?.name ? name : "Quiz 1 Answer Key"}
+                </p>
                 <div className="file-metadata">
                     <p className="info">
                         {fileType.toUpperCase()} {fileSize}

@@ -6,10 +6,10 @@ const router = Router();
 router.post(
     "/",
     catchAsync(async (req, res, next) => {
-        const { code } = req.body;
+        let { code } = req.body;
+        code = code.toLowerCase();
         if (!code) return res.sendStatus(400);
         const fetched = await SearchResult.findOne({ code: code });
-        console.log(fetched);
         if (!fetched) return res.status(200).json({ found: false });
         return res.status(200).json({
             found: true,
