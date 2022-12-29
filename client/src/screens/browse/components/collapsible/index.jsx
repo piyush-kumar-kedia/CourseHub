@@ -115,8 +115,8 @@ const Collapsible = ({ course, color, state }) => {
     const allCourseData = useSelector((state) => state.fileBrowser.allCourseData);
 
     useEffect(() => {
-        if (currCourseCode?.toLowerCase() !== course.code.toLowerCase()) setOpen(false);
-        if (currCourseCode?.toLowerCase() === course.code.toLowerCase()) {
+        if (currCourseCode?.toLowerCase() !== course.code?.toLowerCase()) setOpen(false);
+        if (currCourseCode?.toLowerCase() === course.code?.toLowerCase()) {
             console.log("called");
             triggerGetCourse();
             setOpen(true);
@@ -125,7 +125,7 @@ const Collapsible = ({ course, color, state }) => {
     }, [currCourseCode]);
 
     useEffect(() => {
-        if (currCourseCode === course.code.toUpperCase()) {
+        if (currCourseCode?.toLowerCase() === course.code?.toLowerCase()) {
             setInitial(false);
         }
     }, [currentYear]);

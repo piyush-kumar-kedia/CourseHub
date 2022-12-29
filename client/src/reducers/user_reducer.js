@@ -40,7 +40,7 @@ const UserReducer = (
                 if (
                     !localCourses?.find(
                         (course) =>
-                            course.code.toLowerCase() === action.payload.course.code.toLowerCase()
+                            course.code?.toLowerCase() === action.payload.course.code.toLowerCase()
                     )
                 ) {
                     window.sessionStorage.setItem(

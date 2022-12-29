@@ -21,6 +21,7 @@ import { AddNewCourseLocal, LoginUser, LogoutUser } from "../../actions/user_act
 import { getUser } from "../../api/User";
 import { useParams } from "react-router-dom";
 import { getCourse } from "../../api/Course";
+import { toast } from "react-toastify";
 
 const BrowseScreen = () => {
     const user = useSelector((state) => state.user);
@@ -91,7 +92,7 @@ const BrowseScreen = () => {
                 location.reload();
             }
             const present = localStorageCourses?.find(
-                (course) => course.code.toLowerCase() === code.toLowerCase()
+                (course) => course.code?.toLowerCase() === code.toLowerCase()
             );
             let root = [];
             if (present || currCourse) {
@@ -102,9 +103,13 @@ const BrowseScreen = () => {
                 dispatch(AddNewCourseLocal(fetchedData));
             } else {
                 fetchedData = await getCourse(code);
-                dispatch(UpdateCourses(fetchedData.data));
-                dispatch(AddNewCourseLocal(fetchedData.data));
-                root = fetchedData.data;
+                if (fetchedData.data.found) {
+                    dispatch(UpdateCourses(fetchedData.data));
+                    dispatch(AddNewCourseLocal(fetchedData.data));
+                    root = fetchedData.data;
+                } else {
+                    toast.error("Course not found!");
+                }
             }
             dispatch(ChangeCurrentCourse(null, code));
         };

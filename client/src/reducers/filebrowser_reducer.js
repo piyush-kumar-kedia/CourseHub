@@ -24,7 +24,7 @@ const FileBrowserReducer = (
             if (
                 !arr.find(
                     (course) =>
-                        course.code.toLowerCase() ===
+                        course.code?.toLowerCase() ===
                         action.payload.currentCourse.code.toLowerCase()
                 )
             ) {
