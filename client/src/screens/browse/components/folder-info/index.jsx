@@ -1,8 +1,10 @@
 import "./styles.scss";
 import { toast } from "react-toastify";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import clientRoot from "../../../../api/client";
 const FolderInfo = ({ path, name, canDownload, contributionHandler, folderId, courseCode }) => {
     const handleShare = () => {
-        alert(`localhost:5173/browse/${courseCode}/${folderId}`);
+        toast.info("Link copied to clipboard.");
         return;
     };
     return (
@@ -20,10 +22,14 @@ const FolderInfo = ({ path, name, canDownload, contributionHandler, folderId, co
                                         toast("Added to favourites.");
                                     }}
                                 ></span>
-                                <span
-                                    className="folder-action-icon share"
-                                    onClick={handleShare}
-                                ></span>
+                                <CopyToClipboard
+                                    text={`${clientRoot}/browse/${courseCode}/${folderId}`}
+                                >
+                                    <span
+                                        className="folder-action-icon share"
+                                        onClick={handleShare}
+                                    ></span>
+                                </CopyToClipboard>
                             </>
                         )}
                     </div>

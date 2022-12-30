@@ -134,7 +134,7 @@ const Collapsible = ({ course, color, state }) => {
 
     useEffect(() => {
         if (initial) return;
-        if (code && folderId && code === course.code) {
+        if (code && folderId && code?.toLowerCase() === course.code?.toLowerCase()) {
             console.log(course);
             try {
                 let searchedFolder = searchFolderById(currentCourse, folderId);

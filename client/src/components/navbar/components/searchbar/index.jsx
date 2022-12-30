@@ -2,7 +2,7 @@ import React from "react";
 import "./styles.scss";
 import { useState } from "react";
 import { GetSearchResult } from "../../../../api/Search";
-
+import formatLongText from "../../../../utils/formatLongText";
 const SearchBar = ({ type }) => {
     const [open, setOpen] = useState(false);
     const [searched, setSearched] = useState(false);
@@ -69,13 +69,21 @@ const SearchBar = ({ type }) => {
                                             window.location = "/browse/" + fetched.code;
                                     }}
                                 >
-                                    {fetched.code}
+                                    {fetched.code?.toUpperCase()}
                                     <br />
-                                    {fetched.name}
+                                    {formatLongText(fetched.name, 39)}
                                     {!fetched.isAvailable && " || no data"}
                                 </p>
-                                <span onClick={() => setOpen(false)} style={{ cursor: "pointer" }}>
-                                    close
+                                <span
+                                    onClick={() => setOpen(false)}
+                                    style={{
+                                        cursor: "pointer",
+                                        display: "block",
+                                        marginTop: "12px",
+                                        textDecoration: "underline",
+                                    }}
+                                >
+                                    Close
                                 </span>
                             </>
                         ) : (

@@ -86,7 +86,9 @@ const BrowseScreen = () => {
 
             let currCourse = null;
             try {
-                currCourse = allCourseData?.find((course) => course.code === code);
+                currCourse = allCourseData?.find(
+                    (course) => course.code?.toLowerCase() === code?.toLowerCase()
+                );
             } catch (error) {
                 localStorage.removeItem("AllCourses");
                 location.reload();
@@ -102,12 +104,15 @@ const BrowseScreen = () => {
                 root = fetchedData;
                 dispatch(AddNewCourseLocal(fetchedData));
             } else {
-                fetchedData = await getCourse(code);
+                let fetchingToast = toast.loading("Loading course data...");
+                fetchedData = await getCourse(code.toLowerCase());
                 if (fetchedData.data.found) {
+                    toast.dismiss(fetchingToast);
                     dispatch(UpdateCourses(fetchedData.data));
                     dispatch(AddNewCourseLocal(fetchedData.data));
                     root = fetchedData.data;
                 } else {
+                    toast.dismiss(fetchingToast);
                     toast.error("Course not found!");
                 }
             }
@@ -145,7 +150,9 @@ const BrowseScreen = () => {
                         courseCode={folderData?.course}
                     />
                     <div className="files">
-                        {folderData?.childType === "File"
+                        {!folderData
+                            ? "Select a course"
+                            : folderData?.childType === "File"
                             ? folderData?.children?.map((file) => (
                                   <FileDisplay
                                       file={file}

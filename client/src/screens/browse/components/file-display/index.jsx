@@ -6,16 +6,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { UpdateFavourites } from "../../../../actions/user_actions";
 import { donwloadFile, previewFile } from "../../../../api/File";
 import { AddPreviewUrl, AddDownloadUrl } from "../../../../actions/url_actions";
-
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import clientRoot from "../../../../api/client";
 const FileDisplay = ({ file, path, code }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
     const name = formatFileName(file.name);
     const isLoggedIn = useSelector((state) => state.user?.loggedIn);
+    const currCourseCode = useSelector((state) => state.fileBrowser?.currentCourseCode);
+    const currFolderId = useSelector((state) => state.fileBrowser?.currentFolder?._id);
 
     const dispatch = useDispatch();
 
     const urls = useSelector((state) => state.URLS);
+
+    const handleShare = () => {
+        toast.info("Link copied to clipboard.");
+        return;
+    };
 
     const handleDownload = async () => {
         if (!isLoggedIn) {
@@ -90,7 +98,11 @@ const FileDisplay = ({ file, path, code }) => {
                 }}
             >
                 <div className="top">
-                    <span className="share"></span>
+                    <CopyToClipboard
+                        text={`${clientRoot}/browse/${currCourseCode.toLowerCase()}/${currFolderId}`}
+                    >
+                        <span className="share" onClick={handleShare}></span>
+                    </CopyToClipboard>
                     <span className="download" onClick={handleDownload}></span>
                     <span
                         className="star"

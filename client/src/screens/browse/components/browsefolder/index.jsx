@@ -9,7 +9,7 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData })
     };
     return (
         <div className="browse-folder" onClick={() => onClick(folderData)}>
-            {type === "folder" ? (
+            {/* {type === "folder" ? (
                 <svg
                     width="200"
                     height="175"
@@ -85,7 +85,7 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData })
                         strokeWidth="1.2"
                     />
                 </svg>
-            )}
+            )} */}
             <div className="content">
                 <div className="top">
                     <p className="path">{""}</p>
