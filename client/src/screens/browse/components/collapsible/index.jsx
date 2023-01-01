@@ -49,6 +49,7 @@ const Collapsible = ({ course, color, state }) => {
         }
         if (!currCourse) {
             try {
+                let loadingCourseToastId = toast.loading("Loading course data...");
                 currCourse = await getCourse(code.toLowerCase());
                 console.log("req");
                 const { data } = currCourse;
@@ -56,9 +57,11 @@ const Collapsible = ({ course, color, state }) => {
                     setError(false);
                     setNotFound(true);
                     setLoading(false);
+                    toast.dismiss(loadingCourseToastId);
                     toast.error("Course data not found!");
                     return;
                 }
+                toast.dismiss(loadingCourseToastId);
                 setNotFound(false);
                 let temp = currCourse;
                 currCourse = temp.data;
@@ -93,7 +96,10 @@ const Collapsible = ({ course, color, state }) => {
                         dispatch(
                             ChangeCurrentYearData(currentYear, t.children?.[currentYear].children)
                         );
-                        dispatch(ChangeFolder(t.children?.[currentYear]));
+                        if (!folderId) {
+                            dispatch(ChangeFolder(t.children?.[currentYear]));
+                            folderId = null;
+                        }
                     } catch (error) {
                         console.log(error);
                         dispatch(
@@ -130,24 +136,23 @@ const Collapsible = ({ course, color, state }) => {
         }
     }, [currentYear]);
 
-    const { code, folderId } = useParams();
+    let { code, folderId } = useParams();
 
     useEffect(() => {
         if (initial) return;
         if (code && folderId && code?.toLowerCase() === course.code?.toLowerCase()) {
-            console.log(course);
+            // console.log(course);
             try {
                 let searchedFolder = searchFolderById(currentCourse, folderId);
-                console.log(searchedFolder);
+                console.log("searched folder", searchedFolder);
                 if (searchedFolder) {
                     dispatch(ChangeFolder(searchedFolder));
-                    console.log(searchedFolder);
                 }
             } catch (error) {
                 console.log(error);
             }
         }
-    }, [initial]);
+    }, [initial, currentCourse]);
 
     return (
         <div className={`collapsible ${open}`}>
