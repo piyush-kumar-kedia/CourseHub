@@ -2,6 +2,7 @@ import { model, Schema } from "mongoose";
 
 const FolderSchema = Schema({
     course: { type: String, required: true },
+    id: { type: String, required: true },
     name: { type: String, required: true },
     childType: { type: String, enum: ["File", "Folder"], required: true },
     path: { type: String, required: true },

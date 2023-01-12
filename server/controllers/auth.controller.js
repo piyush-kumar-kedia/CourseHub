@@ -14,6 +14,8 @@ import { findUserWithEmail, getUserFromToken, validateUser } from "../models/use
 
 import User from "../models/user.model.js";
 
+import academic from "../config/academic.js";
+
 //not used
 export const loginHandler = (req, res) => {
     // https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=c6c864ac-cced-4be6-8657-ca15170e7b51&response_type=code&redirect_uri=http://localhost:8080/login/redirect/&scope=offline_access%20user.read&state=12345&prompt=consent
@@ -35,6 +37,7 @@ const fetchCourses = async (rollNumber) => {
             rno: `${rollNumber}`,
         }),
     };
+
     const response = await axios.post(config.url, config.data, {
         headers: config.headers,
     });
@@ -56,8 +59,8 @@ const fetchCourses = async (rollNumber) => {
             const session = $(details[7]).text().trim();
 
             if (
-                year === "2022" &&
-                session.includes("July") &&
+                year === academic.currentYear &&
+                session.includes(academic.sessionIncluesMonth) &&
                 code.length >= 5 &&
                 code.length <= 6 &&
                 !code.includes("SA")

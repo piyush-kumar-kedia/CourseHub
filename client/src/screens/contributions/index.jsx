@@ -1,7 +1,25 @@
 import Wrapper from "./components/wrapper";
 import SectionC from "./components/sectionC";
+import axios from "axios";
+
 import "./styles.scss";
+
+import { useState } from "react";
 const Contributions = () => {
+    const [File_, setFile] = useState(null);
+
+    async function handleUpload() {
+        if (!File_) return;
+        const formData = new FormData();
+        formData.append("upload", File_);
+        try {
+            console.log(formData);
+            await axios.post("http://localhost:4002/upload", formData);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <SectionC>
             <Wrapper>
@@ -68,7 +86,15 @@ const Contributions = () => {
                 </form>
                 <div className="file">
                     <label for="file_upload" className="label_file">
-                        <input type="file" id="file_upload" />
+                        <input
+                            type="file"
+                            id="file_upload"
+                            accept="application/pdf"
+                            name="upload"
+                            onChange={(e) => {
+                                setFile(e.target.files[0]);
+                            }}
+                        />
                         <img src="../../../public/upload.png" height="37px" width="37px" />
                         UPLOAD
                     </label>
@@ -77,7 +103,9 @@ const Contributions = () => {
                     </div>
                 </div>
 
-                <div className="button">SUBMIT</div>
+                <div className="button" onClick={handleUpload}>
+                    SUBMIT
+                </div>
             </Wrapper>
         </SectionC>
     );

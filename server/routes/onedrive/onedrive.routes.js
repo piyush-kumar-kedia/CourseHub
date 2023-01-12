@@ -173,8 +173,8 @@ async function visitAllFiles() {
     const resolved_folders = await Promise.all(folders);
     resolved_folders.map(async (folder) => {
         await CourseModel.create({
-            name: folder.name,
-            code: folder.name.toLowerCase(),
+            name: folder.name.split("-")[1].trim().toLowerCase(),
+            code: folder.name.split("-")[0].trim().toLowerCase(),
             children: folder.children,
         });
     });
@@ -195,8 +195,8 @@ async function visitCourseById(id) {
     const folder_data = await visitFolder(required_course, required_course.name.toLowerCase());
 
     await CourseModel.create({
-        name: folder_data.name,
-        code: folder_data.name.toLowerCase(),
+        name: folder.name.split("-")[1].trim().toLowerCase(),
+        code: folder.name.split("-")[0].trim().toLowerCase(),
         children: folder_data.children,
     });
 
@@ -232,11 +232,12 @@ async function visitFolder(folder, currCourse, prevFolder) {
     const prevFolderName = prevFolder ? `${prevFolder}/` : "root/";
     // console.log(prevFolderName + folder.name);
     const NewFolder = await FolderModel.create({
-        course: currCourse,
+        course: currCourse.split("-")[0].trim().toLowerCase(),
         name: folder.name,
         childType: childType,
         children: res,
         path: prevFolderName,
+        id: folder.id,
     });
     return NewFolder;
 }
