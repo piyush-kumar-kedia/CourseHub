@@ -112,7 +112,7 @@ const Collapsible = ({ course, color, state }) => {
                         setInitial(false);
                     }
                 }
-                dispatch(ChangeCurrentCourse(t.children, t.name));
+                dispatch(ChangeCurrentCourse(t.children, t.code));
             }
         };
         run();
@@ -121,6 +121,8 @@ const Collapsible = ({ course, color, state }) => {
     const allCourseData = useSelector((state) => state.fileBrowser.allCourseData);
 
     useEffect(() => {
+        // console.log(currCourseCode);
+        // console.log(course);
         if (currCourseCode?.toLowerCase() !== course.code?.toLowerCase()) setOpen(false);
         if (currCourseCode?.toLowerCase() === course.code?.toLowerCase()) {
             console.log("called");

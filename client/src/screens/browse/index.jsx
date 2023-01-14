@@ -122,10 +122,10 @@ const BrowseScreen = () => {
         console.log("code search");
     }, [loading]);
 
-    // useEffect(() => {
-    //     // console.log(fb);
-    //     // console.log(user);
-    // }, [fb, user]);
+    useEffect(() => {
+        console.log(fb);
+        // console.log(user);
+    }, [fb, user]);
     return (
         <Container color={"light"} type={"fluid"}>
             <div className="navbar-browse-screen">

@@ -15,6 +15,32 @@ const drive_id = "b!pxmuhRkkIESn1NJOh3iVay2m314xO8NGtXVieZjVnTQBFLWQU0FfSqSeomGk
 const coursehub_id = "01OXYV37Y64PLOWXJRRBGKGSMVOFLO3OPZ";
 
 import { UploadImage } from "../../services/UploadImage.js";
+// router.post("/upload", async (req, res) => {
+//     // fs.writeFile(__dirname + "/output.pdf", req.file?.buffer, (err: any) => {
+//     //     if (err) {
+//     //         console.error(err);
+//     //     }
+//     // });
+//     await handleUpload(req.file?.buffer);
+//     res.sendStatus(200);
+// });
+// async function handleUpload(file) {
+//     try {
+//         var access_token = await generateAccessToken();
+//         console.log(access_token);
+//         var headers = {
+//             Authorization: `Bearer ${access_token}`,
+//         };
+//         const resp = await axios.put(
+//             "https://graph.microsoft.com/v1.0/me/drive/items/01OXYV374UNHP7FBR4UVBLPK2WPXMCR2TW:/test.txt:/content",
+//             file
+//         );
+//         console.log(resp.data);
+//         return resp.data;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 router.get(
     "/generatedevicecode",
