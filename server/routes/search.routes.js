@@ -20,4 +20,15 @@ router.post(
         });
     })
 );
+
+router.post(
+    "/word",
+    catchAsync(async (req, res, next) => {
+        let { words } = req.body;
+
+        const agg = await SearchResult.getSearchResults(words);
+        return res.status(200).json(agg);
+    })
+);
+
 export default router;
