@@ -1,9 +1,9 @@
 import axios from "axios";
 import serverRoot from "./server";
 
-export const GetSearchResult = async (code) => {
+export const GetSearchResult = async (wordArr) => {
     const fetched = await axios.post(`${serverRoot}/search`, {
-        code: code,
+        words: wordArr,
     });
     return fetched;
 };

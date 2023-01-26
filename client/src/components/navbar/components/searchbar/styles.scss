@@ -48,12 +48,16 @@
     .search-results{
         position: absolute;
         width: 518px;
-        height: 120px;
+        height: 100%;
         background-color: #fff;
         z-index: 2;
         margin-left: 21px;
         color: #222;
         padding: 10px 20px;
+        .code{
+            margin-right: 1rem;
+            font-family: 'Bold';
+        }
     }
     @media screen and (max-width: 1240px) {
         width: 500px;

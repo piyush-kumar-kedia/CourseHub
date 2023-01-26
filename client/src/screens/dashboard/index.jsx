@@ -21,6 +21,7 @@ import { getColors } from "../../utils/colors";
 import { LoadCourses } from "../../actions/filebrowser_actions";
 import Contributions from "../contributions";
 import { AddNewCourseLocal } from "../../actions/user_actions";
+import AddCourseModal from "./components/addcoursemodal";
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -30,6 +31,21 @@ const Dashboard = () => {
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
         contributionSection.classList.add("show");
+    };
+    const addCourseModalShowHandler = (event) => {
+        const collection = document.getElementsByClassName("add_modal");
+        const contributionSection = collection[0];
+        contributionSection.classList.add("show");
+    };
+    const handleAddCourse = ({ _id, name, code, color }) => {
+        dispatch(
+            AddNewCourseLocal({
+                _id,
+                name,
+                code,
+                color,
+            })
+        );
     };
 
     useEffect(() => {
@@ -99,32 +115,20 @@ const Dashboard = () => {
                             setClicked={() => handleClick(course.code)}
                         />
                     ))}
+
                     <CourseCard
                         type={"ADD"}
                         setClicked={() => {
-                            dispatch(
-                                AddNewCourseLocal({
-                                    _id: "638f1709897b3c84b7d8d32d",
-                                    name: "Real Analysis",
-                                    code: "ma101",
-                                    color: "#6F8FFE",
-                                })
-                            );
-                            console.log(user);
-                        }}
-                    />
-                    <CourseCard
-                        type={"ADD"}
-                        setClicked={() => {
-                            dispatch(
-                                AddNewCourseLocal({
-                                    _id: "638f1709897b3c84b7d8d32c",
-                                    name: "Introduction to Engineering Drawing",
-                                    code: "ce101",
-                                    color: "#DBCEFF",
-                                })
-                            );
-                            console.log(user);
+                            // dispatch(
+                            //     AddNewCourseLocal({
+                            //         _id: "638f1709897b3c84b7d8d32c",
+                            //         name: "Introduction to Engineering Drawing",
+                            //         code: "ce101",
+                            //         color: "#DBCEFF",
+                            //     })
+                            // );
+                            // console.log(user);
+                            addCourseModalShowHandler();
                         }}
                     />
                 </div>
@@ -151,6 +155,7 @@ const Dashboard = () => {
             </Container>
             <Footer />
             <Contributions />
+            <AddCourseModal handleAddCourse={handleAddCourse} />
         </div>
     );
 };

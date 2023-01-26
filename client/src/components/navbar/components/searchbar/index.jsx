@@ -3,19 +3,42 @@ import "./styles.scss";
 import { useState } from "react";
 import { GetSearchResult } from "../../../../api/Search";
 import formatLongText from "../../../../utils/formatLongText";
+import { useEffect } from "react";
+import { capitalise } from "../../../../utils/capitalise";
 const SearchBar = ({ type }) => {
     const [open, setOpen] = useState(false);
     const [searched, setSearched] = useState(false);
     const [loading, setLoading] = useState(false);
     const [fetched, setFetched] = useState({});
     const [error, setError] = useState(false);
+    const [searchResultStyle, setSearchResultStyle] = useState({
+        "max-height": "15%",
+    });
+    useEffect(() => {
+        if (!error && searched) {
+            if (fetched?.results.length == 1) {
+                setSearchResultStyle({
+                    "max-height": "15%",
+                });
+            } else if (fetched?.results.length == 2) {
+                setSearchResultStyle({
+                    "max-height": "20%",
+                });
+            } else {
+                setSearchResultStyle({
+                    "max-height": "28%",
+                });
+            }
+        }
+    }, [fetched]);
 
     const handleSubmit = async (value) => {
         if (!value) return;
         try {
             setSearched(true);
             setLoading(true);
-            const fetched = await GetSearchResult(value);
+            const fetched = await GetSearchResult(value.split(" "));
+            console.log(fetched.data);
             setFetched(fetched.data);
             setError(false);
             setLoading(false);
@@ -51,13 +74,13 @@ const SearchBar = ({ type }) => {
                 <button className="search-img"></button>
             </form>
             {open && (
-                <div className={`search-results`}>
+                <div className={`search-results`} style={searchResultStyle}>
                     {searched ? (
                         loading ? (
                             "loading"
                         ) : fetched?.found ? (
                             <>
-                                <p
+                                {/* <p
                                     style={{
                                         color: "#fff",
                                         backgroundColor: "#000",
@@ -73,7 +96,32 @@ const SearchBar = ({ type }) => {
                                     <br />
                                     {formatLongText(fetched.name, 39)}
                                     {!fetched.isAvailable && " || no data"}
-                                </p>
+                                </p> */}
+                                {fetched.results.map((result) => {
+                                    return (
+                                        <>
+                                            <p
+                                                style={{
+                                                    color: "#fff",
+                                                    backgroundColor: "#000",
+                                                    cursor: "pointer",
+                                                    padding: "15px",
+                                                }}
+                                                onClick={() => {
+                                                    window.location = "/browse/" + result.code;
+                                                }}
+                                            >
+                                                <span className="code">
+                                                    {result.code.toUpperCase()}
+                                                </span>
+                                                <span className="name">
+                                                    {capitalise(formatLongText(result.name, 40))}
+                                                </span>
+                                            </p>
+                                            <hr />
+                                        </>
+                                    );
+                                })}
                                 <span
                                     onClick={() => setOpen(false)}
                                     style={{

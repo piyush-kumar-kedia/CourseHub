@@ -1,0 +1,26 @@
+import React from "react";
+import "./styles.scss";
+import formatLongText from "../../../../../../utils/formatLongText";
+import { capitalise } from "../../../../../../utils/capitalise";
+
+const Result = ({ _id, code, name, handleClick, handleModalClose }) => {
+    return (
+        <div
+            className="result"
+            onClick={() => {
+                handleClick({
+                    _id,
+                    name: capitalise(name),
+                    code,
+                    color: "#DBCEFF",
+                });
+                handleModalClose();
+            }}
+        >
+            <span className="code">{code.toUpperCase()}</span>
+            <span className="name">{capitalise(formatLongText(name, 40))}</span>
+        </div>
+    );
+};
+
+export default Result;

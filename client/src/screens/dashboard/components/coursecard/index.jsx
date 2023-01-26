@@ -1,3 +1,4 @@
+import formatLongText from "../../../../utils/formatLongText";
 import "./styles.scss";
 const CourseCard = ({ code, color, name, type, setClicked }) => {
     return type === "ADD" ? (
@@ -11,7 +12,7 @@ const CourseCard = ({ code, color, name, type, setClicked }) => {
         <div className="coursecard" style={{ backgroundColor: color }} onClick={setClicked}>
             <p className="code">{code ? code : "code"}</p>
             <div className="name">
-                <p>{name ? name : "name"}</p>
+                <p>{name ? formatLongText(name, 39) : "name"}</p>
             </div>
         </div>
     );
