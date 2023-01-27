@@ -65,6 +65,7 @@ const AddCourseModal = ({ handleAddCourse }) => {
                             className="input_course"
                             onChange={(e) => {
                                 setCode(e.target.value);
+                                if (results.length > 0) setResults([]);
                             }}
                             value={code}
                         ></input>
@@ -75,6 +76,7 @@ const AddCourseModal = ({ handleAddCourse }) => {
                         ? "Loading courses..."
                         : results.map((course) => (
                               <Result
+                                  key={course._id}
                                   _id={course._id}
                                   code={course.code}
                                   name={course.name}

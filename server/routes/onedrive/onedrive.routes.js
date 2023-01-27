@@ -15,6 +15,7 @@ const drive_id = "b!pxmuhRkkIESn1NJOh3iVay2m314xO8NGtXVieZjVnTQBFLWQU0FfSqSeomGk
 const coursehub_id = "01OXYV37Y64PLOWXJRRBGKGSMVOFLO3OPZ";
 
 import { UploadImage } from "../../services/UploadImage.js";
+import SearchResults from "../../models/search.model.js";
 // router.post("/upload", async (req, res) => {
 //     // fs.writeFile(__dirname + "/output.pdf", req.file?.buffer, (err: any) => {
 //     //     if (err) {
@@ -203,6 +204,12 @@ async function visitAllFiles() {
             code: folder.name.split("-")[0].trim().toLowerCase(),
             children: folder.children,
         });
+        await SearchResults.create({
+            name: folder.name.split("-")[1].trim().toLowerCase(),
+            code: folder.name.split("-")[0].trim().toLowerCase(),
+            isAvailable: true,
+        });
+        console.log("Created", folder.name);
     });
     return "ok";
 }

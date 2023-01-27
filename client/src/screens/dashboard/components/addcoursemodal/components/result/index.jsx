@@ -2,6 +2,7 @@ import React from "react";
 import "./styles.scss";
 import formatLongText from "../../../../../../utils/formatLongText";
 import { capitalise } from "../../../../../../utils/capitalise";
+import { getRandomColor } from "../../../../../../utils/colors";
 
 const Result = ({ _id, code, name, handleClick, handleModalClose }) => {
     return (
@@ -12,7 +13,7 @@ const Result = ({ _id, code, name, handleClick, handleModalClose }) => {
                     _id,
                     name: capitalise(name),
                     code,
-                    color: "#DBCEFF",
+                    color: getRandomColor(),
                 });
                 handleModalClose();
             }}
