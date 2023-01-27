@@ -42,7 +42,7 @@ const AddCourseModal = ({ handleAddCourse }) => {
             setCode("");
         } catch (error) {
             setCode("");
-            setErr(true);
+            setErr("Server Error! Please contact admin.");
         }
     }
     const handleModalClose = (event) => {
