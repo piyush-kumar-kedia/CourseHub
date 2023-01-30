@@ -1,0 +1,95 @@
+.cwrap{
+    width: 60%;
+    position: relative;
+    max-width: 600px;
+    // display: flex;
+    // flex-direction: column;
+    &.cpassive{
+        margin: 0px;
+        .csearch{
+            margin: 0;
+            width: 100%;
+            width: 300px;
+        }
+        .csearch-results{
+            margin-left: 0;
+            margin-top: 44px;
+            width: 290px;
+        }
+    }
+    .csearch{
+        // margin: 0 20px;
+        display: flex;
+        justify-content: flex-end;
+        input{
+            font-size: 18px;
+            width: 100%;
+            height: 40px;
+            padding: 20px 20px;
+            &::placeholder{
+                font-family: 'Regular';
+                color: #000;
+                font-size: 1rem;
+            }
+            &:focus{
+                outline-width: 0;
+            }
+        }
+        .csearch-img{
+            border: none;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            background: url(./Search.svg);
+            background-position: center;
+            background-size: contain;
+            margin: 12px 10px;
+        }
+        .csearch-cancel{
+            border: none;
+            cursor: pointer;
+            width: 15px;
+            height: 15px;
+            position: absolute;
+            background: url(./close.svg);
+            background-size: contain;
+            background-position: center;
+            margin: 12px 10px;
+        }
+        
+    }
+    .csearch-results{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        // background-color: rgba(63, 63, 63, 0.699);
+        z-index: 2;
+        margin-top: 42px;
+        color: #222;
+        padding: 5px 0px;
+        .ccode{
+            margin-right: 0.5rem;
+            font-family: 'Bold';
+            font-size: 0.86rem;
+        }
+        .cname{
+            font-size: 0.86rem;
+        }
+    }
+    @media screen and (max-width: 1240px) {
+        // width: 500px;
+        // display: none;
+        .csearch-results{
+            // width: 458px;
+        }
+        
+    }
+    @media screen and (max-width: 1140px) {
+        // width: 350px;
+        // display: none;
+        .csearch-results{
+            // width: 308px;
+        }
+    }
+}

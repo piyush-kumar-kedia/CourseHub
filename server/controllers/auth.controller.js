@@ -79,10 +79,10 @@ const getDepartment = async (access_token) => {
         method: "get",
         url: "https://graph.microsoft.com/beta/me/profile",
         headers: {
+            Authorization: `Bearer ${access_token}`,
             "Content-Type": "application/x-www-form-urlencoded",
             Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
             Host: "graph.microsoft.com",
-            Authorization: `Bearer ${access_token}`,
         },
     };
     const response = await axios.get(config.url, {
@@ -162,6 +162,70 @@ export const redirectHandler = async (req, res, next) => {
     });
 
     return res.redirect(appConfig.clientURL);
+};
+export const mobileCodeHandler = async (req, res, next) => {
+    const { code } = req.body;
+    var data = qs.stringify({
+        client_secret: clientSecret,
+        client_id: clientid,
+        redirect_uri: redirect_uri,
+        scope: "user.read",
+        grant_type: "authorization_code",
+        code: code,
+    });
+
+    var config = {
+        method: "post",
+        url: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            client_secret: clientSecret,
+        },
+        data: data,
+    };
+    const response = await axios.post(config.url, config.data, {
+        headers: config.headers,
+    });
+
+    if (!response.data) throw new AppError(500, "Something went wrong");
+
+    const AccessToken = response.data.access_token;
+    const RefreshToken = response.data.refresh_token;
+
+    const userFromToken = await getUserFromToken(AccessToken);
+
+    if (!userFromToken || !userFromToken.data) throw new AppError(401, "Access Denied");
+
+    const roll = userFromToken.data.surname;
+    if (!roll) throw new AppError(401, "Sign in using Institute Account");
+
+    let existingUser = await findUserWithEmail(userFromToken.data.mail); //find with email
+
+    if (!existingUser) {
+        const courses = await fetchCourses(userFromToken.data.surname);
+        const department = await getDepartment(AccessToken);
+
+        const userData = {
+            name: userFromToken.data.displayName,
+            degree: userFromToken.data.jobTitle,
+            rollNumber: userFromToken.data.surname,
+            email: userFromToken.data.mail,
+            // branch: department, //calculate branch
+            semester: 2, //calculate sem
+            courses: courses,
+            department: department,
+        };
+
+        const { error } = validateUser(userData);
+        if (error) throw new AppError(500, error.message);
+
+        const user = new User(userData);
+        existingUser = await user.save();
+    }
+
+    const token = existingUser.generateJWT();
+
+    return res.json({ access_token: token });
 };
 
 export const logoutHandler = (req, res, next) => {
