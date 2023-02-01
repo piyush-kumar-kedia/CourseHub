@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const SearchSchema = mongoose.Schema({
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     code: { type: String, required: true, unique: true },
     isAvailable: { type: Boolean, default: false },
 });

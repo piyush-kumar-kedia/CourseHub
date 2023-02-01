@@ -35,4 +35,16 @@ router.post(
     })
 );
 
+router.post(
+    "/feed",
+    catchAsync(async (req, res, next) => {
+        const { name, code } = req.body;
+        const savedDocument = await SearchResult.create({
+            name: name.toLowerCase(),
+            code: code.toLowerCase(),
+        });
+        res.json(savedDocument);
+    })
+);
+
 export default router;

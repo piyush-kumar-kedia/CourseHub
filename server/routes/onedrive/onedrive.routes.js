@@ -204,12 +204,26 @@ async function visitAllFiles() {
             code: folder.name.split("-")[0].trim().toLowerCase(),
             children: folder.children,
         });
-        await SearchResults.create({
-            name: folder.name.split("-")[1].trim().toLowerCase(),
+        const searchDocument = await SearchResults.find({
             code: folder.name.split("-")[0].trim().toLowerCase(),
-            isAvailable: true,
         });
-        console.log("Created", folder.name);
+        console.log(searchDocument);
+        if (!searchDocument) {
+            await SearchResults.create({
+                name: folder.name.split("-")[1].trim().toLowerCase(),
+                code: folder.name.split("-")[0].trim().toLowerCase(),
+                isAvailable: true,
+            });
+            console.log("Created", folder.name);
+        } else {
+            await SearchResults.updateOne(
+                { code: folder.name.split("-")[0].trim().toLowerCase() },
+                {
+                    isAvailable: true,
+                }
+            );
+            console.log("Updated", folder.name);
+        }
     });
     return "ok";
 }
@@ -228,10 +242,30 @@ async function visitCourseById(id) {
     const folder_data = await visitFolder(required_course, required_course.name.toLowerCase());
 
     await CourseModel.create({
-        name: folder.name.split("-")[1].trim().toLowerCase(),
-        code: folder.name.split("-")[0].trim().toLowerCase(),
+        name: required_course.name.split("-")[1].trim().toLowerCase(),
+        code: required_course.name.split("-")[0].trim().toLowerCase(),
         children: folder_data.children,
     });
+    const searchDocument = await SearchResults.findOne({
+        code: required_course.name.split("-")[0].trim().toLowerCase(),
+    });
+    // console.log(searchDocument);
+    if (!searchDocument) {
+        await SearchResults.create({
+            name: required_course.name.split("-")[1].trim().toLowerCase(),
+            code: required_course.name.split("-")[0].trim().toLowerCase(),
+            isAvailable: true,
+        });
+        console.log("Created", required_course.name);
+    } else {
+        await SearchResults.updateOne(
+            { code: required_course.name.split("-")[0].trim().toLowerCase() },
+            {
+                isAvailable: true,
+            }
+        );
+        console.log("Updated", required_course.name);
+    }
 
     return "ok";
 }
