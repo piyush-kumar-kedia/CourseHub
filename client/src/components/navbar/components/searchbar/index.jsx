@@ -103,12 +103,18 @@ const SearchBar = ({ type }) => {
                                             <p
                                                 style={{
                                                     color: "#fff",
-                                                    backgroundColor: "#000",
-                                                    cursor: "pointer",
+                                                    backgroundColor: result.isAvailable
+                                                        ? "#000"
+                                                        : "#636363",
                                                     padding: "15px",
+                                                    cursor: result.isAvailable
+                                                        ? "pointer"
+                                                        : "not-allowed",
                                                 }}
                                                 onClick={() => {
-                                                    window.location = "/browse/" + result.code;
+                                                    if (result.isAvailable) {
+                                                        window.location = "/browse/" + result.code;
+                                                    }
                                                 }}
                                             >
                                                 <span className="code">
@@ -116,6 +122,9 @@ const SearchBar = ({ type }) => {
                                                 </span>
                                                 <span className="name">
                                                     {capitalise(formatLongText(result.name, 40))}
+                                                </span>
+                                                <span className="extra-info">
+                                                    {!result?.isAvailable && "UNAVAILABLE"}
                                                 </span>
                                             </p>
                                             <hr />
