@@ -20,8 +20,9 @@ import { useEffect } from "react";
 import { getColors } from "../../utils/colors";
 import { LoadCourses } from "../../actions/filebrowser_actions";
 import Contributions from "../contributions";
-import { AddNewCourseLocal } from "../../actions/user_actions";
+import { AddNewCourseLocal, ClearLocalCourses } from "../../actions/user_actions";
 import AddCourseModal from "./components/addcoursemodal";
+import { AddNewCourseAPI } from "../../api/User";
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -37,18 +38,26 @@ const Dashboard = () => {
         const contributionSection = collection[0];
         contributionSection.classList.add("show");
     };
-    const handleAddCourse = ({ _id, name, code, color }) => {
-        dispatch(
-            AddNewCourseLocal({
-                _id,
-                name,
-                code,
-                color,
-            })
-        );
+    const handleAddCourse = async ({ code, name }) => {
+        try {
+            await AddNewCourseAPI(code, name);
+            location.reload();
+        } catch (error) {
+            console.log(error);
+        }
+        // dispatch(
+        //     AddNewCourseLocal({
+        //         _id,
+        //         name,
+        //         code,
+        //         color,
+        //     })
+        // );
     };
 
     useEffect(() => {
+        sessionStorage.removeItem("LocalCourses");
+        dispatch(ClearLocalCourses());
         if (localStorage.getItem("AllCourses") !== null) {
             try {
                 dispatch(LoadCourses(JSON.parse(localStorage.getItem("AllCourses"))));
@@ -106,7 +115,7 @@ const Dashboard = () => {
                             setClicked={() => handleClick(course.code)}
                         />
                     ))}
-                    {user.localCourses.map((course) => (
+                    {/* {user.localCourses.map((course) => (
                         <CourseCard
                             key={course.name}
                             code={course?.code?.toUpperCase()}
@@ -114,7 +123,7 @@ const Dashboard = () => {
                             color={course.color}
                             setClicked={() => handleClick(course.code)}
                         />
-                    ))}
+                    ))} */}
 
                     <CourseCard
                         type={"ADD"}

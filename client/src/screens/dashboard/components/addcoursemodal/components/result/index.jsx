@@ -10,10 +10,8 @@ const Result = ({ _id, code, name, handleClick, handleModalClose }) => {
             className="result"
             onClick={() => {
                 handleClick({
-                    _id,
-                    name: capitalise(name),
-                    code,
-                    color: getRandomColor(),
+                    code: code.toUpperCase(),
+                    name,
                 });
                 handleModalClose();
             }}

@@ -32,14 +32,18 @@ const Collapsible = ({ course, color, state }) => {
         let currCourse = null;
         let inLocalStorage = null;
         try {
-            currCourse = allCourseData.find((course) => course.code === code);
+            currCourse = allCourseData.find(
+                (course) => course.code.toLowerCase() === code.toLowerCase()
+            );
         } catch (error) {
             localStorage.removeItem("AllCourses");
             location.reload();
         }
         try {
             const allLocal = JSON.parse(localStorage.getItem("AllCourses"));
-            inLocalStorage = allLocal?.find((course) => course.code === code);
+            inLocalStorage = allLocal?.find(
+                (course) => course.code.toLowerCase() === code.toLowerCase()
+            );
         } catch (error) {
             localStorage.removeItem("AllCourses");
             location.reload();

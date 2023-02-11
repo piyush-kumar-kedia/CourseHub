@@ -133,9 +133,13 @@ const BrowseScreen = () => {
             </div>
             <div className="controller">
                 <div className="left">
-                    {user.user?.courses?.map((course, idx) => {
-                        return <Collapsible color={getColors(idx)} key={idx} course={course} />;
-                    })}
+                    {user.localCourses?.length > 0
+                        ? ""
+                        : user.user?.courses?.map((course, idx) => {
+                              return (
+                                  <Collapsible color={getColors(idx)} key={idx} course={course} />
+                              );
+                          })}
                     {user.localCourses?.map((course, idx) => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}

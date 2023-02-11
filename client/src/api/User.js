@@ -12,6 +12,11 @@ export const handleLogin = () => {
     window.location =
         "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=c6c864ac-cced-4be6-8657-ca15170e7b51&response_type=code&redirect_uri=http://localhost:8080/login/redirect/&scope=offline_access%20user.read&state=12345&prompt=consent";
 };
+export const AddNewCourseAPI = async (code, name) => {
+    const resp = await axios.post(`${serverRoot}/api/user/course`, { code, name });
+    console.log(resp);
+    return resp;
+};
 
 export const AddToFavourites = async (id, name, path, code) => {
     const data = {

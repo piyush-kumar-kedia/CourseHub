@@ -37,3 +37,9 @@ export const LoadLocalCourses = (courses) => {
         },
     };
 };
+
+export const ClearLocalCourses = () => {
+    return {
+        type: "CLEAR_LOCAL_COURSES",
+    };
+};

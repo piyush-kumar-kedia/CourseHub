@@ -33,6 +33,13 @@ const UserReducer = (
         case "UPDATE_FAVOURITES":
             return { ...state, favourites: action.payload.favourites };
         case "ADD_COURSE_LOCAL":
+            if (
+                state.user?.courses?.find(
+                    (course) =>
+                        course.code.toLowerCase() === action.payload.course.code.toLowerCase()
+                )
+            )
+                return state;
             if (state.localCourses?.find((course) => course.code === action.payload.course.code))
                 return state;
             try {
@@ -54,6 +61,8 @@ const UserReducer = (
             return { ...state, localCourses: [...state.localCourses, action.payload.course] };
         case "LOAD_LOCAL_COURSES":
             return { ...state, localCourses: [...state.localCourses, ...action.payload.courses] };
+        case "CLEAR_LOCAL_COURSES":
+            return { ...state, localCourses: [] };
         default:
             return state;
     }
