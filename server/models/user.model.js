@@ -11,7 +11,12 @@ const userSchema = Schema({
     // branch: { type: String, required: true },
     semester: { type: Number, reqiured: true },
     degree: { type: String, required: true },
-    courses: { type: Array, default: [], required: true },
+    courses: [
+        {
+            code: { type: String, unique: true },
+            name: { type: String },
+        },
+    ],
     // contri
     department: { type: String, required: true }, //dup
     favourites: [
@@ -92,6 +97,16 @@ export const findUserWithEmail = async function (email) {
     // console.log("found user with email", user);
     if (!user) return false;
     return user;
+};
+
+export const AddNewCourse = async (userid, code, name) => {
+    const UserData = await User.findById(userid);
+    UserData.courses.push({
+        code,
+        name,
+    });
+    const updatedUser = await UserData.save();
+    return updatedUser;
 };
 
 export const addToFavourites = async (userid, name, id, path, code) => {

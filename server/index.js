@@ -22,7 +22,7 @@ const PORT = config.port;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
-app.use("/api/auth", authRoutes);
+app.use("/", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/file", onedriveRoutes);
 app.use("/api/course", courseRoutes);
