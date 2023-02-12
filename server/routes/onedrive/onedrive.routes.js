@@ -349,7 +349,7 @@ async function getFilePreviewLink(file_id) {
     return data.getUrl;
 }
 
-async function getAccessToken() {
+export async function getAccessToken() {
     var data;
     if (fs.existsSync("./onedrive-refresh-token.token")) {
         data = await refreshAccessToken();

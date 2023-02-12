@@ -18,7 +18,7 @@ import searchRoutes from "./routes/search.routes.js";
 
 const app = express();
 const PORT = config.port;
-
+import UploadFile from "./services/UploadFile.js";
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
