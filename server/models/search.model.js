@@ -11,20 +11,13 @@ SearchSchema.statics.getSearchResults = async function (wordArr) {
         const SearchResult = this;
         const agg = await SearchResult.aggregate([
             { $match: {} },
-            { $project: { name: true, code: true, isAvailable: true } },
-            {
-                $project: {
-                    name: { $toLower: "$name" },
-                    code: { $toLower: "$code" },
-                    isAvailable: true,
-                },
-            },
+            { $project: { name: true, code: true } },
+            { $project: { name: { $toLower: "$name" }, code: { $toLower: "$code" } } },
 
             {
                 $project: {
                     name: true,
                     code: true,
-                    isAvailable: true,
                     wordArray: { $split: ["$name", " "] },
                 },
             },
@@ -32,7 +25,6 @@ SearchSchema.statics.getSearchResults = async function (wordArr) {
                 $project: {
                     name: true,
                     code: true,
-                    isAvailable: true,
                     numberOfWordsMatched: {
                         $size: {
                             $setIntersection: ["$wordArray", words],
@@ -44,7 +36,6 @@ SearchSchema.statics.getSearchResults = async function (wordArr) {
                 $project: {
                     name: true,
                     code: true,
-                    isAvailable: true,
                     numberOfWordsMatched: true,
                     codeMatch: {
                         $size: {

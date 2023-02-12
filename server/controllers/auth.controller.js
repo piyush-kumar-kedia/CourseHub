@@ -8,7 +8,7 @@ import appConfig from "../config/default.js";
 
 const clientid = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_VALUE;
-const redirect_uri = "http://localhost:8080/login/redirect/";
+const redirect_uri = process.env.REDIRECT_URI;
 
 import { findUserWithEmail, getUserFromToken, validateUser } from "../models/user.model.js";
 
@@ -16,9 +16,11 @@ import User from "../models/user.model.js";
 
 import academic from "../config/academic.js";
 
+import aesjs from "aes-js";
+import EncryptText from "../utils/encryptAES.js";
+
 //not used
 export const loginHandler = (req, res) => {
-    // https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=c6c864ac-cced-4be6-8657-ca15170e7b51&response_type=code&redirect_uri=http://localhost:8080/login/redirect/&scope=offline_access%20user.read&state=12345&prompt=consent
     res.redirect(
         `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.read&state=12345&prompt=consent`
     );
@@ -105,7 +107,7 @@ export const redirectHandler = async (req, res, next) => {
 
     var config = {
         method: "post",
-        url: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+        url: `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/token`,
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             client_secret: clientSecret,
@@ -163,8 +165,9 @@ export const redirectHandler = async (req, res, next) => {
 
     return res.redirect(appConfig.clientURL);
 };
-export const mobileCodeHandler = async (req, res, next) => {
-    const { code } = req.body;
+export const mobileRedirectHandler = async (req, res, next) => {
+    const { code } = req.query;
+
     var data = qs.stringify({
         client_secret: clientSecret,
         client_id: clientid,
@@ -176,7 +179,7 @@ export const mobileCodeHandler = async (req, res, next) => {
 
     var config = {
         method: "post",
-        url: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+        url: `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/token`,
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             client_secret: clientSecret,
@@ -225,7 +228,9 @@ export const mobileCodeHandler = async (req, res, next) => {
 
     const token = existingUser.generateJWT();
 
-    return res.json({ access_token: token });
+    const encryptedToken = EncryptText(token);
+
+    return res.redirect(`${appConfig.mobileURL}://success?token=${encryptedToken}`);
 };
 
 export const logoutHandler = (req, res, next) => {

@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import { addToFavourites, removeFromFavourites, AddNewCourse } from "../models/user.model.js";
+import { addToFavourites, removeFromFavourites } from "../models/user.model.js";
 
 export const getUser = async (req, res, next) => {
     return res.json(req.user);
@@ -11,14 +11,6 @@ export const createUser = async (req, res) => {
     const user = new User(data);
     const savedUser = await user.save();
     res.json(savedUser);
-};
-
-export const addNewCourse = async (req, res, next) => {
-    const data = req.body;
-    if (!data.code || !data.name) return res.sendStatus(400);
-
-    const updatedUser = await AddNewCourse(req.user._id, data.code, data.name);
-    return res.status(200).json(updatedUser);
 };
 
 export const addToFavouriteController = async (req, res, next) => {

@@ -4,16 +4,16 @@ const scope = "User.read offline_acess Mail.read";
 import catchAsync from "../utils/catchAsync.js";
 import {
     redirectHandler,
+    mobileRedirectHandler,
     loginHandler,
     logoutHandler,
-    mobileCodeHandler,
 } from "../controllers/auth.controller.js";
 
 //not used
 router.get("/login", loginHandler);
 
 router.get("/login/redirect/", catchAsync(redirectHandler));
-router.post("/mobile", catchAsync(mobileCodeHandler));
+router.get("/login/redirect/mobile", catchAsync(mobileRedirectHandler));
 
 router.get("/logout", logoutHandler);
 
