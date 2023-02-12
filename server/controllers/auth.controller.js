@@ -22,7 +22,7 @@ import EncryptText from "../utils/encryptAES.js";
 //not used
 export const loginHandler = (req, res) => {
     res.redirect(
-        `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.read&state=12345&prompt=consent`
+        `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.read&state=12345&prompt=consent`
     );
 };
 const fetchCourses = async (rollNumber) => {
