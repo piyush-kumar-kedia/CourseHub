@@ -108,7 +108,15 @@ export const addToFavourites = async (userid, name, id, path, code) => {
     const updatedUser = await UserData.save();
     return updatedUser;
 };
-
+export const AddNewCourse = async (userid, code, name) => {
+    const UserData = await User.findById(userid);
+    UserData.courses.push({
+        code,
+        name,
+    });
+    const updatedUser = await UserData.save();
+    return updatedUser;
+};
 export const removeFromFavourites = async (userid, fileid) => {
     const resp = await User.findOneAndUpdate(
         { _id: userid },

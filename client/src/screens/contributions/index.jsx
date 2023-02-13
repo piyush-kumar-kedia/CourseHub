@@ -3,11 +3,17 @@ import SectionC from "./components/sectionC";
 import axios from "axios";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
-import { useRef } from "react";
-
+import { useEffect, useRef, useState } from "react";
+import Cookies from "js-cookie";
 import "./styles.scss";
+import { v4 as uuidv4 } from "uuid";
 
 const Contributions = () => {
+    const [contributionId, setContributionId] = useState("");
+    useEffect(() => {
+        setContributionId(uuidv4());
+    }, []);
+
     let pond = useRef();
     async function handleSubmit() {
         await pond.processFiles();
@@ -84,7 +90,14 @@ const Contributions = () => {
                 <FilePond
                     allowMultiple={true}
                     maxFiles={40}
-                    server={"http://localhost:8080/onedrive/upload"}
+                    server={{
+                        url: "http://localhost:8080/api/contribution/upload",
+                        process: {
+                            headers: {
+                                "contribution-id": contributionId,
+                            },
+                        },
+                    }}
                     instantUpload={false}
                     ref={(ref) => {
                         pond = ref;

@@ -12,6 +12,7 @@ const LandingPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    console.log(document.cookie);
 
     useEffect(() => {
         async function getAuth() {
