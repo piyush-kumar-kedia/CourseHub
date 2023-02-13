@@ -16,10 +16,13 @@ import onedriveRoutes from "./routes/onedrive/onedrive.routes.js";
 import courseRoutes from "./routes/course.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 import eventRoutes from "./routes/event.routes.js";
+const path = require("path");
 
 const app = express();
 const PORT = config.port;
 import UploadFile from "./services/UploadFile.js";
+
+app.use(express.static(path.join(__dirname, "static")));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
