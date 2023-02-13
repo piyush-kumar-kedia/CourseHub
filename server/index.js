@@ -15,6 +15,7 @@ connectDatabase();
 import onedriveRoutes from "./routes/onedrive/onedrive.routes.js";
 import courseRoutes from "./routes/course.routes.js";
 import searchRoutes from "./routes/search.routes.js";
+import eventRoutes from "./routes/event.routes.js";
 
 const app = express();
 const PORT = config.port;
@@ -27,6 +28,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/file", onedriveRoutes);
 app.use("/api/course", courseRoutes);
 app.use("/api/search", searchRoutes);
+app.use("/api/event", eventRoutes);
 
 app.use(
     "/homepage",
