@@ -8,8 +8,10 @@ import fs from "fs";
 
 async function ContributionCreation(contributionId, data) {
     const existingContribution = await Contribution.findOne({ contributionId });
+    console.log(existingContribution);
     if (!existingContribution) {
-        const newContribution = await Contribution.create(data);
+        const newContribution = await Contribution.create({ ...data, contributionId });
+        // console.log("new contri");
         return newContribution;
     }
     const updatedContribution = await Contribution.findOneAndUpdate(
@@ -17,17 +19,21 @@ async function ContributionCreation(contributionId, data) {
         { ...data },
         { new: true }
     );
+    // console.log("updated contri");
     return updatedContribution;
 }
 
 async function HandleFileToDB(contributionId, fileName) {
     const existingContribution = await Contribution.findOne({ contributionId });
+
     if (!existingContribution) {
         const newContribution = await Contribution.create({ contributionId, fileName });
+        console.log("new contri");
         return newContribution;
     }
     existingContribution.fileName.push(fileName);
     await existingContribution.save();
+    console.log("updated contri");
     return existingContribution;
 }
 
@@ -64,11 +70,12 @@ async function HandleFileUpload(req, res, next) {
 async function CreateNewContribution(req, res, next) {
     const payloadSchema = {
         contributionId: Joi.string().required(),
+        year: Joi.string().required(),
         uploadedBy: Joi.string().required(),
         courseCode: Joi.string().required(),
         folder: Joi.string().required(),
         description: Joi.string().required(),
-        isAnonymous: Joi.boolean().required(),
+        // isAnonymous: Joi.boolean().required(),
     };
     const data = req.body;
     const valid = validatePayload(payloadSchema, data);
@@ -77,10 +84,11 @@ async function CreateNewContribution(req, res, next) {
     }
     let _data = JSON.parse(JSON.stringify(data));
     delete _data.contributionId;
+    // console.log(data, _data);
     const newContribution = await ContributionCreation(data.contributionId, _data);
     return res.json({
         created: true,
-        data: newContribution,
+        // data: newContribution,
     });
 }
 

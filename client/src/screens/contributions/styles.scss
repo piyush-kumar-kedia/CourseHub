@@ -141,4 +141,12 @@
     padding: 1rem;
     font-family: 'bold';
     cursor: pointer;
+    &.true{
+        background-color: #FECF6F;
+        cursor: pointer;
+    }
+    &.false{
+        background-color: #535353;
+        cursor: not-allowed;
+    }
 }

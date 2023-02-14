@@ -7,20 +7,68 @@ import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import "./styles.scss";
 import { v4 as uuidv4 } from "uuid";
-
+import { CreateNewContribution } from "../../api/Contribution";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 const Contributions = () => {
+    const uploadedBy = useSelector((state) => state.user.user._id);
+
     const [contributionId, setContributionId] = useState("");
     useEffect(() => {
         setContributionId(uuidv4());
     }, []);
 
+    const [courseCode, setCourseCode] = useState(null);
+    const [folder, setFolder] = useState("Lecture Slides");
+    const [description, setDescription] = useState(null);
+    const [year, setYear] = useState("2022");
+    const [submitEnabled, setSubmitEnabled] = useState(false);
+
+    useEffect(() => {
+        if (!courseCode || !folder || !year || !description || courseCode?.length < 3) {
+            setSubmitEnabled(false);
+            return;
+        }
+        setSubmitEnabled(true);
+    }, [courseCode, folder, description, year]);
+
+    // const [contributionId, setContributionId] = useState("");
+
     let pond = useRef();
     async function handleSubmit() {
+        if (!courseCode || !folder || !year || !description) {
+            toast.error("Please fill the complete form.");
+            return;
+        }
+        if (courseCode?.length < 3) {
+            toast.error("Invalid course code length!");
+            return;
+        }
+        console.log(courseCode, folder, description, year);
         await pond.processFiles();
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
-        contributionSection.classList.remove("show");
         pond.removeFiles();
+        try {
+            setSubmitEnabled(false);
+            let resp = await CreateNewContribution({
+                courseCode,
+                folder,
+                description,
+                year,
+                contributionId,
+                uploadedBy,
+            });
+            contributionSection.classList.remove("show");
+            toast.success("Files uploaded successfully!");
+            console.log(resp);
+            setSubmitEnabled(true);
+        } catch (error) {
+            setSubmitEnabled(true);
+            contributionSection.classList.remove("show");
+            toast.error("Failed to upload! Please try again.");
+            console.log(error);
+        }
     }
     return (
         <SectionC>
@@ -35,13 +83,19 @@ const Contributions = () => {
                             placeholder="Course Code"
                             name="course"
                             className="input_course"
+                            value={courseCode}
+                            onChange={(e) => setCourseCode(e.target.value)}
                         ></input>
                     </div>
                     <div className="section">
                         <label htmlFor="section" className="label_section">
                             SECTION :
                         </label>
-                        <select name="section" className="select_section">
+                        <select
+                            name="section"
+                            className="select_section"
+                            onChange={(e) => setFolder(e.target.value)}
+                        >
                             <option value="Lecture Slides">Lecture Slides</option>
                             <option value="Tutorials">Tutorials</option>
                             <option value="Exams">Exams</option>
@@ -53,7 +107,11 @@ const Contributions = () => {
                         <label htmlFor="year" className="label_year">
                             YEAR :
                         </label>
-                        <select name="year" className="select_year">
+                        <select
+                            name="year"
+                            className="select_year"
+                            onChange={(e) => setYear(e.target.value)}
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -83,6 +141,8 @@ const Contributions = () => {
                             name="description"
                             className="input_description"
                             placeholder="Give a brief description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
                     </div>
                 </form>
@@ -106,7 +166,7 @@ const Contributions = () => {
                 <div className="uploaded">
                     <span>UPLOADED:</span> folder/file
                 </div>
-                <div className="button" onClick={handleSubmit}>
+                <div className={`button ${submitEnabled}`} onClick={handleSubmit}>
                     SUBMIT
                 </div>
             </Wrapper>

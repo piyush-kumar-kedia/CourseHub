@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 const EventSchema = new mongoose.Schema({
-    semester: { type: Number },
-    midSem: { type: Date },
-    endSem: { type: Date },
+    firstYearDates: {
+        midSem: { type: Date },
+        endSem: { type: Date },
+    },
+    otherDates: {
+        midSem: { type: Date },
+        endSem: { type: Date },
+    },
 });
 
 const Event = mongoose.model("Event", EventSchema);
