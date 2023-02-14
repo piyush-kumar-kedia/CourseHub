@@ -17,13 +17,16 @@ import courseRoutes from "./routes/course.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 import eventRoutes from "./routes/event.routes.js";
 import contributionRoutes from "./routes/contribution.routes.js";
-import path from "path";
+import { path, dirname } from "path";
+import { fileURLToPath } from 'url';
 import UploadFile from "./services/UploadFile.js";
 
 const app = express();
 const PORT = config.port;
 
-app.use(express.static(path.join(__dirname, "/static")));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+app.use(express.static(path.join(__dirname, "static")));
 
 app.use(express.json());
 app.use(cookieParser());
