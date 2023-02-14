@@ -23,7 +23,7 @@ import UploadFile from "./services/UploadFile.js";
 const app = express();
 const PORT = config.port;
 
-// app.use(express.static(path.join(__dirname, "static")));
+app.use(express.static(path.join(__dirname, "/static")));
 
 app.use(express.json());
 app.use(cookieParser());
