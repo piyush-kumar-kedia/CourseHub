@@ -7,3 +7,10 @@ export const GetSearchResult = async (wordArr) => {
     });
     return fetched;
 };
+
+export const IsCourseAvailable = async (code) => {
+    const fetched = await axios.post(`${serverRoot}/api/search/isavailable`, {
+        code: code,
+    });
+    return fetched;
+};

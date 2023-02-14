@@ -59,4 +59,15 @@ router.get(
     })
 );
 
+router.post(
+    "/isavailable",
+    // isAuthenticated,
+    catchAsync(async (req, res, next) => {
+        const { code } = req.body;
+        const course = await SearchResult.findOne({ code: code?.toLowerCase() });
+        if (!course) return res.json({ isAvailable: false });
+        return res.json({ isAvailable: course.isAvailable });
+    })
+);
+
 export default router;

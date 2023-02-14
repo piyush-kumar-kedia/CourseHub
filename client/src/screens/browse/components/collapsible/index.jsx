@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import searchFolderById from "../../../../utils/searchFolderById";
 import { toast } from "react-toastify";
+import { capitalise } from "../../../../utils/capitalise";
 
 const Collapsible = ({ course, color, state }) => {
     const [open, setOpen] = useState(state ? state : false);
@@ -168,7 +169,9 @@ const Collapsible = ({ course, color, state }) => {
                     <div className="text">
                         <p className="code">{course.code ? course.code.toUpperCase() : "CL 301"}</p>
                         <p className="name">
-                            {course.name ? course.name : "Process Control and Instrumentation"}
+                            {course.name
+                                ? capitalise(course.name)
+                                : "Process Control and Instrumentation"}
                         </p>
                     </div>
                     <div className="arrow"></div>
