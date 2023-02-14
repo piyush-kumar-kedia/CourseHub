@@ -1,7 +1,7 @@
 import axios from "axios";
 import serverRoot from "./server";
 
-let redirectUri = "http://localhost:8080/api/auth/login/redirect";
+let redirectUri = "http://www.coursehubiitg.in/api/auth/login/redirect";
 
 axios.defaults.withCredentials = true;
 
@@ -11,7 +11,7 @@ export const getUser = async () => {
 };
 
 export const handleLogin = () => {
-    window.location = `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/authorize?client_id=89fc28dc-5aaf-471b-a9bf-f7411b5527f7&response_type=code&redirect_uri=http://localhost:8080/api/auth/login/redirect&scope=offline_access%20user.read&state=12345&prompt=consent`;
+    window.location = `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/authorize?client_id=89fc28dc-5aaf-471b-a9bf-f7411b5527f7&response_type=code&redirect_uri=http://www.coursehubiitg.in/api/auth/login/redirect&scope=offline_access%20user.read&state=12345&prompt=consent`;
 };
 export const AddNewCourseAPI = async (code, name) => {
     const resp = await axios.post(`${serverRoot}/api/user/course`, { code, name });
