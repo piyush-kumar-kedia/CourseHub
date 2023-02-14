@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:test1/screens/guest_screen.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   Function callback;
@@ -104,14 +108,23 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
         Container(
-          margin: const EdgeInsets.fromLTRB(0, 750, 0, 0),
+          margin: const EdgeInsets.fromLTRB(0, 700, 0, 0),
           alignment: Alignment.bottomCenter,
           child: Column(
             children: [
               Builder(builder: (context) {
                 return GestureDetector(
-                  onTap: () => {
-                   callback()
+                  onTap: ()  async {
+                   // callback()
+                    var url = Uri.parse('https://coursehub-api.onrender.com/api/course');
+                    var response = await http.get(url);
+                    String body = response.body;
+                    var courses = jsonDecode(body);
+                    var list = [];
+                    for (var course in courses) {
+                      list.add(course["name"]);
+                    }
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => GuestScreen(courses: list.join("\n"))));
                   },
                   child: Container(
                     alignment: Alignment.bottomCenter,
@@ -126,7 +139,7 @@ class LoginScreen extends StatelessWidget {
                           Container(
                               margin: const EdgeInsets.fromLTRB(50, 0, 0, 0),
                               child: Image.asset('assets/image 4.png')),
-                          Text("       Sign in with Microsoft",
+                          Text("       Continue",
                               style: TextStyle(
                                   fontFamily: "Proxima Nova",
                                   fontSize: 16,
