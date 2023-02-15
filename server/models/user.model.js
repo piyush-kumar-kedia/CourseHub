@@ -3,6 +3,7 @@ import Joi from "joi";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import config from "../config/default.js";
+import { logger } from "@azure/identity";
 
 const userSchema = Schema({
     name: { type: String, required: true },
@@ -60,6 +61,20 @@ export const validateUser = function (obj) {
         department: Joi.string().required(),
     });
     return joiSchema.validate(obj);
+};
+export const updateUserData = async (userId, userData) => {
+    User.findOne({ _id: userId }, async (err, doc) => {
+        if (err) {
+            logger.info("ERROR IN UPDATING USER");
+        }
+        if (userData.newUserData.newUserName) {
+            doc.name = userData.newUserData.newUserName;
+            await doc.save();
+        } else if (userData.newUserData.newUserSem) {
+            doc.semester = userData.newUserData.newUserSem;
+            await doc.save();
+        }
+    });
 };
 
 export const getUserFromToken = async function (access_token) {

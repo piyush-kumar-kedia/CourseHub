@@ -4,6 +4,7 @@ import {
     createUser,
     addToFavouriteController,
     removeFromFavouritesController,
+    updateUserController,
 } from "../controllers/user.controller.js";
 import catchAsync from "../utils/catchAsync.js";
 const router = Router();
@@ -16,6 +17,7 @@ router.get("/", isAuthenticated, catchAsync(getUser));
 
 //not used
 router.post("/", validate(validateUser), catchAsync(createUser));
+router.put("/update", isAuthenticated, catchAsync(updateUserController));
 
 router.post("/favourites", isAuthenticated, catchAsync(addToFavouriteController));
 
