@@ -37,6 +37,14 @@ export const LoadLocalCourses = (courses) => {
         },
     };
 };
+export const UpdateUserAction = (newUserData) => {
+    return {
+        type: "UPDATE_USER",
+        payload: {
+            newUserData,
+        },
+    };
+};
 
 export const ClearLocalCourses = () => {
     return {

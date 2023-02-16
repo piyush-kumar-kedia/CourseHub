@@ -4,6 +4,7 @@ import axios from "axios";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { useEffect, useRef, useState } from "react";
+import Footer from "../../components/footer";
 import Cookies from "js-cookie";
 import "./styles.scss";
 import { v4 as uuidv4 } from "uuid";
