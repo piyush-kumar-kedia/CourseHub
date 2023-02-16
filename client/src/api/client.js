@@ -1,1 +1,1 @@
-export default "http://www.coursehubiitg.in";
+export default "https://www.coursehubiitg.in";
