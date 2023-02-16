@@ -21,7 +21,7 @@ import contributionRoutes from "./routes/contribution.routes.js";
 const app = express();
 const PORT = config.port;
 
-app.use(express.static("static/index.html"));
+app.use(express.static("static"));
 
 app.use(express.json());
 app.use(cookieParser());
