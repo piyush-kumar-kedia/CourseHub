@@ -105,6 +105,8 @@ export const redirectHandler = async (req, res, next) => {
         code: code,
     });
 
+    console.log(data);
+
     var config = {
         method: "post",
         url: `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/token`,
