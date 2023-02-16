@@ -123,6 +123,8 @@ export const redirectHandler = async (req, res, next) => {
 
     if (!response.data) throw new AppError(500, "Something went wrong");
 
+    console.log(response.data);
+
     const AccessToken = response.data.access_token;
     const RefreshToken = response.data.refresh_token;
 
