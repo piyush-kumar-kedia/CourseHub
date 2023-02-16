@@ -23,7 +23,7 @@ const PORT = config.port;
 
 //app.use(express.static("static/index.html"));
 app.get('/*', function (req, res) {
-    res.sendFile('static/index.html',
+    res.sendFile('/var/www/website/_work/CourseHub/CourseHub/server/static/index.html',
         function (err) {
             if (err) {
                 res.status(500).send(err);
