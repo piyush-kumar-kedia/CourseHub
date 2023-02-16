@@ -14,10 +14,19 @@
         background-color: #000;
         color: #fff;
         max-width: 60px;
-        padding: 2px;
+        padding: 3px 6px;
         text-align: center;
         font-family: 'Bold';
         font-size: 0.8rem;
+
+    }
+    .unavailable{
+        // background-color: #000;
+        // color: #fff;
+        padding: 2px 4px;
+        text-align: center;
+        font-family: 'Bold';
+        font-size: 0.65rem;
     }
     .name{
         width: 70%;
@@ -27,9 +36,7 @@
         }
     }
 
-    &:hover{
-        transform: scale(1.05);
-    }
+    
 
     &.ADD{
         background-color: #000;
@@ -51,5 +58,14 @@
             color: #fff;
             margin: auto;
         }
+    }
+    &.true{
+        &:hover{
+            transform: scale(1.05);
+        }
+    }
+    &.false{
+        background-color: #636363 !important;
+        cursor: not-allowed !important;
     }
 }
