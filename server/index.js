@@ -21,7 +21,16 @@ import contributionRoutes from "./routes/contribution.routes.js";
 const app = express();
 const PORT = config.port;
 
-app.use(express.static("static/index.html"));
+//app.use(express.static("static/index.html"));
+app.get('/*', function (req, res) {
+    res.sendFile('static/index.html',
+        function (err) {
+            if (err) {
+                res.status(500).send(err);
+            }
+        }
+    );
+});
 
 app.use(express.json());
 app.use(cookieParser());
