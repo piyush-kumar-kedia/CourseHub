@@ -92,4 +92,9 @@ async function CreateNewContribution(req, res, next) {
     });
 }
 
-export default { GetAllContributions, CreateNewContribution, HandleFileUpload };
+async function GetMyContributions(req, res, next) {
+    const myContributions = await Contribution.find({ uploadedBy: req.user._id });
+    res.json(myContributions);
+}
+
+export default { GetAllContributions, CreateNewContribution, HandleFileUpload, GetMyContributions };

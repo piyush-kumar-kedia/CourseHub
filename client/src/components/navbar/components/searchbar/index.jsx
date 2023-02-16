@@ -144,7 +144,22 @@ const SearchBar = ({ type }) => {
                                 </span>
                             </>
                         ) : (
-                            "not found"
+                            <>
+                                Not found! <br />
+                                <br /> Please ensure that there are no spaces in between course
+                                code. (ce101 and not ce 101){" "}
+                                <span
+                                    onClick={() => setOpen(false)}
+                                    style={{
+                                        cursor: "pointer",
+                                        display: "block",
+                                        marginTop: "12px",
+                                        textDecoration: "underline",
+                                    }}
+                                >
+                                    Close
+                                </span>
+                            </>
                         )
                     ) : error ? (
                         "error"
