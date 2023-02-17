@@ -122,8 +122,12 @@ const Dashboard = () => {
                     </div>
 
                     <div className="exam-card-container">
-                        <ExamCard days={midSem} name={"Mid-Sem Exam"} color={"#FECF6F"} />
-                        <ExamCard days={endSem} name={"End-Sem Exam"} color={"#FECF6F"} />
+                        {midSem >= 0 && (
+                            <ExamCard days={midSem} name={"Mid-Sem Exam"} color={"#FECF6F"} />
+                        )}
+                        {endSem >= 0 && (
+                            <ExamCard days={endSem} name={"End-Sem Exam"} color={"#FECF6F"} />
+                        )}
                     </div>
                 </div>
                 <Space amount={50} />
