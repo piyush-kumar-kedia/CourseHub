@@ -12,7 +12,11 @@ const LandingPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
-    console.log(document.cookie);
+
+    useEffect(() => {
+        sessionStorage.removeItem("LocalCourses");
+    }, []);
+
     const searchCourseShowModalHandler = (event) => {
         const collection = document.getElementsByClassName("add_modal");
         const contributionSection = collection[0];
