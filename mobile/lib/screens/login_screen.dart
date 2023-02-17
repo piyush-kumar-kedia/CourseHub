@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:test1/screens/guest_screen.dart';
-import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   Function callback;
@@ -93,20 +90,20 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            height: 140,
-            width: 302,
-            child: Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa odio nibh eu eu nulla ac vestibulum amet. Ultrices magna ",
-                style: TextStyle(
-                    fontFamily: "Proxima Nova",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.black)),
-          ),
-        ),
+        // Align(
+        //   alignment: Alignment.bottomCenter,
+        //   child: SizedBox(
+        //     height: 140,
+        //     width: 302,
+        //     child: Text(
+        //         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa odio nibh eu eu nulla ac vestibulum amet. Ultrices magna ",
+        //         style: TextStyle(
+        //             fontFamily: "Proxima Nova",
+        //             fontSize: 12,
+        //             fontWeight: FontWeight.w300,
+        //             color: Colors.black)),
+        //   ),
+        // ),
         Container(
           margin: const EdgeInsets.fromLTRB(0, 700, 0, 0),
           alignment: Alignment.bottomCenter,
@@ -116,15 +113,7 @@ class LoginScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: ()  async {
                    // callback()
-                    var url = Uri.parse('https://coursehub-api.onrender.com/api/course');
-                    var response = await http.get(url);
-                    String body = response.body;
-                    var courses = jsonDecode(body);
-                    var list = [];
-                    for (var course in courses) {
-                      list.add(course["name"]);
-                    }
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => GuestScreen(courses: list.join("\n"))));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => GuestScreen(courses: "")));
                   },
                   child: Container(
                     alignment: Alignment.bottomCenter,
@@ -138,7 +127,8 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           Container(
                               margin: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-                              child: Image.asset('assets/image 4.png')),
+                              // child: Image.asset('assets/image 4.png')),
+                              child: Icon( Icons.arrow_circle_right)),
                           Text("       Continue",
                               style: TextStyle(
                                   fontFamily: "Proxima Nova",
