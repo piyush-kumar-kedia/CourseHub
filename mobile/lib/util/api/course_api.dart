@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:test1/util/endpoints/course_endpoints.dart';
 
-import '../../models/course_model.dart';
+import '../../models/course.dart';
 
 class CourseApiClient {
   CourseApiClient._();
