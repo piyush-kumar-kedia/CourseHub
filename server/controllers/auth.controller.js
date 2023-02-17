@@ -176,7 +176,8 @@ export const mobileRedirectHandler = async (req, res, next) => {
     var data = qs.stringify({
         client_secret: clientSecret,
         client_id: clientid,
-        redirect_uri: redirect_uri,
+        //redirect_uri: redirect_uri,
+        redirect_uri: "https://www.coursehubiitg.in/api/auth/login/redirect/mobile",
         scope: "user.read",
         grant_type: "authorization_code",
         code: code,
