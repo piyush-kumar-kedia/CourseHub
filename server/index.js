@@ -22,6 +22,11 @@ const app = express();
 const PORT = config.port;
 
 app.use(express.static("static"));
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const _dirname = path.dirname(_filename);
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -53,6 +58,13 @@ app.use((err, req, res, next) => {
         error: true,
         message: message,
     });
+});
+
+// Set static folder
+app.use(express.static("static"));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "static", "index.html"));
 });
 
 app.listen(PORT, () => {
