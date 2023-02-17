@@ -16,18 +16,22 @@ import { useNavigate } from "react-router-dom";
 
 import formatName from "../../utils/formatName";
 import formatBranch from "../../utils/formatBranch";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getColors } from "../../utils/colors";
 import { LoadCourses } from "../../actions/filebrowser_actions";
 import Contributions from "../contributions";
 import { AddNewCourseLocal, ClearLocalCourses } from "../../actions/user_actions";
 import AddCourseModal from "./components/addcoursemodal";
-import { AddNewCourseAPI } from "../../api/User";
+import { AddNewCourseAPI, GetExamDates } from "../../api/User";
 
 const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
+
+    const [midSem, setMidSem] = useState(0);
+    const [endSem, setEndSem] = useState(0);
+
     const contributionHandler = (event) => {
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
@@ -68,6 +72,26 @@ const Dashboard = () => {
         }
     }, []);
 
+    useEffect(() => {
+        async function run() {
+            try {
+                console.log("Exam Dates");
+                const { data } = await GetExamDates();
+                const { dates } = data;
+                const midSemDate = new Date(dates.midSem);
+                const endSemDate = new Date(dates.endSem);
+                const now = Date.now();
+                const daysTillMidsem = parseInt((midSemDate.getTime() - now) / (1000 * 3600 * 24));
+                setMidSem(daysTillMidsem);
+                const daysEndSem = parseInt((endSemDate.getTime() - now) / (1000 * 3600 * 24));
+                setEndSem(daysEndSem);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        run();
+    }, []);
+
     const handleClick = (code) => {
         dispatch(ChangeCurrentCourse(null, code.toUpperCase()));
         navigate("/browse");
@@ -98,8 +122,8 @@ const Dashboard = () => {
                     </div>
 
                     <div className="exam-card-container">
-                        <ExamCard days={22} name={"Mid-Sem Exam"} color={"#FECF6F"} />
-                        <ExamCard days={45} name={"End-Sem Exam"} color={"#FECF6F"} />
+                        <ExamCard days={midSem} name={"Mid-Sem Exam"} color={"#FECF6F"} />
+                        <ExamCard days={endSem} name={"End-Sem Exam"} color={"#FECF6F"} />
                     </div>
                 </div>
                 <Space amount={50} />

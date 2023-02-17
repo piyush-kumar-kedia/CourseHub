@@ -49,7 +49,7 @@ app.use(
 // Error handler
 app.use((err, req, res, next) => {
     logger.error(err.message);
-    console.log(err);
+    // console.log(err);
     const { status = 500, message = "Something went wrong!" } = err;
     return res.status(status).json({
         error: true,

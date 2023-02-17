@@ -39,3 +39,7 @@ export const RemoveFromFavourites = async (id) => {
     console.log(resp);
     return resp;
 };
+export const GetExamDates = async () => {
+    const resp = await axios.get(`${serverRoot}/api/event/examdates`);
+    return resp;
+};
