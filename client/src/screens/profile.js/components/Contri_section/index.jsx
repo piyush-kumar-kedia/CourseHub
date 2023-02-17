@@ -2,33 +2,44 @@ import Container from "../../../../components/container";
 import Contribution_card from "./ContributionCard";
 import "./styles.scss";
 import SubHeading from "../../../../components/subheading";
+import { GetMyContributions } from "../../../../api/Contribution";
+
+import { useEffect, useState } from "react";
 const Contrisection = () => {
-  return (
-    <Container color={"light"}>
-      <div className="c_content">
-        <div className="sub_head">
-          <SubHeading text={"MY CONTRIBUTIONS"} type={"bold"} color={"black"} />
-        </div>
+    const [isLoading, setIsLoading] = useState(true);
+    const [myContributions, setMyContributions] = useState([]);
+    useEffect(() => {
+        const callBack = async () => {
+            const resp = await GetMyContributions();
+            setMyContributions((prev) => [...resp.data]);
+            setIsLoading(false);
+        };
+        callBack();
+    }, []);
+
+    const ContriCard = myContributions.map((contributionItem) => (
         <Contribution_card
-          text={"PENDING"}
-          content={
-            "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Earum, illo. Numquam cupiditate facere vitae facilis"
-          }
+            courseCode={contributionItem.courseCode}
+            section={contributionItem.folder}
+            year={contributionItem.year}
+            uploadDate={contributionItem.updatedAt}
+            key={contributionItem.contributionId}
+            isApproved={`${contributionItem.approved}`}
+            content={`${contributionItem.description}`}
         />
-        <Contribution_card
-          text={"APPROVED"}
-          content={
-            "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Earum, illo. Numquam cupiditate facere vitae facilis"
-          }
-        />
-        <Contribution_card
-          text={"DECLINED"}
-          content={
-            "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Earum, illo. Numquam cupiditate facere vitae facilis"
-          }
-        />
-      </div>
-    </Container>
-  );
+    ));
+
+    return isLoading ? (
+        "loading"
+    ) : (
+        <Container color={"light"}>
+            <div className="c_content">
+                <div className="sub_head">
+                    <SubHeading text={"MY CONTRIBUTIONS"} type={"bold"} color={"black"} />
+                </div>
+                {ContriCard}
+            </div>
+        </Container>
+    );
 };
 export default Contrisection;

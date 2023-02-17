@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
-
     const [contributionId, setContributionId] = useState("");
     useEffect(() => {
         setContributionId(uuidv4());
@@ -37,6 +36,7 @@ const Contributions = () => {
 
     let pond = useRef();
     async function handleSubmit() {
+        console.log(folder);
         if (!courseCode || !folder || !year || !description) {
             toast.error("Please fill the complete form.");
             return;
@@ -57,6 +57,7 @@ const Contributions = () => {
                 folder,
                 description,
                 year,
+                approved: false,
                 contributionId,
                 uploadedBy,
             });

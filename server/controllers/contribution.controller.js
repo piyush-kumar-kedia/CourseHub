@@ -5,6 +5,8 @@ import validatePayload from "../utils/validate.js";
 import formidable from "formidable";
 import UploadFile from "../services/UploadFile.js";
 import fs from "fs";
+import { CLIENT_RENEG_LIMIT } from "tls";
+import { logger } from "@azure/identity";
 
 async function ContributionCreation(contributionId, data) {
     const existingContribution = await Contribution.findOne({ contributionId });
@@ -19,7 +21,7 @@ async function ContributionCreation(contributionId, data) {
         { ...data },
         { new: true }
     );
-    // console.log("updated contri");
+    console.log("updated contri");
     return updatedContribution;
 }
 
@@ -74,21 +76,21 @@ async function CreateNewContribution(req, res, next) {
         uploadedBy: Joi.string().required(),
         courseCode: Joi.string().required(),
         folder: Joi.string().required(),
+        approved: Joi.bool().required(),
         description: Joi.string().required(),
         // isAnonymous: Joi.boolean().required(),
     };
     const data = req.body;
+
     const valid = validatePayload(payloadSchema, data);
     if (valid.error) {
         return next(new AppError(400, valid.error));
     }
-    let _data = JSON.parse(JSON.stringify(data));
-    delete _data.contributionId;
-    // console.log(data, _data);
-    const newContribution = await ContributionCreation(data.contributionId, _data);
+
+    const newContribution = await ContributionCreation(data.contributionId, data);
     return res.json({
         created: true,
-        // data: newContribution,
+        data: newContribution,
     });
 }
 
