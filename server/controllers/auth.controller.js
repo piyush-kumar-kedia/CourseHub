@@ -234,9 +234,9 @@ export const mobileRedirectHandler = async (req, res, next) => {
 
     const token = existingUser.generateJWT();
 
-    const encryptedToken = EncryptText(token);
+//     const encryptedToken = EncryptText(token);
 
-    return res.redirect(`${appConfig.mobileURL}://success?token=${encryptedToken}`);
+    return res.redirect(`${appConfig.mobileURL}://success?token=${token}`);
 };
 
 export const logoutHandler = (req, res, next) => {
