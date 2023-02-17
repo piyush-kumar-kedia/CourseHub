@@ -7,13 +7,17 @@ import { LoginUser, LogoutUser } from "../../actions/user_actions";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { getUser, handleLogin } from "../../api/User";
-
+import AddCourseModal from "./components/searchcoursemodal";
 const LandingPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     console.log(document.cookie);
-
+    const searchCourseShowModalHandler = (event) => {
+        const collection = document.getElementsByClassName("add_modal");
+        const contributionSection = collection[0];
+        contributionSection.classList.add("show");
+    };
     useEffect(() => {
         async function getAuth() {
             try {
@@ -38,28 +42,33 @@ const LandingPage = () => {
     return loading ? (
         "loading..."
     ) : (
-        <section className="landing">
-            <div className="top">
-                <div className="right"></div>
-            </div>
-            <div className="bottom">
-                <div className="content">
-                    <div className="text">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa odio nibh
-                            eu eu nulla ac vestibulum amet. Ultrices magna faucibus dui dignissim
-                            scelerisque. Lorem a sed egestas libero nisi. Vel mauris non sed
-                            fermentum.
-                        </p>
-                    </div>
-                    <div className="btn-container">
-                        <MicrosoftSignIn setClicked={handleLogin} />
-                        <div className="line"></div>
-                        <SearchCourseButton />
+        <>
+            <section className="landing">
+                <div className="top">
+                    <div className="right"></div>
+                </div>
+                <div className="bottom">
+                    <div className="content">
+                        <div className="text">
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa odio
+                                nibh eu eu nulla ac vestibulum amet. Ultrices magna faucibus dui
+                                dignissim scelerisque. Lorem a sed egestas libero nisi. Vel mauris
+                                non sed fermentum.
+                            </p>
+                        </div>
+                        <div className="btn-container">
+                            <MicrosoftSignIn setClicked={handleLogin} />
+                            <div className="line"></div>
+                            <SearchCourseButton
+                                searchCourseShowModalHandler={searchCourseShowModalHandler}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+            <AddCourseModal />
+        </>
     );
 };
 
