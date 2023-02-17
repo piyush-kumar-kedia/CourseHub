@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:test1/widgets/course_card.dart';
+import 'package:test1/widgets/file_card.dart';
 
 class Favourites extends StatelessWidget {
   Favourites({
@@ -39,7 +39,7 @@ class Favourites extends StatelessWidget {
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: 4.0),
                 itemBuilder: (BuildContext context, int index) {
-                  return CourseCard(
+                  return FileCard(
                       index: branches[index], address: address[index],name: name[index],);
                 },
               )),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test1/components/course_card.dart';
+import 'package:test1/widgets/course_card.dart';
 
-import '../models/course_model.dart';
+import '../models/course.dart';
 import '../util/api/course_api.dart';
 
 class GuestScreen extends StatelessWidget {

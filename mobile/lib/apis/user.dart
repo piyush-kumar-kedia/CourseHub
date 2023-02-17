@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cryptography/cryptography.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:encrypt/encrypt.dart';
@@ -11,12 +11,12 @@ const baseUrl = 'https://www.coursehubiitg.in';
 const access_token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjNlZWZjYmM1OGNlNTFlODQ4ZGUwYjRlIiwiaWF0IjoxNjc2NjQxOTYyLCJleHAiOjE2NzY2NDU1NjJ9.Mz7G-IDRClAjDjgzkd6kM7DWBcSJY0SGewseLC4ls_g';
 
-// Uint8List convertStringToUint8List(String str) {
-//   final List<int> codeUnits = str.codeUnits;
-//   final Uint8List unit8List = Uint8List.fromList(codeUnits);
+Uint8List convertStringToUint8List(String str) {
+  final List<int> codeUnits = str.codeUnits;
+  final Uint8List unit8List = Uint8List.fromList(codeUnits);
 
-//   return unit8List;
-// }
+  return unit8List;
+}
 
 Future<Map<String, dynamic>> getUser() async {
   final prefs = await SharedPreferences.getInstance();
