@@ -193,9 +193,7 @@ const Contributions = () => {
                         pond = ref;
                     }}
                 />
-                <div className="uploaded">
-                    <span>UPLOADED:</span> folder/file
-                </div>
+                <div className="uploaded">{/* <span>UPLOADED:</span> folder/file */}</div>
                 <div className={`button ${submitEnabled}`} onClick={handleSubmit}>
                     SUBMIT
                 </div>
