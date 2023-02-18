@@ -21,17 +21,15 @@ import contributionRoutes from "./routes/contribution.routes.js";
 const app = express();
 const PORT = config.port;
 
-
 app.use(express.static("static"));
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin: "https://coursehubiitg.in" }));
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/file", onedriveRoutes);

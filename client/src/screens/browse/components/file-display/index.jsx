@@ -11,7 +11,21 @@ import clientRoot from "../../../../api/client";
 const FileDisplay = ({ file, path, code }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
-    const name = formatFileName(file.name);
+    let name = formatFileName(file.name);
+    let contributor = "";
+    try {
+        if (name.indexOf("~") !== -1) {
+            name = name.slice(name.indexOf("~"));
+            contributor = name.slice(name.indexOf("~") + 1);
+            contributor = contributor.slice(0, contributor.indexOf("."));
+        } else {
+            name = name.slice(0, name.indexOf(fileType));
+            contributor = "Anonymous";
+        }
+    } catch (error) {
+        name = formatFileName(file.name);
+        contributor = "Anonymous";
+    }
     const isLoggedIn = useSelector((state) => state.user?.loggedIn);
     const currCourseCode = useSelector((state) => state.fileBrowser?.currentCourseCode);
     const currFolderId = useSelector((state) => state.fileBrowser?.currentFolder?._id);
@@ -124,7 +138,7 @@ const FileDisplay = ({ file, path, code }) => {
                     <p className="info">
                         {fileType.toUpperCase()} {fileSize}
                     </p>
-                    <p className="contributor">Atharva Tagalpallewar</p>
+                    <p className="contributor">{contributor}</p>
                 </div>
             </div>
         </div>
