@@ -8,6 +8,7 @@ import { donwloadFile, previewFile } from "../../../../api/File";
 import { AddPreviewUrl, AddDownloadUrl } from "../../../../actions/url_actions";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import clientRoot from "../../../../api/client";
+import capitalise from "../../../../utils/capitalise.js";
 const FileDisplay = ({ file, path, code }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
@@ -139,7 +140,7 @@ const FileDisplay = ({ file, path, code }) => {
                     <p className="info">
                         {fileType.toUpperCase()} {fileSize}
                     </p>
-                    <p className="contributor">{contributor}</p>
+                    <p className="contributor">{capitalise(contributor)}</p>
                 </div>
             </div>
         </div>
