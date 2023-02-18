@@ -11,15 +11,16 @@ import clientRoot from "../../../../api/client";
 const FileDisplay = ({ file, path, code }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
-    let name = formatFileName(file.name);
-    let contributor = "";
+    let name = file.name;
+    let _dispName = formatFileName(name);
+    let contributor = file.name;
     try {
         if (name.indexOf("~") !== -1) {
-            name = name.slice(name.indexOf("~"));
+            _dispName = formatFileName(name.slice(0, name.indexOf("~")));
             contributor = name.slice(name.indexOf("~") + 1);
             contributor = contributor.slice(0, contributor.indexOf("."));
         } else {
-            name = name.slice(0, name.indexOf(fileType));
+            _dispName = formatFileName(name.slice(0, name.indexOf(fileType)));
             contributor = "Anonymous";
         }
     } catch (error) {
@@ -132,7 +133,7 @@ const FileDisplay = ({ file, path, code }) => {
             </div>
             <div className="content">
                 <p className="title" title={file.name}>
-                    {file?.name ? name : "Quiz 1 Answer Key"}
+                    {file?.name ? _dispName : "Quiz 1 Answer Key"}
                 </p>
                 <div className="file-metadata">
                     <p className="info">
