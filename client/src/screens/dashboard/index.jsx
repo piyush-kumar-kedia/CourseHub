@@ -23,6 +23,7 @@ import Contributions from "../contributions";
 import { AddNewCourseLocal, ClearLocalCourses } from "../../actions/user_actions";
 import AddCourseModal from "./components/addcoursemodal";
 import { AddNewCourseAPI, GetExamDates } from "../../api/User";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -44,6 +45,16 @@ const Dashboard = () => {
     };
     const handleAddCourse = async ({ code, name }) => {
         try {
+            // check if course already exists
+            const found = user.user?.courses?.find(
+                (course) => course.code.toLowerCase() === code.toLowerCase()
+            );
+
+            if (found) {
+                toast.info("Course already exists.");
+                return;
+            }
+            // add to user in DB
             await AddNewCourseAPI(code, name);
             location.reload();
         } catch (error) {
