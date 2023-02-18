@@ -46,7 +46,7 @@ async function GetAllContributions(req, res, next) {
 
 async function HandleFileUpload(req, res, next) {
     const contributionId = req.headers["contribution-id"];
-
+    console.log(req.headers.username);
     const form = formidable({ multiples: true });
 
     form.parse(req, async (err, fields, files) => {
@@ -54,15 +54,27 @@ async function HandleFileUpload(req, res, next) {
             next(err);
             return;
         }
+
+        // Files names
         let initialPath = files.filepond.filepath;
         let newFilename = files.filepond.newFilename;
         let originalFilename = files.filepond.originalFilename;
 
+        let wordArr = originalFilename.split(".");
+        let fileExtension = wordArr[wordArr.length - 1];
+        let finalFileName = "";
+
+        for (let i = 0; i < wordArr.length - 1; i++) {
+            finalFileName += wordArr[i];
+        }
+        finalFileName += "~" + req.headers.username;
+        finalFileName += "." + fileExtension;
+
         const finalPath = initialPath.slice(0, initialPath.indexOf(newFilename));
 
-        fs.rename(finalPath + newFilename, finalPath + originalFilename, async () => {
-            await HandleFileToDB(contributionId, originalFilename);
-            await UploadFile(contributionId, finalPath, originalFilename);
+        fs.rename(finalPath + newFilename, finalPath + finalFileName, async () => {
+            await HandleFileToDB(contributionId, finalFileName);
+            await UploadFile(contributionId, finalPath, finalFileName);
         });
 
         return res.json({ fields, files });

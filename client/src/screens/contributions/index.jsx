@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
+    const userName = useSelector((state) => state.user.user.name);
     const [contributionId, setContributionId] = useState("");
     useEffect(() => {
         setContributionId(uuidv4());
@@ -185,6 +186,7 @@ const Contributions = () => {
                         process: {
                             headers: {
                                 "contribution-id": contributionId,
+                                username: userName,
                             },
                         },
                     }}
