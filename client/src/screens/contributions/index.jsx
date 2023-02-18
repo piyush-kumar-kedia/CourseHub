@@ -4,7 +4,9 @@ import axios from "axios";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { useEffect, useRef, useState } from "react";
+import Footer from "../../components/footer";
 import Cookies from "js-cookie";
+import ToggleSwitch from "./components/ToggleSwitch";
 import "./styles.scss";
 import { v4 as uuidv4 } from "uuid";
 import { CreateNewContribution } from "../../api/Contribution";
@@ -12,7 +14,6 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
-
     const [contributionId, setContributionId] = useState("");
     useEffect(() => {
         setContributionId(uuidv4());
@@ -35,6 +36,7 @@ const Contributions = () => {
     // const [contributionId, setContributionId] = useState("");
 
     let pond = useRef();
+
     async function handleSubmit() {
         if (!courseCode || !folder || !year || !description) {
             toast.error("Please fill the complete form.");
@@ -49,19 +51,39 @@ const Contributions = () => {
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
         pond.removeFiles();
+        const toggle = document.getElementById("toggle");
+        console.log(toggle);
+        let isAnoynmous = toggle.checked;
+        console.log(isAnoynmous);
+
         try {
             setSubmitEnabled(false);
-            let resp = await CreateNewContribution({
-                courseCode,
-                folder,
-                description,
-                year,
-                contributionId,
-                uploadedBy,
-            });
+            if (isAnoynmous) {
+                let resp = await CreateNewContribution({
+                    courseCode,
+                    folder,
+                    description,
+                    year,
+                    approved: false,
+                    contributionId,
+                    uploadedBy: `63ef67f7ab9bcbea9195147c`,
+                });
+                console.log(resp);
+            } else {
+                let resp = await CreateNewContribution({
+                    courseCode,
+                    folder,
+                    description,
+                    year,
+                    approved: false,
+                    contributionId,
+                    uploadedBy,
+                });
+                console.log(resp);
+            }
             contributionSection.classList.remove("show");
             toast.success("Files uploaded successfully!");
-            console.log(resp);
+            setContributionId(uuidv4());
             setSubmitEnabled(true);
         } catch (error) {
             setSubmitEnabled(true);
@@ -145,6 +167,14 @@ const Contributions = () => {
                             onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
                     </div>
+                    <div className="year">
+                        <label htmlFor="course" className="label_year">
+                            ANNOYOMOUS:
+                        </label>
+                        <span className="toggle-container">
+                            <ToggleSwitch label={"toggle"} />
+                        </span>
+                    </div>
                 </form>
 
                 <FilePond
@@ -163,9 +193,7 @@ const Contributions = () => {
                         pond = ref;
                     }}
                 />
-                <div className="uploaded">
-                    <span>UPLOADED:</span> folder/file
-                </div>
+                <div className="uploaded">{/* <span>UPLOADED:</span> folder/file */}</div>
                 <div className={`button ${submitEnabled}`} onClick={handleSubmit}>
                     SUBMIT
                 </div>

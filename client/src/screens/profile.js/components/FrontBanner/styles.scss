@@ -1,35 +1,78 @@
 .front_banner {
+
     position: relative;
     height: 45vh;
+    background-size: cover;
+    background-image: url('./Assets/banner.svg');
+    background-position-x: 85%;
+    background-repeat: no-repeat;
+    background-size: contain;
     padding-top: 5vh;
 
     .banner_text {
         color: white;
         width: fit-content;
+        margin-left: 0;
 
         .sub_head {
             margin-bottom: 20px;
+
+            span {
+                margin-left: 0;
+                color: white;
+                font-family: 'Bold';
+                font-size: 1.5rem;
+            }
+        }
+
+        span {
+            font-size: xx-large;
+        }
+
+        header {
+            color: white;
+            font-family: 'Bold';
+            font-size: 4rem;
+            display: flex;
+            align-items: center;
+
+            .inputName {
+                background: none;
+                border: none;
+                color: white;
+                font-family: 'Bold';
+                font-size: 3rem;
+                width: auto;
+            }
+
+            .inputName:focus {
+                outline: none;
+                border: none;
+                border-bottom: 2px solid #CACACA;
+            }
+
+            .tickDiv {
+                height: 2rem;
+                margin-left: 1rem;
+                width: 2rem;
+                background-image: url('./Assets/tick.svg');
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+
+            .editDiv {
+                margin-left: 1rem;
+                height: 2rem;
+                width: 2rem;
+                background-image: url('./Assets/editL.svg');
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+
         }
     }
-
-    .svg_profile {
-        position: absolute;
-        bottom: 0px;
-        right: 12vw;
-        z-index: 2;
-    }
 }
 
-.svg_wave {
-    position: absolute;
-    left: 0;
-    bottom: 6vh;
-    z-index: 1;
-    width: 100vw;
-}
-
-@media screen and (max-width:1050px) {
-    .svg_profile {
-        display: none;
-    }
-}
+@media screen and (max-width:1050px) {}

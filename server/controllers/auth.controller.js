@@ -18,6 +18,7 @@ import academic from "../config/academic.js";
 
 import aesjs from "aes-js";
 import EncryptText from "../utils/encryptAES.js";
+import { getRandomColor } from "../utils/generateRandomColor.js";
 
 //not used
 export const loginHandler = (req, res) => {
@@ -68,9 +69,11 @@ const fetchCourses = async (rollNumber) => {
                 !code.includes("SA")
             ) {
                 var code = code.substring(0, 5);
+                let color = getRandomColor();
                 courses.push({
                     code,
                     name,
+                    color,
                 });
             }
         });

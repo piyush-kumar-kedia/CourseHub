@@ -25,6 +25,7 @@
     }
 }
 
+
 .section {
     display: flex;
     align-items: center;
@@ -57,6 +58,14 @@
     .label_year {
         font-family: 'Bold';
         font-size: 1.2rem;
+    }
+
+    .toggle-container {
+        width: 60%;
+        height: auto;
+        margin: 0;
+        display: flex;
+        align-items: center;
     }
 
     .select_year {
@@ -141,11 +150,13 @@
     padding: 1rem;
     font-family: 'bold';
     cursor: pointer;
-    &.true{
+
+    &.true {
         background-color: #FECF6F;
         cursor: pointer;
     }
-    &.false{
+
+    &.false {
         background-color: #535353;
         cursor: not-allowed;
     }

@@ -4,6 +4,7 @@ import NavLink from "../../../../components/navbar/components/navlink";
 import SearchBar from "../../../../components/navbar/components/searchbar";
 import { useNavigate } from "react-router-dom";
 const NavBarBrowseScreen = () => {
+
 	const navigate = useNavigate();
 	const handleLogout = () => {
 		dispatch(LogoutUser());

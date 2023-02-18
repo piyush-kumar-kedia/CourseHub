@@ -63,6 +63,19 @@ const UserReducer = (
             return { ...state, localCourses: [...state.localCourses, ...action.payload.courses] };
         case "CLEAR_LOCAL_COURSES":
             return { ...state, localCourses: [] };
+        case "UPDATE_USER":
+            console.log(action.payload);
+            if (action.payload.newUserData.newUserName) {
+                return {
+                    ...state,
+                    user: { ...state.user, name: action.payload.newUserData.newUserName },
+                };
+            } else if (action.payload.newUserData.newUserSem) {
+                return {
+                    ...state,
+                    user: { ...state.user, semester: action.payload.newUserData.newUserSem },
+                };
+            }
         default:
             return state;
     }

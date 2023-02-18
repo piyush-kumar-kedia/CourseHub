@@ -17,10 +17,48 @@
         align-items: center;
         justify-content: space-around;
 
-
-        p {
+        .inputSem {
+            background: none;
             font-family: 'Bold';
             font-size: 1.8rem;
+            border: none;
+            color: black;
+            width: auto;
+        }
+
+        .inputSem:focus {
+            outline: none;
+            border: none;
+            border-bottom: 2px solid black;
+        }
+
+        .tickSvg {
+            width: 2rem;
+            height: 100%;
+            align-items: center;
+            background-image: url('../Assets/tickdark.svg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+
+        }
+
+        .editSvg {
+            width: 2rem;
+            height: 100%;
+            background-image: url('../Assets/edit.svg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        .inputDiv {
+            width: 2rem;
+            height: 100%;
+            display: flex;
+            font-family: 'Bold';
+            font-size: 1.8rem;
+            align-items: center;
         }
     }
 
