@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test1/screens/dummy_screen.dart';
+import 'package:test1/screens/favourites.dart';
 import 'package:test1/screens/login_screen.dart';
 import 'package:test1/widgets/nav_bar.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       key: navigatorKey,
     
-      home: LoginScreen()
+      home: Favourites()
     );
   }
 }
