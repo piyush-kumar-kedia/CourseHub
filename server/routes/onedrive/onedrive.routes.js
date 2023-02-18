@@ -69,10 +69,13 @@ router.get(
         console.log(response.data.user_code);
 
         fs.writeFileSync("./onedrive-device-code.token", response.data.device_code, "utf-8");
-        fs.unlinkSync("./onedrive-access-token.token");
-        fs.unlinkSync("./onedrive-refresh-token.token");
+        if (fs.existsSync("./onedrive-access-token.token")) {
+            fs.unlinkSync("./onedrive-access-token.token");
+            fs.unlinkSync("./onedrive-refresh-token.token");
+        }
 
-        res.redirect(`https://microsoft.com/devicelogin`);
+
+        //res.redirect(`https://microsoft.com/devicelogin`);
 
         res.status(200).json({
             status: "success",

@@ -17,17 +17,21 @@ import courseRoutes from "./routes/course.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 import eventRoutes from "./routes/event.routes.js";
 import contributionRoutes from "./routes/contribution.routes.js";
-import path from "path";
-import UploadFile from "./services/UploadFile.js";
 
 const app = express();
 const PORT = config.port;
 
-// app.use(express.static(path.join(__dirname, "/static")));
+
+app.use(express.static("static"));
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(cors({ credentials: true, origin: "https://coursehubiitg.in" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/file", onedriveRoutes);
@@ -55,6 +59,13 @@ app.use((err, req, res, next) => {
         error: true,
         message: message,
     });
+});
+
+// Set static folder
+app.use(express.static("static"));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "static", "index.html"));
 });
 
 app.listen(PORT, () => {
