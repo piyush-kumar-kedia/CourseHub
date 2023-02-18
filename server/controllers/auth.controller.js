@@ -23,7 +23,7 @@ import { getRandomColor } from "../utils/generateRandomColor.js";
 //not used
 export const loginHandler = (req, res) => {
     res.redirect(
-        `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.read&state=12345&prompt=consent`
+        `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.read&state=12345`
     );
 };
 const fetchCourses = async (rollNumber) => {
@@ -102,11 +102,14 @@ export const redirectHandler = async (req, res, next) => {
     var data = qs.stringify({
         client_secret: clientSecret,
         client_id: clientid,
-        redirect_uri: redirect_uri,
+        //redirect_uri: redirect_uri,
+        redirect_uri: "https://www.coursehubiitg.in/api/auth/login/redirect",
         scope: "user.read",
         grant_type: "authorization_code",
         code: code,
     });
+
+    console.log(data);
 
     var config = {
         method: "post",
@@ -122,6 +125,8 @@ export const redirectHandler = async (req, res, next) => {
     });
 
     if (!response.data) throw new AppError(500, "Something went wrong");
+
+    console.log(response.data);
 
     const AccessToken = response.data.access_token;
     const RefreshToken = response.data.refresh_token;
@@ -174,7 +179,8 @@ export const mobileRedirectHandler = async (req, res, next) => {
     var data = qs.stringify({
         client_secret: clientSecret,
         client_id: clientid,
-        redirect_uri: redirect_uri,
+        //redirect_uri: redirect_uri,
+        redirect_uri: "https://www.coursehubiitg.in/api/auth/login/redirect/mobile",
         scope: "user.read",
         grant_type: "authorization_code",
         code: code,
@@ -231,9 +237,9 @@ export const mobileRedirectHandler = async (req, res, next) => {
 
     const token = existingUser.generateJWT();
 
-    const encryptedToken = EncryptText(token);
+//     const encryptedToken = EncryptText(token);
 
-    return res.redirect(`${appConfig.mobileURL}://success?token=${encryptedToken}`);
+    return res.redirect(`${appConfig.mobileURL}://success?token=${token}`);
 };
 
 export const logoutHandler = (req, res, next) => {
