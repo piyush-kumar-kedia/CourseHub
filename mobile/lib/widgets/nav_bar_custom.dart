@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive/hive.dart';
 import 'package:test1/screens/browse_screen.dart';
+import 'package:test1/screens/contribute_screen.dart';
 import 'package:test1/screens/favourites_screen.dart';
 import 'package:test1/screens/home_screen.dart';
 import 'package:test1/screens/profile_screen.dart';
@@ -29,7 +30,7 @@ class _NavBarCustom extends State<NavBarCustom> {
       code: "ma101",
       callback: () {},
     ),
-    Wrapper(),
+    ContributeScreen(),
     FavouritesScreen(),
     Wrapper(),
   ];
@@ -43,7 +44,7 @@ class _NavBarCustom extends State<NavBarCustom> {
         code: "ce101",
         callback: returnToHomeCallback,
       ),
-      Wrapper(),
+      ContributeScreen(),
       FavouritesScreen(),
       Profile(),
     ];
