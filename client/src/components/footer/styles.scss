@@ -1,11 +1,12 @@
 .footer-container {
 
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #FECF6F;
-    padding: 40px;
+    // flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    background-color: #000000;
+    color: #fff;
+    padding: 45px;
 
     .footer-text {
         font-size: 1.2rem;
@@ -13,11 +14,69 @@
     }
 
     .footer-img {
-        width: 220px;
+        width: 190px;
         height: 60px;
-        background: url(./footer-img.svg), none;
+        background: url(./assets/footer-img.svg), none;
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
+        margin-right: 24px;
+    }
+    .link-logo-container{
+        display: flex;
+        align-items: center;
+        .link-group{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            .link-img{
+                width: 24px;
+                height: 24px;
+                display: block;
+                // background-color: white;
+                margin: 2px;
+                &.website{
+                    background: url(./assets/Website.svg);
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+                &.linkedin{
+                    background: url(./assets/LinkedIn.svg);
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+                &.twitter{
+                    background: url(./assets/Twitter.svg);
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+                &.instagram{
+                    background: url(./assets/Instagram.svg);
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+            }
+        }
+    }
+    .right{
+        .span-name{
+            font-size: 0.84rem;
+        }
+        text-align: right;
+        .right-heading, .website-and-backend,.footer-app,.footer-lead{
+            display: block;
+        }
+        .right-heading, .bold-text{
+            font-family: "Bold";
+        }
+        // font-size: 0.8rem;
+    }
+    @media screen and (max-width: 980px) {
+        .right{
+            display: none;
+        }
     }
 }

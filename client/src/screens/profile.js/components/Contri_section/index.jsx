@@ -5,6 +5,7 @@ import SubHeading from "../../../../components/subheading";
 import { GetMyContributions } from "../../../../api/Contribution";
 
 import { useEffect, useState } from "react";
+import CourseCard from "../../../dashboard/components/coursecard";
 const Contrisection = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [myContributions, setMyContributions] = useState([]);
@@ -37,7 +38,11 @@ const Contrisection = () => {
                 <div className="sub_head">
                     <SubHeading text={"MY CONTRIBUTIONS"} type={"bold"} color={"black"} />
                 </div>
-                {ContriCard}
+                {!(myContributions.length === 0) ? (
+                    ContriCard
+                ) : (
+                    <div className="No-Contri-graphic" />
+                )}
             </div>
         </Container>
     );
