@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:test1/screens/browse_screen.dart';
 import 'package:test1/screens/favourites.dart';
 import 'package:test1/screens/home_screen.dart';
 import 'package:test1/widgets/wrapper.dart';
@@ -13,13 +14,31 @@ class _NavBarCustom extends State<NavBarCustom> {
 
   int currentPageNumber = 0;
 
+  void returnToHomeCallback() {
+    setState(() {
+      currentPageNumber = 0;
+    });
+  }
+
   List<Widget> screens = [
     HomeScreen(),
-    Wrapper(),
+    BrowseScreen(code: "ma101", callback: () {},),
     Wrapper(),
     Favourites(),
     Wrapper(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    screens = [
+      HomeScreen(),
+      BrowseScreen(code: "ce101", callback: returnToHomeCallback,),
+      Wrapper(),
+      Favourites(),
+      Wrapper(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

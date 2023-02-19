@@ -27,4 +27,22 @@ class CourseApiClient {
     }
     return courses;
   }
+
+  static Future<Map<String, dynamic>> getCourseDetail(String code) async {
+    http.Response? response;
+    Map<String, dynamic> m = {};
+
+    try {
+      response = await http.get(
+        Uri.parse('${CourseEndPoints.allCourses}$code/'),
+      );
+      if (response.statusCode == 200) {
+        var decodedResponse = jsonDecode(response.body);
+        m = decodedResponse as Map<String, dynamic>;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return m;
+  }
 }
