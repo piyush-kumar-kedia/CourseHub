@@ -27,7 +27,7 @@ class FolderExplorer extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(16.0, 20.0, 0, 0),
                       child: Text(
                         e["name"],
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: "ProximaNova",
                           fontSize: 18.0,
                           fontWeight: FontWeight.w700,
@@ -65,15 +65,15 @@ class FolderExplorer extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 12.0,
                     ),
                     Container(
                       width: 30.0,
                       height: 40.0,
-                      color: Color(0xFFD9D9D9),
+                      color: const Color(0xFFD9D9D9),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 12.0,
                     ),
                     Expanded(
@@ -83,20 +83,20 @@ class FolderExplorer extends StatelessWidget {
                           Text(
                             name,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: "ProximaNova",
                               fontWeight: FontWeight.w500,
                               fontSize: 18.0,
                               color: Colors.black,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 4.0,
                           ),
                           Row(
-                            children: [
+                            children: const [
                               Text(
-                                "PDF",
+                                "PDF", //TODO
                                 style: TextStyle(
                                   fontFamily: "ProximaNova",
                                   fontWeight: FontWeight.w400,
@@ -120,7 +120,7 @@ class FolderExplorer extends StatelessWidget {
                                 width: 4.0,
                               ),
                               Text(
-                                "Atharva Tagalpallewar",
+                                "Atharva Tagalpallewar", //TODO
                                 style: TextStyle(
                                   fontFamily: "ProximaNova",
                                   fontWeight: FontWeight.w400,
@@ -133,13 +133,59 @@ class FolderExplorer extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Icon(Icons.arrow_downward),
-                    SizedBox(
-                      width: 4.0,
+                    GestureDetector(
+                        onTap: () {
+                          print("h"); //TODO
+                        },
+                        child: const Icon(
+                          Icons.arrow_downward,
+                          size: 30.0,
+                          color: Color(
+                              0x7F000000), // TODO change colour on download
+                        )),
+                    PopupMenuButton(
+                      splashRadius: 1,
+                      icon: const Icon(
+                        Icons.more_vert,
+                        size: 30.0,
+                      ),
+                      onSelected: (value) {
+                        // TODO
+                      },
+                      itemBuilder: (BuildContext bc) {
+                        return [
+                          PopupMenuItem(
+                            value: '/fav',
+                            child: Row(
+                              children: const [
+                                Text("Favourite"),
+                                Spacer(),
+                                Icon(
+                                  Icons.star,
+                                  size: 30.0,
+                                  color: Color(0x7F000000),
+                                ),
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: '/share',
+                            child: Row(
+                              children: const [
+                                Text("Share"),
+                                Spacer(),
+                                Icon(
+                                  Icons.share,
+                                  size: 30.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ];
+                      },
                     ),
-                    Icon(Icons.more_vert),
-                    SizedBox(
-                      width: 12.0,
+                    const SizedBox(
+                      width: 10.0,
                     ),
                   ],
                 ),
