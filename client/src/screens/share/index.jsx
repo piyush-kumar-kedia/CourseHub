@@ -23,7 +23,7 @@ const Share = (props) => {
                         <section className="clip" onClick={copyHandler}></section>
                     </CopyToClipboard>
                 </div>
-                <div className="bottom-banner">BOTTOM BANNER</div>
+                <div className="bottom-banner"></div>
             </Wrapper>
         </SectionShare>
     );
