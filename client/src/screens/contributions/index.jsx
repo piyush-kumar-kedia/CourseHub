@@ -150,11 +150,18 @@ const Contributions = () => {
                                     d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                                 />
                             </svg>
-
+                            <option value="2022">2023</option>
                             <option value="2022">2022</option>
+                            <option value="2022">2021</option>
+                            <option value="2022">2020</option>
                             <option value="2019">2019</option>
                             <option value="2018">2018</option>
                             <option value="2017">2017</option>
+                            <option value="2022">2016</option>
+                            <option value="2022">2015</option>
+                            <option value="2022">2014</option>
+                            <option value="2022">2013</option>
+                            <option value="2022">2012</option>
                         </select>
                     </div>
                     <div className="description">
@@ -183,7 +190,7 @@ const Contributions = () => {
                     allowMultiple={true}
                     maxFiles={40}
                     server={{
-                        url: "http://localhost:8080/api/contribution/upload",
+                        url: "https://www.coursehubiitg.in/api/contribution/upload",
                         process: {
                             headers: {
                                 "contribution-id": contributionId,
