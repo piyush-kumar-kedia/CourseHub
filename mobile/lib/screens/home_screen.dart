@@ -5,8 +5,8 @@ import 'package:test1/widgets/course_card.dart';
 import '../models/course.dart';
 import '../util/api/course_api.dart';
 
-class GuestScreen extends StatelessWidget {
-  const GuestScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

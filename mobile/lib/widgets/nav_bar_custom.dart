@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:test1/screens/favourites.dart';
-import 'package:test1/screens/guest_screen.dart';
+import 'package:test1/screens/home_screen.dart';
 import 'package:test1/widgets/wrapper.dart';
 
 class NavBarCustom extends StatefulWidget {
@@ -14,7 +14,7 @@ class _NavBarCustom extends State<NavBarCustom> {
   int currentPageNumber = 0;
 
   List<Widget> screens = [
-    GuestScreen(),
+    HomeScreen(),
     Wrapper(),
     Wrapper(),
     Favourites(),

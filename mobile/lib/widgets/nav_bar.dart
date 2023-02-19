@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:test1/screens/guest_screen.dart';
+import 'package:test1/screens/home_screen.dart';
 import 'package:test1/screens/login_screen.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:test1/widgets/wrapper.dart';
@@ -16,7 +16,7 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   List<Widget> _buildScreens() {
     return [
-      GuestScreen(),
+      HomeScreen(),
       Wrapper(),
       Wrapper(),
       Wrapper(),
