@@ -4,13 +4,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class Contribute extends StatefulWidget {
-  const Contribute({Key? key}) : super(key: key);
+class ContributeScreen extends StatefulWidget {
+  const ContributeScreen({Key? key}) : super(key: key);
 
   @override
-  State<Contribute> createState() => _ContributeState();
+  State<ContributeScreen> createState() => _ContributeScreenState();
 }
-class _ContributeState extends State<Contribute> {
+class _ContributeScreenState extends State<ContributeScreen> {
   FilePickerResult? result;
   UniqueKey key = UniqueKey();
   String dropdownValue = '2023';

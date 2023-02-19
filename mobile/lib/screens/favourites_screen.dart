@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:test1/widgets/file_card.dart';
 
-class Favourites extends StatelessWidget {
-  Favourites({
+class FavouritesScreen extends StatelessWidget {
+  FavouritesScreen({
     Key? key,
   }) : super(key: key);
   var fav = <Map>[

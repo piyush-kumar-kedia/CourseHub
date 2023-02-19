@@ -30,7 +30,7 @@ class _NavBarCustom extends State<NavBarCustom> {
       callback: () {},
     ),
     Wrapper(),
-    Favourites(),
+    FavouritesScreen(),
     Wrapper(),
   ];
 
@@ -44,7 +44,7 @@ class _NavBarCustom extends State<NavBarCustom> {
         callback: returnToHomeCallback,
       ),
       Wrapper(),
-      Favourites(),
+      FavouritesScreen(),
       Profile(),
     ];
   }
