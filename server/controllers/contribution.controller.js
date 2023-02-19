@@ -146,7 +146,7 @@ async function MobileFileUploadHandler(req, res, next) {
         for (let i = 0; i < wordArr.length - 1; i++) {
             finalFileName += wordArr[i];
         }
-        finalFileName += "~" + req.headers.username;
+        finalFileName += "~" + req.user.name;
         finalFileName += "." + fileExtension;
         fileNames.push(finalFileName);
 

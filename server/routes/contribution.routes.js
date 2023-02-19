@@ -12,6 +12,7 @@ router.post("/", catchAsync(ContributionController.CreateNewContribution));
 router.post("/upload", catchAsync(ContributionController.HandleFileUpload));
 router.post(
     "/upload/mobile",
+    isAuthenticated,
     upload.array("files"),
     catchAsync(ContributionController.MobileFileUploadHandler)
 );
