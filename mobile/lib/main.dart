@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:test1/screens/dummy_screen.dart';
 
 import 'package:test1/widgets/nav_bar_custom.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       key: navigatorKey,
-      home: Scaffold(body: NavBarCustom()),
+      home: SafeArea(child: Scaffold(body: NavBarCustom())),
     );
   }
 }
