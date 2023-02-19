@@ -37,7 +37,7 @@ const App = () => {
         }
     }, [isLoggedIn]);
 
-    return (
+    return window.screen.width >= 640 ? (
         <div className="App">
             <ToastContainer
                 position="top-right"
@@ -63,6 +63,14 @@ const App = () => {
                     <Route element={<ErrorScreen />} path="*" />
                 </Routes>
             </Router>
+        </div>
+    ) : (
+        <div
+            style={{
+                textAlign: "center",
+            }}
+        >
+            Device not supported :| Coming soon
         </div>
     );
 };

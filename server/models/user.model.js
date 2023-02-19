@@ -28,7 +28,7 @@ const userSchema = Schema({
 userSchema.methods.generateJWT = function () {
     var user = this;
     var token = jwt.sign({ user: user._id }, config.jwtSecret, {
-        expiresIn: "1h",
+        expiresIn: "24d",
     });
     return token;
 };
