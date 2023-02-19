@@ -19,6 +19,7 @@ import academic from "../config/academic.js";
 import aesjs from "aes-js";
 import EncryptText from "../utils/encryptAES.js";
 import { getRandomColor } from "../utils/generateRandomColor.js";
+import academicdata from "../config/academic.js";
 
 //not used
 export const loginHandler = (req, res) => {
@@ -96,6 +97,12 @@ const getDepartment = async (access_token) => {
     return response.data.positions[0].detail.company.department;
 };
 
+function calculateSemester(rollNumber) {
+    const year = parseInt(rollNumber.slice(0, 2));
+    const semester = academicdata.semesterMap[year];
+    return semester;
+}
+
 export const redirectHandler = async (req, res, next) => {
     const { code } = req.query;
 
@@ -150,7 +157,7 @@ export const redirectHandler = async (req, res, next) => {
             rollNumber: userFromToken.data.surname,
             email: userFromToken.data.mail,
             // branch: department, //calculate branch
-            semester: 2, //calculate sem
+            semester: calculateSemester(userFromToken.data.surname), //calculate sem
             courses: courses,
             department: department,
         };
@@ -165,9 +172,10 @@ export const redirectHandler = async (req, res, next) => {
     const token = existingUser.generateJWT();
 
     res.cookie("token", token, {
-        maxAge: 3600000,
+        maxAge: 2073600000,
         sameSite: "lax",
         secure: false,
+        expires: new Date(Date.now() + 2073600000),
         httpOnly: true,
     });
 

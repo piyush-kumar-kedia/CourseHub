@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:test1/apis/login.dart';
-import 'package:test1/apis/user.dart';
+import '../apis/authentication/login.dart';
+import '../apis/user/user.dart';
 
 class DummyScreen extends StatelessWidget {
   const DummyScreen({super.key});
@@ -20,7 +20,7 @@ class DummyScreen extends StatelessWidget {
                 }),
             ElevatedButton(
               onPressed: () {
-                getUser();
+                getCurrentUser();
               },
               child: const Text('Get my details'),
             )

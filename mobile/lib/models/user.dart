@@ -1,6 +1,10 @@
+// To parse this JSON data, do
+//
+//     final user = userFromJson(jsonString);
+
 import 'dart:convert';
-import './course.dart';
-import './favourites.dart';
+
+import 'package:test1/models/course.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 
@@ -28,10 +32,10 @@ class User {
   String degree;
   List<Course> courses;
   String department;
-  List<Favourite> favourites;
+  List<dynamic> favourites;
   int v;
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory User.fromJson(Map<dynamic, dynamic> json) => User(
         id: json["_id"],
         name: json["name"],
         email: json["email"],
@@ -41,8 +45,7 @@ class User {
         courses:
             List<Course>.from(json["courses"].map((x) => Course.fromJson(x))),
         department: json["department"],
-        favourites: List<Favourite>.from(
-            json["favourites"].map((x) => Favourite.fromJson(x))),
+        favourites: List<dynamic>.from(json["favourites"].map((x) => x)),
         v: json["__v"],
       );
 
@@ -55,7 +58,8 @@ class User {
         "degree": degree,
         "courses": List<dynamic>.from(courses.map((x) => x.toJson())),
         "department": department,
-        "favourites": List<dynamic>.from(favourites.map((x) => x.toJson())),
+        "favourites": List<dynamic>.from(favourites.map((x) => x)),
         "__v": v,
       };
 }
+
