@@ -20,3 +20,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+class RemoveScrollGlow extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
+  }
+}

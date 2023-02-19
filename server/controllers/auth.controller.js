@@ -172,9 +172,10 @@ export const redirectHandler = async (req, res, next) => {
     const token = existingUser.generateJWT();
 
     res.cookie("token", token, {
-        maxAge: 3600000,
+        maxAge: 2073600000,
         sameSite: "lax",
         secure: false,
+        expires: new Date(Date.now() + 2073600000),
         httpOnly: true,
     });
 

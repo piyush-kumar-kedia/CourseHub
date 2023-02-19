@@ -47,6 +47,8 @@ dependencies:
   persistent_bottom_nav_bar: ^5.0.2
   hive: any
   hive_flutter: any
+  file_picker: ^5.2.5
+
 
 dev_dependencies:
   flutter_test:
