@@ -19,12 +19,12 @@ const FolderInfo = ({ path, name, canDownload, contributionHandler, folderId, co
                         <div className="folder-actions">
                             {folderId && courseCode && (
                                 <>
-                                    <span
+                                    {/* <span
                                         className="folder-action-icon favs"
                                         onClick={() => {
                                             toast("Added to favourites.");
                                         }}
-                                    ></span>
+                                    ></span> */}
                                     <span
                                         className="folder-action-icon share"
                                         onClick={handleShare}
