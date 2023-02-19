@@ -7,7 +7,7 @@ const NavBarBrowseScreen = () => {
     const navigate = useNavigate();
     const handleLogout = () => {
         dispatch(LogoutUser());
-        window.location = "http://localhost:8080/logout";
+        window.location = "https://www.coursehubiitg.in/logout";
     };
     return (
         <nav className="nav-browse">
