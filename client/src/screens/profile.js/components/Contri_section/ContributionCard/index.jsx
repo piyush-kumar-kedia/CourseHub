@@ -12,7 +12,7 @@ export default function ContributionCard(props) {
             </div>
             <p className="content">{props.content}</p>
             <div className="btn">
-                <Button text={props.isApproved} />
+                <Button text={props.isApproved === true ? "APPROVED" : "PENDING"} />
             </div>
         </div>
     );
