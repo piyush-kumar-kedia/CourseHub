@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:test1/widgets/course_card.dart';
 
+import '../apis/courses/course_api.dart';
 import '../models/course.dart';
-import '../util/api/course_api.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

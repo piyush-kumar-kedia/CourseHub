@@ -3,26 +3,26 @@ const String baseUrl = "https://coursehubiitg.in/api";
 class MiscellaneousEndpoints {
   static const String examDates =
       '$baseUrl/exam'; //Needs params : semester_number
-  static const String contributionList = '$baseUrl/contributions';
+  static const String contributionList = '$baseUrl/contributions/';
 }
 
 class CoursesEndpoints {
   static const String search = '$baseUrl/search/'; // Needs params :course_code
-  static const String searchAvailable = '$baseUrl/search/available'; // Needs params :course_code
-  static const String course = '$baseUrl/course'; //Needs params : course_code
+  static const String searchAvailable = '$baseUrl/search/available/'; // Needs params :course_code
+  static const String course = '$baseUrl/course/'; //Needs params : course_code
 }
 
 class FileEndpoints {
   static const String download =
-      '$baseUrl/file/download'; //Needs params : Onedrive-file-ID
+      '$baseUrl/file/download/'; //Needs params : Onedrive-file-ID
   static const String preview =
-      '$baseUrl/file/preview'; //Needs params : Onedrive-file-ID
+      '$baseUrl/file/preview/'; //Needs params : Onedrive-file-ID
 }
 
 class UserEndpoints {
-  static const String currentUser = '$baseUrl/user';
-  static const String addFav = '$baseUrl/user/favourite';
-  static const String removeFav = '$baseUrl/user/favourite';
+  static const String currentUser = '$baseUrl/user/';
+  static const String addFav = '$baseUrl/user/favourite/';
+  static const String removeFav = '$baseUrl/user/favourite/';
 }
 
 class AuthEndpints {

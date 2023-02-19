@@ -14,7 +14,7 @@ class CourseApiClient {
 
     try {
       response = await http.get(
-        Uri.parse(CourseEndPoints.allCourses),
+        Uri.parse(CoursesEndpoints.course),
       );
       if (response.statusCode == 200) {
         var decodedResponse = jsonDecode(response.body);
@@ -34,7 +34,7 @@ class CourseApiClient {
 
     try {
       response = await http.get(
-        Uri.parse('${CourseEndPoints.allCourses}$code/'),
+        Uri.parse('${CoursesEndpoints.course}$code/'),
       );
       if (response.statusCode == 200) {
         var decodedResponse = jsonDecode(response.body);

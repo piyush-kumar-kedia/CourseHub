@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         key: navigatorKey,
         home: Scaffold(
-          body: NavBarCustom(),
+          body: LoginScreen(),
         ));
   }
 }
