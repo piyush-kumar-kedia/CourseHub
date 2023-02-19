@@ -37,24 +37,22 @@ class _ProfileState extends State<Profile> {
           Container(
             color: Colors.black,
             child: Column(children: [
-              const SizedBox(
-                height: 80,
-              ),
               Container(
                 alignment: Alignment.topLeft,
                 padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 30),
                 width: double.infinity,
                 child: const Text(
                   "MY PROFILE",
                   style: TextStyle(
-                    fontFamily: 'Proxima Nova',
+                    fontFamily: 'ProximaNova',
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
                     color: Colors.white,
                   ),
                 ),
               ),
+              SizedBox(height: 16.0,),
               Container(
                 alignment: Alignment.topLeft,
                 padding:
@@ -63,7 +61,7 @@ class _ProfileState extends State<Profile> {
                 child: Text(
                   name,
                   style: const TextStyle(
-                    fontFamily: 'Proxima Nova',
+                    fontFamily: 'ProximaNova',
                     fontWeight: FontWeight.w700,
                     fontSize: 28,
                     color: Colors.white,
@@ -78,7 +76,7 @@ class _ProfileState extends State<Profile> {
                 child: Text(
                   "B.tech, $branch",
                   style: const TextStyle(
-                    fontFamily: 'Proxima Nova',
+                    fontFamily: 'ProximaNova',
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
                     color: Colors.white,
@@ -91,6 +89,7 @@ class _ProfileState extends State<Profile> {
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                 width: double.infinity,
                 child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                   color: const Color(0xffFECF6F),
                   child: Container(
                     alignment: Alignment.topLeft,
@@ -106,7 +105,7 @@ class _ProfileState extends State<Profile> {
                             Text(
                               sem.toString(),
                               style: const TextStyle(
-                                fontFamily: 'Proxima Nova',
+                                fontFamily: 'ProximaNova',
                                 fontWeight: FontWeight.w700,
                                 fontSize: 18.8,
                               ),
@@ -115,7 +114,7 @@ class _ProfileState extends State<Profile> {
                               th,
                               style: const TextStyle(
                                 fontFeatures: [FontFeature.superscripts()],
-                                fontFamily: 'Proxima Nova',
+                                fontFamily: 'ProximaNova',
                                 fontWeight: FontWeight.w700,
                                 // fontSize: 16,
                               ),
@@ -129,7 +128,7 @@ class _ProfileState extends State<Profile> {
                         child: const Text(
                           "Semester",
                           style: TextStyle(
-                            fontFamily: 'Proxima Nova',
+                            fontFamily: 'ProximaNova',
                             fontWeight: FontWeight.w400,
                             fontSize: 14.1,
                           ),
@@ -156,7 +155,7 @@ class _ProfileState extends State<Profile> {
                   child: const Text(
                     "MY CONTRIBUTIONS",
                     style: TextStyle(
-                      fontFamily: 'Proxima Nova',
+                      fontFamily: 'ProximaNova',
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                       color: Colors.black,
