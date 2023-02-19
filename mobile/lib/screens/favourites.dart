@@ -78,7 +78,7 @@ class Favourites extends StatelessWidget {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 20.0,
                                     mainAxisSpacing: 2.0),
-                            itemBuilder: (BuildContext context, int index) {
+                                   itemBuilder: (BuildContext context, int index) {
                                return FileCard(
                                 index: fav[index]['code'].toUpperCase(),
                                 address: fav[index]['path'].replaceAll("/"," > "),
