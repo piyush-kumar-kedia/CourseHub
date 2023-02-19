@@ -18,9 +18,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        scrollBehavior: RemoveScrollGlow(),
         key: navigatorKey,
         home: Scaffold(
           body: LoginScreen(),
         ));
+  }
+}
+class RemoveScrollGlow extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
   }
 }

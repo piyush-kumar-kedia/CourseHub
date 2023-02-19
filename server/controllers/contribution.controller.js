@@ -88,7 +88,7 @@ async function CreateNewContribution(req, res, next) {
         uploadedBy: Joi.string().required(),
         courseCode: Joi.string().required(),
         folder: Joi.string().required(),
-        approved: Joi.bool().required(),
+        approved: Joi.bool(),
         description: Joi.string().required(),
         // isAnonymous: Joi.boolean().required(),
     };
@@ -111,4 +111,68 @@ async function GetMyContributions(req, res, next) {
     res.json(myContributions);
 }
 
-export default { GetAllContributions, CreateNewContribution, HandleFileUpload, GetMyContributions };
+async function MobileFileUploadHandler(req, res, next) {
+    const payloadSchema = {
+        contributionId: Joi.string().required(),
+        year: Joi.string().required(),
+        uploadedBy: Joi.string().required(),
+        courseCode: Joi.string().required(),
+        folder: Joi.string().required(),
+        approved: Joi.bool(),
+        description: Joi.string().required(),
+        // isAnonymous: Joi.boolean().required(),
+    };
+    const data = req.body;
+
+    const valid = validatePayload(payloadSchema, data);
+    if (valid.error) {
+        return next(new AppError(400, valid.error));
+    }
+
+    const contributionId = data.contributionId;
+    const files = req.files;
+    let fileNames = [];
+    files.map((file) => {
+        // Files names
+
+        let initialPath = file.path;
+        let newFilename = file.filename;
+        let originalFilename = file.originalname;
+
+        let wordArr = originalFilename.split(".");
+        let fileExtension = wordArr[wordArr.length - 1];
+        let finalFileName = "";
+
+        for (let i = 0; i < wordArr.length - 1; i++) {
+            finalFileName += wordArr[i];
+        }
+        finalFileName += "~" + req.user.name;
+        finalFileName += "." + fileExtension;
+        fileNames.push(finalFileName);
+
+        const finalPath = initialPath.slice(0, initialPath.indexOf(newFilename));
+
+        fs.rename(finalPath + newFilename, finalPath + finalFileName, async () => {
+            // await HandleFileToDB(contributionId, finalFileName);
+            await UploadFile(contributionId, finalPath, finalFileName);
+        });
+    });
+
+    // const newContribution = await ContributionCreation(data.contributionId, data);
+    const newContribution = await Contribution.create({
+        ...data,
+        fileName: [...fileNames],
+    });
+    return res.json({
+        created: true,
+        data: newContribution,
+    });
+}
+
+export default {
+    GetAllContributions,
+    CreateNewContribution,
+    HandleFileUpload,
+    GetMyContributions,
+    MobileFileUploadHandler,
+};
