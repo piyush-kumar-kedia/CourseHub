@@ -83,7 +83,9 @@ const FrontBanner = () => {
                                 <div className="editDiv" onClick={editNameHandler} />
                             )}
                         </header>
-                        <span>{formatBranch(user?.user?.degree, user?.user?.department)}</span>
+                        <div className="branch">
+                            {formatBranch(user?.user?.degree, user?.user?.department)}
+                        </div>
                     </div>
 
                     <SemCard sem={user.user.semester} />

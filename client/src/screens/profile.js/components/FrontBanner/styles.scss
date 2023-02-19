@@ -29,7 +29,7 @@
             }
         }
 
-        span {
+        .branch {
             font-size: xx-large;
         }
 
@@ -92,4 +92,11 @@
     .front_banner {
         background: none;
     }
+}
+
+@media screen and (max-width:1300px) {
+    .branch {
+        max-width: 500px;
+    }
+
 }
