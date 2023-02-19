@@ -9,6 +9,7 @@ import { AddPreviewUrl, AddDownloadUrl } from "../../../../actions/url_actions";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import clientRoot from "../../../../api/client";
 import capitalise from "../../../../utils/capitalise.js";
+import Share from "../../../share";
 const FileDisplay = ({ file, path, code }) => {
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
@@ -37,8 +38,8 @@ const FileDisplay = ({ file, path, code }) => {
     const urls = useSelector((state) => state.URLS);
 
     const handleShare = () => {
-        toast.info("Link copied to clipboard.");
-        return;
+        const sectionShare = document.getElementById("share");
+        sectionShare.classList.add("show");
     };
 
     const handleDownload = async () => {
@@ -114,11 +115,8 @@ const FileDisplay = ({ file, path, code }) => {
                 }}
             >
                 <div className="top">
-                    <CopyToClipboard
-                        text={`${clientRoot}/browse/${currCourseCode.toLowerCase()}/${currFolderId}`}
-                    >
-                        <span className="share" onClick={handleShare}></span>
-                    </CopyToClipboard>
+                    <span className="share" onClick={handleShare}></span>
+
                     <span className="download" onClick={handleDownload}></span>
                     <span
                         className="star"
@@ -143,6 +141,7 @@ const FileDisplay = ({ file, path, code }) => {
                     <p className="contributor">{capitalise(contributor)}</p>
                 </div>
             </div>
+            <Share link={`${clientRoot}/browse/${currCourseCode.toLowerCase()}/${currFolderId}`} />
         </div>
     );
 };

@@ -22,7 +22,7 @@ import { getUser } from "../../api/User";
 import { useParams } from "react-router-dom";
 import { getCourse } from "../../api/Course";
 import { toast } from "react-toastify";
-
+import Share from "../share";
 const BrowseScreen = () => {
     const user = useSelector((state) => state.user);
     const folderData = useSelector((state) => state.fileBrowser.currentFolder);
@@ -199,6 +199,7 @@ const BrowseScreen = () => {
                     </div>
                 </div>
             </div>
+
             <Contributions />
         </Container>
     );

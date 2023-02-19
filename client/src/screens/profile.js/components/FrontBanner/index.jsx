@@ -56,35 +56,38 @@ const FrontBanner = () => {
         <Container color={"dark"}>
             <div className="front_banner">
                 <div className="banner_text">
-                    <div className="sub_head">
-                        <span>MY PROFILE</span>
+                    <div className="texts">
+                        <div className="sub_head">
+                            <span>MY PROFILE</span>
+                        </div>
+                        <header>
+                            {isNameEdit ? (
+                                <input
+                                    autofocus="autofocus"
+                                    id="nameField"
+                                    className="inputName"
+                                    value={userName}
+                                    onChange={(event) => {
+                                        setUserName((prev) => {
+                                            return event.target.value;
+                                        });
+                                    }}
+                                    type="text"
+                                />
+                            ) : (
+                                formatName(user?.user?.name)
+                            )}
+                            {isNameEdit ? (
+                                <div className="tickDiv" onClick={submitNameHandler} />
+                            ) : (
+                                <div className="editDiv" onClick={editNameHandler} />
+                            )}
+                        </header>
+                        <span>{formatBranch(user?.user?.degree, user?.user?.department)}</span>
                     </div>
-                    <header>
-                        {isNameEdit ? (
-                            <input
-                                autofocus="autofocus"
-                                id="nameField"
-                                className="inputName"
-                                value={userName}
-                                onChange={(event) => {
-                                    setUserName((prev) => {
-                                        return event.target.value;
-                                    });
-                                }}
-                                type="text"
-                            />
-                        ) : (
-                            formatName(user?.user?.name)
-                        )}
-                        {isNameEdit ? (
-                            <div className="tickDiv" onClick={submitNameHandler} />
-                        ) : (
-                            <div className="editDiv" onClick={editNameHandler} />
-                        )}
-                    </header>
-                    <span>{formatBranch(user?.user?.degree, user?.user?.department)}</span>
+
+                    <SemCard sem={user.user.semester} />
                 </div>
-                <SemCard sem={user.user.semester} />
             </div>
             <ToastContainer />
         </Container>
