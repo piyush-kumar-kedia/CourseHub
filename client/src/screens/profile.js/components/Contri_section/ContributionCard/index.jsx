@@ -1,11 +1,14 @@
 import "./styles.scss";
 import Button from "./Buttons";
+import date from "date-and-time";
 export default function ContributionCard(props) {
-    const uploadDate = props.date;
+    const now = new Date(props.uploadDate);
+    const pattern = date.compile(`DD MMM YYYY   hh:mm A`);
+    const finalDate = date.format(now, pattern);
     return (
         <div className="main_card">
             <div className="path">
-                <p>{props.uploadDate}</p>
+                <p>{finalDate}</p>
                 <p>
                     {props.courseCode} {">"} {props.year} {">"} {props.section}
                 </p>

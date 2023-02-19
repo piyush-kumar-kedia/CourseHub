@@ -115,46 +115,47 @@ const Dashboard = () => {
 
     return (
         <div className="App">
-            <NavBar />
-            <Container color={"dark"}>
-                <Space amount={20} />
-                <div className="split">
-                    <div>
-                        <Heading text={"Welcome,"} type={""} color={"light"} />
-                        <Heading
-                            text={formatName(user?.user?.name)}
-                            type={"bold"}
-                            color={"light"}
-                        />
-                        <SubHeading
-                            text={formatBranch(user?.user?.degree, user?.user?.department)}
-                            color={"light"}
-                        />
-                    </div>
+            <div>
+                <NavBar />
+                <Container color={"dark"}>
+                    <Space amount={20} />
+                    <div className="split">
+                        <div>
+                            <Heading text={"Welcome,"} type={""} color={"light"} />
+                            <Heading
+                                text={formatName(user?.user?.name)}
+                                type={"bold"}
+                                color={"light"}
+                            />
+                            <SubHeading
+                                text={formatBranch(user?.user?.degree, user?.user?.department)}
+                                color={"light"}
+                            />
+                        </div>
 
-                    <div className="exam-card-container">
-                        {midSem >= 0 && (
-                            <ExamCard days={midSem} name={"Mid-Sem Exam"} color={"#FECF6F"} />
-                        )}
-                        {endSem >= 0 && (
-                            <ExamCard days={endSem} name={"End-Sem Exam"} color={"#FECF6F"} />
-                        )}
+                        <div className="exam-card-container">
+                            {midSem >= 0 && (
+                                <ExamCard days={midSem} name={"Mid-Sem Exam"} color={"#FECF6F"} />
+                            )}
+                            {endSem >= 0 && (
+                                <ExamCard days={endSem} name={"End-Sem Exam"} color={"#FECF6F"} />
+                            )}
+                        </div>
                     </div>
-                </div>
-                <Space amount={50} />
-                <SubHeading text={"MY COURSES"} color={"light"} type={"bold"} />
-                <Space amount={20} />
-                <div className="coursecard-container">
-                    {user.user.courses.map((course, index) => (
-                        <CourseCard
-                            key={course.name}
-                            code={course?.code?.toUpperCase()}
-                            name={course.name}
-                            color={getColors(index)}
-                            setClicked={() => handleClick(course.code)}
-                        />
-                    ))}
-                    {/* {user.localCourses.map((course) => (
+                    <Space amount={50} />
+                    <SubHeading text={"MY COURSES"} color={"light"} type={"bold"} />
+                    <Space amount={20} />
+                    <div className="coursecard-container">
+                        {user.user.courses.map((course, index) => (
+                            <CourseCard
+                                key={course.name}
+                                code={course?.code?.toUpperCase()}
+                                name={course.name}
+                                color={getColors(index)}
+                                setClicked={() => handleClick(course.code)}
+                            />
+                        ))}
+                        {/* {user.localCourses.map((course) => (
                         <CourseCard
                             key={course.name}
                             code={course?.code?.toUpperCase()}
@@ -164,46 +165,49 @@ const Dashboard = () => {
                         />
                     ))} */}
 
-                    <CourseCard
-                        type={"ADD"}
-                        setClicked={() => {
-                            // dispatch(
-                            //     AddNewCourseLocal({
-                            //         _id: "638f1709897b3c84b7d8d32c",
-                            //         name: "Introduction to Engineering Drawing",
-                            //         code: "ce101",
-                            //         color: "#DBCEFF",
-                            //     })
-                            // );
-                            // console.log(user);
-                            addCourseModalShowHandler();
-                        }}
-                    />
-                </div>
+                        <CourseCard
+                            type={"ADD"}
+                            setClicked={() => {
+                                // dispatch(
+                                //     AddNewCourseLocal({
+                                //         _id: "638f1709897b3c84b7d8d32c",
+                                //         name: "Introduction to Engineering Drawing",
+                                //         code: "ce101",
+                                //         color: "#DBCEFF",
+                                //     })
+                                // );
+                                // console.log(user);
+                                addCourseModalShowHandler();
+                            }}
+                        />
+                    </div>
+                    <Space amount={50} />
+                </Container>
+                <ContributionBanner contributionHandler={contributionHandler} />
                 <Space amount={50} />
-            </Container>
-            <ContributionBanner contributionHandler={contributionHandler} />
-            <Space amount={50} />
-            <Container>
-                <SubHeading text={"MY FAVOURITES"} type={"bold"} />
-                <div className="fav-container">
-                    {user?.favourites?.length > 0 ? (
-                        user.favourites.map((favourite) => (
-                            <FavouriteCard
-                                name={favourite.name}
-                                path={favourite.path}
-                                key={favourite.id}
-                                code={favourite.code}
-                                id={favourite.id}
-                                _id={favourite._id}
-                            />
-                        ))
-                    ) : (
-                        <div className="no-fav-graphic"></div>
-                    )}
-                </div>
-            </Container>
-            <Footer />
+                <Container>
+                    <SubHeading text={"MY FAVOURITES"} type={"bold"} />
+                    <div className="fav-container">
+                        {user?.favourites?.length > 0 ? (
+                            user.favourites.map((favourite) => (
+                                <FavouriteCard
+                                    name={favourite.name}
+                                    path={favourite.path}
+                                    key={favourite.id}
+                                    code={favourite.code}
+                                    id={favourite.id}
+                                    _id={favourite._id}
+                                />
+                            ))
+                        ) : (
+                            <div className="no-fav-graphic"></div>
+                        )}
+                    </div>
+                </Container>
+            </div>
+            <div>
+                <Footer />
+            </div>
             <Contributions />
             <AddCourseModal handleAddCourse={handleAddCourse} />
         </div>

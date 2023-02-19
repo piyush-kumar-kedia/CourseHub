@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:test1/widgets/browser_nav_crumb.dart';
 import 'package:test1/widgets/folder_explorer.dart';
 
@@ -15,11 +16,19 @@ class BrowseScreen extends StatefulWidget {
 
 class _BrowseScreen extends State<BrowseScreen> {
   String path = "Home/";
-  String year = "2020";
+  String year = "";
+  List<String> availableYears = [];
 
   void addToPathCallback(String p) {
     setState(() {
       path += '$p/';
+    });
+  }
+
+  void handleClick(String value) {
+    setState(() {
+      year = value;
+      path = "Home/";
     });
   }
 
@@ -46,6 +55,17 @@ class _BrowseScreen extends State<BrowseScreen> {
         }
         Map<String, dynamic> data = snapshot.data!;
         List<String> pathArgs = path.split("/");
+
+        availableYears.clear();
+        String lastYear = "";
+        for (var c in data["children"]) {
+          availableYears.add(c["name"]);
+          lastYear = c["name"];
+        }
+
+        if (year == "") {
+          year = lastYear;
+        }
 
         Map<String, dynamic> dataToShow = data;
         List<Widget> navigation_crumbs = [];
@@ -146,6 +166,58 @@ class _BrowseScreen extends State<BrowseScreen> {
                   callback: addToPathCallback,
                 ),
               ),
+              Container(
+                color: Colors.black,
+                height: 60,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+                child: Row(
+                  children: [
+                    const Text(
+                      'YEAR',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: "ProximaNova",
+                        fontSize: 16,
+                      ),
+                    ),
+                    Spacer(),
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 10.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              year,
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            PopupMenuButton<String>(
+                              child: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.black,
+                              ),
+                              onSelected: handleClick,
+                              itemBuilder: (context) {
+                                return availableYears.map((String choice) {
+                                  return PopupMenuItem<String>(
+                                    value: choice,
+                                    child: Text(choice),
+                                  );
+                                }).toList();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         );

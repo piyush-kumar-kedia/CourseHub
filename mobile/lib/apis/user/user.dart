@@ -1,6 +1,8 @@
 import 'dart:convert';
-import '../../models/user.dart';
 import 'package:hive_flutter/adapters.dart';
+
+import '../../models/user.dart';
+
 import '../endpoints.dart';
 import 'package:http/http.dart' as http;
 
