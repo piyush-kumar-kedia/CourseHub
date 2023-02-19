@@ -465,6 +465,11 @@
   "resolved" "https://registry.npmjs.org/csstype/-/csstype-3.1.1.tgz"
   "version" "3.1.1"
 
+"date-and-time@^2.4.2":
+  "integrity" "sha512-h+GwuCLcrDblUt2pXdVuKJJenwNMNtEw1H/eWqBdrkOziTTPzgAkzyCLXZ+QXgtOEheO59cZa8DcObYwE6NLDA=="
+  "resolved" "https://registry.npmjs.org/date-and-time/-/date-and-time-2.4.2.tgz"
+  "version" "2.4.2"
+
 "debug@^4.1.0":
   "integrity" "sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ=="
   "resolved" "https://registry.npmjs.org/debug/-/debug-4.3.4.tgz"
