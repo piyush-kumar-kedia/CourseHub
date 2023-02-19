@@ -94,7 +94,7 @@ class _ContributeScreenState extends State<ContributeScreen> {
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black, width: 0.6),
                                 ),
-                                labelText: 'eg. MA101',
+                                hintText: 'Eg. MA101',
                                 errorText: _validate1 ? 'Course Name can\'t Be Empty' : null,
                               ),
                             ),
