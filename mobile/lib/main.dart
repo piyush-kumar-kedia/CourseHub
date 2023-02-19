@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test1/screens/dummy_screen.dart';
 import 'package:test1/screens/favourites.dart';
+import 'package:test1/screens/guest_screen.dart';
 import 'package:test1/screens/login_screen.dart';
 import 'package:test1/widgets/nav_bar.dart';
+import 'package:test1/widgets/nav_bar_custom.dart';
 
 
 void main() => runApp(MyApp());
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       key: navigatorKey,
     
-      home: Favourites()
+      home: Scaffold(body: NavBarCustom(),)
     );
   }
 }
