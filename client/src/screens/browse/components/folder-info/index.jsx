@@ -19,12 +19,12 @@ const FolderInfo = ({ path, name, canDownload, contributionHandler, folderId, co
                         <div className="folder-actions">
                             {folderId && courseCode && (
                                 <>
-                                    <span
+                                    {/* <span
                                         className="folder-action-icon favs"
                                         onClick={() => {
                                             toast("Added to favourites.");
                                         }}
-                                    ></span>
+                                    ></span> */}
                                     <span
                                         className="folder-action-icon share"
                                         onClick={handleShare}
@@ -35,13 +35,13 @@ const FolderInfo = ({ path, name, canDownload, contributionHandler, folderId, co
                     </div>
                 </div>
                 <div className="btn-container">
-                    <button
+                    {/* <button
                         className="btn download"
                         style={{ display: canDownload ? "inline-block" : "none" }}
                     >
                         <span className="icon download-icon"></span>
                         <span className="text">Download All Files</span>
-                    </button>
+                    </button> */}
                     <button className="btn plus" onClick={contributionHandler}>
                         <span className="icon plus-icon"></span>
                         <span className="text">Contribute</span>

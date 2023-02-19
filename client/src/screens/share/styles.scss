@@ -42,10 +42,13 @@
 }
 
 .bottom-banner {
-    height: 6rem;
-    text-align: center;
+    margin-top: 20px;
+    height: 12rem;
+    // width: 12rem;
+    // text-align: center;
+    background: url(./assets/banner.svg);
     background-repeat: no-repeat;
-    background-size: contain;
     background-position: center;
-    background-color: aquamarine;
+    background-size: contain;
+    // background-color: aquamarine;
 }

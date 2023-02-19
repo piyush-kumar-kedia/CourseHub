@@ -6,6 +6,7 @@ import {
     removeFromFavouritesController,
     updateUserController,
     addNewCourse,
+    deleteCourse,
 } from "../controllers/user.controller.js";
 import catchAsync from "../utils/catchAsync.js";
 const router = Router();
@@ -24,4 +25,5 @@ router.post("/favourites", isAuthenticated, catchAsync(addToFavouriteController)
 
 router.delete("/favourites/:id", isAuthenticated, catchAsync(removeFromFavouritesController));
 router.post("/course", isAuthenticated, catchAsync(addNewCourse));
+router.delete("/course/:code", isAuthenticated, catchAsync(deleteCourse));
 export default router;

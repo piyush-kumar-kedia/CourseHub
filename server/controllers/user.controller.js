@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+import User, { RemoveCourse } from "../models/user.model.js";
 import { addToFavourites, removeFromFavourites, AddNewCourse } from "../models/user.model.js";
 import { updateUserData } from "../models/user.model.js";
 export const getUser = async (req, res, next) => {
@@ -34,6 +34,13 @@ export const addNewCourse = async (req, res, next) => {
     if (!data.code || !data.name) return res.sendStatus(400);
 
     const updatedUser = await AddNewCourse(req.user._id, data.code, data.name);
+    return res.status(200).json(updatedUser);
+};
+export const deleteCourse = async (req, res, next) => {
+    const { code } = req.params;
+    if (!code) return res.sendStatus(400);
+    const updatedUser = await RemoveCourse(req.user._id, code);
+
     return res.status(200).json(updatedUser);
 };
 export const removeFromFavouritesController = async (req, res, next) => {
