@@ -19,7 +19,10 @@ class FolderExplorer extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Stack(
                   children: [
-                    SvgPicture.asset("assets/folder.svg"),
+                    SvgPicture.asset(
+                      "assets/folder.svg",
+                      width: double.infinity,
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16.0, 20.0, 0, 0),
                       child: Text(
@@ -43,8 +46,8 @@ class FolderExplorer extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: GridView.count(
           crossAxisCount: 2,
-          crossAxisSpacing: 23.0,
-          mainAxisSpacing: 16.0,
+          crossAxisSpacing: 0.0,
+          mainAxisSpacing: 0.0,
           childAspectRatio: 1.25,
           shrinkWrap: true,
           children: folders,
