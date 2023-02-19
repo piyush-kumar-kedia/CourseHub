@@ -29,7 +29,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin: "*" }));
+app.use(cors({ credentials: true, origin: "http://192.168.1.8:8080" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/file", onedriveRoutes);
