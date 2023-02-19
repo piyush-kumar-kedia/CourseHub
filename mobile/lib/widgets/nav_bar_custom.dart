@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:test1/screens/browse_screen.dart';
-import 'package:test1/screens/favourites.dart';
+import 'package:test1/screens/favourites_screen.dart';
 import 'package:test1/screens/home_screen.dart';
-import 'package:test1/screens/profile.dart';
+import 'package:test1/screens/profile_screen.dart';
 import 'package:test1/widgets/wrapper.dart';
 
 class NavBarCustom extends StatefulWidget {

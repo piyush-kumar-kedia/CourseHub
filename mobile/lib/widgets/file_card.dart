@@ -16,7 +16,7 @@ class FileCard extends StatelessWidget {
     return Stack(
       children: [
         SvgPicture.asset(
-          'assets/Group',
+          'assets/Group 2658.svg',
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -36,6 +36,7 @@ class FileCard extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       color: Colors.black)),
             ),
+             SizedBox(height: 2.0,),
 
              SizedBox(
               width:120,

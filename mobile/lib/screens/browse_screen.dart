@@ -130,8 +130,8 @@ class _BrowseScreen extends State<BrowseScreen> {
               Container(
                 color: Color.fromRGBO(254, 207, 111, 1),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0, vertical: 8.0),
+                  padding: const EdgeInsets.fromLTRB(
+                      24.0, 8.0, 24.0, 12.0),
                   child: Row(
                     children: [
                       Text(
@@ -143,11 +143,6 @@ class _BrowseScreen extends State<BrowseScreen> {
                         ),
                       ),
                       Spacer(),
-                      Icon(
-                        Icons.star,
-                        color: Color(0x7F000000),
-                        size: 30.0,
-                      ),
                       SizedBox(
                         width: 8.0,
                       ),
