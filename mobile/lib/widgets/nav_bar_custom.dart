@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:test1/screens/browse_screen.dart';
 import 'package:test1/screens/favourites.dart';
 import 'package:test1/screens/home_screen.dart';
 import 'package:test1/screens/profile.dart';
 import 'package:test1/widgets/wrapper.dart';
+
+import '../models/user.dart';
 
 class NavBarCustom extends StatefulWidget {
   @override
@@ -12,7 +15,6 @@ class NavBarCustom extends StatefulWidget {
 }
 
 class _NavBarCustom extends State<NavBarCustom> {
-
   int currentPageNumber = 0;
 
   void returnToHomeCallback() {
@@ -23,7 +25,10 @@ class _NavBarCustom extends State<NavBarCustom> {
 
   List<Widget> screens = [
     HomeScreen(),
-    BrowseScreen(code: "ma101", callback: () {},),
+    BrowseScreen(
+      code: "ma101",
+      callback: () {},
+    ),
     Wrapper(),
     Favourites(),
     Wrapper(),
@@ -34,7 +39,10 @@ class _NavBarCustom extends State<NavBarCustom> {
     super.initState();
     screens = [
       HomeScreen(),
-      BrowseScreen(code: "ce101", callback: returnToHomeCallback,),
+      BrowseScreen(
+        code: "ce101",
+        callback: returnToHomeCallback,
+      ),
       Wrapper(),
       Favourites(),
       Profile(),
@@ -111,7 +119,9 @@ class _NavBarCustom extends State<NavBarCustom> {
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(12.0),
                                           ),
-                                          color: (currentPageNumber == 0) ? Colors.white : Colors.transparent,
+                                          color: (currentPageNumber == 0)
+                                              ? Colors.white
+                                              : Colors.transparent,
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(4.0),
@@ -125,7 +135,9 @@ class _NavBarCustom extends State<NavBarCustom> {
                                     ),
                                   ),
                                   Text("Home"),
-                                  SizedBox(height: 8.0,)
+                                  SizedBox(
+                                    height: 8.0,
+                                  )
                                 ],
                               ),
                               Column(
@@ -143,7 +155,9 @@ class _NavBarCustom extends State<NavBarCustom> {
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(12.0),
                                           ),
-                                          color: (currentPageNumber == 1) ? Colors.white : Colors.transparent,
+                                          color: (currentPageNumber == 1)
+                                              ? Colors.white
+                                              : Colors.transparent,
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(4.0),
@@ -157,7 +171,9 @@ class _NavBarCustom extends State<NavBarCustom> {
                                     ),
                                   ),
                                   Text("Browse"),
-                                  SizedBox(height: 8.0,)
+                                  SizedBox(
+                                    height: 8.0,
+                                  )
                                 ],
                               ),
                               Column(
@@ -173,7 +189,8 @@ class _NavBarCustom extends State<NavBarCustom> {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Colors.white,
-                                          border: Border.all(color: Colors.black, width: 2.0),
+                                          border: Border.all(
+                                              color: Colors.black, width: 2.0),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(16.0),
@@ -188,7 +205,9 @@ class _NavBarCustom extends State<NavBarCustom> {
                                   ),
                                   Spacer(),
                                   Text("Contribute"),
-                                  SizedBox(height: 8.0,)
+                                  SizedBox(
+                                    height: 8.0,
+                                  )
                                 ],
                               ),
                               Column(
@@ -206,7 +225,9 @@ class _NavBarCustom extends State<NavBarCustom> {
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(12.0),
                                           ),
-                                          color: (currentPageNumber == 3) ? Colors.white : Colors.transparent,
+                                          color: (currentPageNumber == 3)
+                                              ? Colors.white
+                                              : Colors.transparent,
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(4.0),
@@ -220,7 +241,9 @@ class _NavBarCustom extends State<NavBarCustom> {
                                     ),
                                   ),
                                   Text("Favourites"),
-                                  SizedBox(height: 8.0,)
+                                  SizedBox(
+                                    height: 8.0,
+                                  )
                                 ],
                               ),
                               Column(
@@ -238,7 +261,9 @@ class _NavBarCustom extends State<NavBarCustom> {
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(12.0),
                                           ),
-                                          color: (currentPageNumber == 4) ? Colors.white : Colors.transparent,
+                                          color: (currentPageNumber == 4)
+                                              ? Colors.white
+                                              : Colors.transparent,
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(4.0),
@@ -252,7 +277,9 @@ class _NavBarCustom extends State<NavBarCustom> {
                                     ),
                                   ),
                                   Text("Profile"),
-                                  SizedBox(height: 8.0,)
+                                  SizedBox(
+                                    height: 8.0,
+                                  )
                                 ],
                               ),
                             ],
@@ -269,5 +296,4 @@ class _NavBarCustom extends State<NavBarCustom> {
       ),
     );
   }
-
 }
