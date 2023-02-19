@@ -1,12 +1,13 @@
 $small: 850px;
 $medium: 1250px;
-.contributionbanner{
+
+.contributionbanner {
     background-color: #FECF6F;
     background-image: url(contribute.svg), none;
     background-position: center;
     background-repeat: no-repeat;
 
-    .content{
+    .content {
         max-width: 1400px;
         padding: 40px 64px;
         margin: auto;
@@ -15,33 +16,42 @@ $medium: 1250px;
         align-items: center;
         width: 100%;
         height: 200px;
-        .left{
+
+        .left {
             flex: 1;
-            .title{
+
+            .title {
                 font-family: 'Bold';
                 font-size: 1.5rem;
             }
-            .para{
+
+            .para {
                 max-width: 350px;
                 font-size: 1.2rem;
             }
-        }.middle{
+        }
+
+        .middle {
             flex: 1;
-        }.right{
+        }
+
+        .right {
             flex: 1;
             // text-align: right;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            .upwings{
+
+            .upwings {
                 height: 40px;
                 background: url(./components/button/up.svg), none;
                 background-repeat: no-repeat;
                 background-position: center;
                 width: 100%;
             }
-            .downwings{
+
+            .downwings {
                 height: 40px;
                 background: url(./components/button/down.svg), none;
                 background-repeat: no-repeat;
@@ -50,32 +60,49 @@ $medium: 1250px;
             }
         }
     }
+
     @media screen and (max-width: $medium) {
-        
+
         background-image: url(contribute_smallscreen.svg), none;
-        
-        .content{
+        background-position: 30vw;
+
+        .content {
             height: 100%;
             justify-content: center;
-            .left{
+
+            .left {
                 margin-left: 10px;
                 margin-bottom: 15px;
             }
-            .middle{
+
+            .middle {
                 display: none;
             }
-            .right{
-                .upwings, .downwings{
+
+            .right {
+
+                .upwings,
+                .downwings {
                     display: none;
                 }
             }
         }
     }
+
     @media screen and (max-width: 950px) {
         background-image: unset;
     }
+
+    @media screen and (max-width: 1176px) {
+        background-position: 28vw;
+    }
+
+    @media screen and (max-width: 1141px) {
+        background-image: unset;
+    }
+
     @media screen and (max-width: $small) {
-        .content{
+        .content {
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;

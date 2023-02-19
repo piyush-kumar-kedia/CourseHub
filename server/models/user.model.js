@@ -28,7 +28,7 @@ const userSchema = Schema({
 userSchema.methods.generateJWT = function () {
     var user = this;
     var token = jwt.sign({ user: user._id }, config.jwtSecret, {
-        expiresIn: "1h",
+        expiresIn: "24d",
     });
     return token;
 };
@@ -129,6 +129,15 @@ export const AddNewCourse = async (userid, code, name) => {
         code,
         name,
     });
+    const updatedUser = await UserData.save();
+    return updatedUser;
+};
+export const RemoveCourse = async (userid, code) => {
+    const UserData = await User.findById(userid);
+    let filtered = UserData.courses.filter(
+        (course) => course.code.toLowerCase() !== code.toLowerCase()
+    );
+    UserData.courses = filtered;
     const updatedUser = await UserData.save();
     return updatedUser;
 };

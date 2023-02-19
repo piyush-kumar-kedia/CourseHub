@@ -187,18 +187,20 @@ const Dashboard = () => {
             <Container>
                 <SubHeading text={"MY FAVOURITES"} type={"bold"} />
                 <div className="fav-container">
-                    {user?.favourites?.length > 0
-                        ? user.favourites.map((favourite) => (
-                              <FavouriteCard
-                                  name={favourite.name}
-                                  path={favourite.path}
-                                  key={favourite.id}
-                                  code={favourite.code}
-                                  id={favourite.id}
-                                  _id={favourite._id}
-                              />
-                          ))
-                        : "No favourites added yet."}
+                    {user?.favourites?.length > 0 ? (
+                        user.favourites.map((favourite) => (
+                            <FavouriteCard
+                                name={favourite.name}
+                                path={favourite.path}
+                                key={favourite.id}
+                                code={favourite.code}
+                                id={favourite.id}
+                                _id={favourite._id}
+                            />
+                        ))
+                    ) : (
+                        <div className="no-fav-graphic"></div>
+                    )}
                 </div>
             </Container>
             <Footer />

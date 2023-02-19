@@ -11,8 +11,12 @@
 
     .banner_text {
         color: white;
-        width: fit-content;
+        width: 100%;
         margin-left: 0;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
 
         .sub_head {
             margin-bottom: 20px;
@@ -32,7 +36,7 @@
         header {
             color: white;
             font-family: 'Bold';
-            font-size: 4rem;
+            font-size: 3rem;
             display: flex;
             align-items: center;
 
@@ -42,7 +46,7 @@
                 color: white;
                 font-family: 'Bold';
                 font-size: 3rem;
-                width: auto;
+                width: 25rem;
             }
 
             .inputName:focus {
@@ -75,4 +79,17 @@
     }
 }
 
-@media screen and (max-width:1050px) {}
+@media screen and (max-width:1182px) {
+    .inputName {
+        background: none;
+        border: none;
+        color: white;
+        font-family: 'Bold';
+        font-size: 4rem;
+        width: 30rem;
+    }
+
+    .front_banner {
+        background: none;
+    }
+}

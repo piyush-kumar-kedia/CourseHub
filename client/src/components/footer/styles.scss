@@ -1,4 +1,5 @@
-.footer-container{
+.footer-container {
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -6,11 +7,12 @@
     background-color: #FECF6F;
     padding: 40px;
 
-    .footer-text{
+    .footer-text {
         font-size: 1.2rem;
         margin-bottom: 15px;
     }
-    .footer-img{
+
+    .footer-img {
         width: 220px;
         height: 60px;
         background: url(./footer-img.svg), none;

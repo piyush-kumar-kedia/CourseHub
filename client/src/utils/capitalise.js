@@ -1,4 +1,5 @@
 export function capitalise(str) {
+    str = str.toLowerCase();
     const arr = str.split(" ");
 
     for (var i = 0; i < arr.length; i++) {
@@ -8,3 +9,4 @@ export function capitalise(str) {
     const str2 = arr.join(" ");
     return str2;
 }
+export default capitalise;

@@ -5,57 +5,66 @@ class FileCard extends StatelessWidget {
   String index;
   String address;
   String name;
-  FileCard({super.key, required this.index, required this.address,required this.name});
+  FileCard(
+      {super.key,
+      required this.index,
+      required this.address,
+      required this.name});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        SvgPicture.asset(
+          'assets/Group 2658.svg',
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+        ),
+
         Positioned(
-          child: Container(
-            child: SvgPicture.asset(
-              "assets/Group2658.svg",
-              matchTextDirection: false,
+          top:24,
+          left:12,
+          child: Column(
+          children:[
+             SizedBox(
+              width:120,
+              child: Text("$address",
+                  style: TextStyle(
+                      fontFamily: "ProximaNova",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black)),
             ),
+
+             SizedBox(
+              width:120,
+              child: Text("$name",
+                  style: TextStyle(
+                      fontFamily: "ProximaNova",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black)),
+            ),
+
+          ]
           ),
         ),
         Positioned(
-          top: 20,
-          left: 10,
-          child: Text("$address",
-              style: TextStyle(
-                  fontFamily: "Proxima Nova",
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black)),
-        ),
-        Positioned(
-          top: 40,
-          left: 10,
-          child: Text("$name",
-              style: TextStyle(
-                  fontFamily: "Proxima Nova",
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black)),
-        ),
-       
-         Positioned(
-          top:80,
-          left:80,
+          bottom: 24,
+          right:16,
           child: SizedBox(
             width: 100,
             child: Text("$index",
-                textAlign: TextAlign.justify,
+                textAlign: TextAlign.right,
                 style: TextStyle(
-                  fontFamily: "Proxima Nova",
+                  fontFamily: "ProximaNova",
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: Color.fromRGBO(0,0,0,0.25 ),
+                  color: Color.fromRGBO(0, 0, 0, 0.25),
                 )),
           ),
         )
-      
       ],
     );
     ;

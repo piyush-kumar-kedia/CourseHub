@@ -12,8 +12,10 @@ import { v4 as uuidv4 } from "uuid";
 import { CreateNewContribution } from "../../api/Contribution";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import googleFormLink from "../../api/googleFormLink";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
+    const userName = useSelector((state) => state.user.user.name);
     const [contributionId, setContributionId] = useState("");
     useEffect(() => {
         setContributionId(uuidv4());
@@ -181,10 +183,11 @@ const Contributions = () => {
                     allowMultiple={true}
                     maxFiles={40}
                     server={{
-                        url: "https://www.coursehubiitg.in/api/contribution/upload",
+                        url: "http://localhost:8080/api/contribution/upload",
                         process: {
                             headers: {
                                 "contribution-id": contributionId,
+                                username: userName,
                             },
                         },
                     }}
@@ -193,7 +196,13 @@ const Contributions = () => {
                         pond = ref;
                     }}
                 />
-                <div className="uploaded">{/* <span>UPLOADED:</span> folder/file */}</div>
+                <div className="uploaded">
+                    {/* <span>UPLOADED:</span> folder/file */}
+                    Or submit link on{" "}
+                    <a href={googleFormLink} target="_blank">
+                        Google forms.
+                    </a>
+                </div>
                 <div className={`button ${submitEnabled}`} onClick={handleSubmit}>
                     SUBMIT
                 </div>

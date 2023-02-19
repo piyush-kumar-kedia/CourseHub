@@ -12,26 +12,6 @@ class Wrapper extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              height: 80,
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              width: double.infinity,
-              color: Colors.black,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Coursehub',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: "ProximaNova",
-                        fontSize: 24),
-                  ),
-                  SvgPicture.asset('assets/search.svg')
-                ],
-              ),
-            ),
-            Container(
               height: 100,
               color: const Color.fromRGBO(254, 207, 111, 1),
             ),
