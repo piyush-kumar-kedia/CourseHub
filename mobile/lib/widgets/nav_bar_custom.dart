@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:test1/screens/browse_screen.dart';
 import 'package:test1/screens/favourites.dart';
 import 'package:test1/screens/home_screen.dart';
+import 'package:test1/screens/profile.dart';
 import 'package:test1/widgets/wrapper.dart';
 
 class NavBarCustom extends StatefulWidget {
@@ -36,7 +37,7 @@ class _NavBarCustom extends State<NavBarCustom> {
       BrowseScreen(code: "ce101", callback: returnToHomeCallback,),
       Wrapper(),
       Favourites(),
-      Wrapper(),
+      Profile(),
     ];
   }
 

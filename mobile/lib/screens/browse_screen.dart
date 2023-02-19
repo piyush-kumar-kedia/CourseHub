@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test1/widgets/browser_nav_crumb.dart';
 import 'package:test1/widgets/folder_explorer.dart';
 
-import '../util/api/course_api.dart';
+import '../apis/courses/course_api.dart';
 
 class BrowseScreen extends StatefulWidget {
   final String code;
