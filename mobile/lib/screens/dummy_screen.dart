@@ -21,7 +21,7 @@ class DummyScreen extends StatelessWidget {
                 }),
             ElevatedButton(
               onPressed: () {
-                getUser();
+   
               },
               child: const Text('Get my details'),
             )

@@ -1,9 +1,11 @@
-import 'package:coursehub_api/apis/endpoints.dart';
+
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:test1/apis/endpoints.dart';
 
 Future<void> authenticate() async {
+
 
   try {
     final result = await FlutterWebAuth.authenticate(
