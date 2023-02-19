@@ -55,10 +55,9 @@ const LandingPage = () => {
                     <div className="content">
                         <div className="text">
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa odio
-                                nibh eu eu nulla ac vestibulum amet. Ultrices magna faucibus dui
-                                dignissim scelerisque. Lorem a sed egestas libero nisi. Vel mauris
-                                non sed fermentum.
+                                Your go-to platform for all your academic needs. Get access to past
+                                papers, lecture slides, assignments, tutorials, notes and more to
+                                help you ace your exams
                             </p>
                         </div>
                         <div className="btn-container">
