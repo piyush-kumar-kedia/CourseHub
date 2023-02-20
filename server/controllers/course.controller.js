@@ -21,6 +21,11 @@ export const getCourse = async (req, res, next) => {
                         strictPopulate: false,
                         path: "children",
                         select: "-__v",
+                        populate: {
+                            strictPopulate: false,
+                            path: "children",
+                            select: "-__v",
+                        },
                     },
                 },
             },
