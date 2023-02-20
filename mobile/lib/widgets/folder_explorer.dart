@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FolderExplorer extends StatelessWidget {
@@ -150,7 +151,43 @@ class FolderExplorer extends StatelessWidget {
                         size: 30.0,
                       ),
                       onSelected: (value) {
-                        // TODO
+                        if (value == '/fav') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              action: SnackBarAction(
+                                label: "UNDO",
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          behavior: SnackBarBehavior.floating,
+                                          margin:
+                                              EdgeInsets.only(bottom: 125.0),
+                                          duration: Duration(seconds: 1),
+                                          content: Text('UNDO SUCCESSFUL!')));
+                                },
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.only(bottom: 125.0),
+                              duration: const Duration(seconds: 1),
+                              content: const Text('Added to Favourites!'),
+                            ),
+                          );
+                          // TODO
+                        } else if (value == '/share') {
+                          String link = "link";
+                          Clipboard.setData(ClipboardData(
+                            text: link,
+                          )).then((_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: EdgeInsets.only(bottom: 125.0),
+                                    duration: Duration(seconds: 1),
+                                    content: Text(
+                                        'Share link copied to your clipboard!')));
+                          });
+                          // TODO
+                        }
                       },
                       itemBuilder: (BuildContext bc) {
                         return [

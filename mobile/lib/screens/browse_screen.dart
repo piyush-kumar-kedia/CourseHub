@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 import 'package:test1/widgets/browser_nav_crumb.dart';
 import 'package:test1/widgets/folder_explorer.dart';
 
@@ -49,7 +49,7 @@ class _BrowseScreen extends State<BrowseScreen> {
       future: CourseApiClient.getCourseDetail(widget.code),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
@@ -113,121 +113,149 @@ class _BrowseScreen extends State<BrowseScreen> {
           level++;
         }
         navigation_crumbs.removeLast();
-        return Container(
-          child: Column(
-            children: [
-              Container(
-                color: Color.fromRGBO(254, 207, 111, 1),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: SingleChildScrollView(
-                    child: Row(
-                      children: navigation_crumbs,
-                    ),
+        return Column(
+          children: [
+            Container(
+              color: const Color.fromRGBO(254, 207, 111, 1),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: SingleChildScrollView(
+                  child: Row(
+                    children: navigation_crumbs,
                   ),
                 ),
               ),
-              Container(
-                color: Color.fromRGBO(254, 207, 111, 1),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 12.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        currentTitle,
-                        style: TextStyle(
-                          fontFamily: "ProximaNova",
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w700,
+            ),
+            Container(
+              color: const Color.fromRGBO(254, 207, 111, 1),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 12.0),
+                child: Row(
+                  children: [
+                    Text(
+                      currentTitle,
+                      style: const TextStyle(
+                        fontFamily: "ProximaNova",
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                        icon: const Icon(
+                          Icons.star,
+                          size: 30.0,
                         ),
-                      ),
-                      Spacer(),
-                      IconButton(
-                          icon: const Icon(
-                            Icons.star,
-                            size: 30.0,
-                          ),
-                          color: const Color(0x7F000000),
-                          onPressed: () {
-                            print("h"); //TODO
-                          }),
-                      const SizedBox(
-                        width: 8.0,
-                      ),
-                      IconButton(
+                        color: const Color(0x7F000000),
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              action: SnackBarAction(
+                                label: "UNDO",
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          behavior: SnackBarBehavior.floating,
+                                          margin:
+                                              EdgeInsets.only(bottom: 125.0),
+                                          duration: Duration(seconds: 1),
+                                          content: Text('UNDO SUCCESSFUL!')));
+                                },
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.only(bottom: 125.0),
+                              duration: const Duration(seconds: 1),
+                              content: const Text('Added to Favourites!'),
+                            ),
+                          );
+                          //TODO action of fav
+                        }),
+                    const SizedBox(
+                      width: 8.0,
+                    ),
+                    IconButton(
                         icon: const Icon(
                           Icons.share,
                           size: 30.0,
                         ),
                         color: const Color(0x7F000000),
                         onPressed: () {
-                          print("h"); //TODO
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FolderExplorer(
-                  data: dataToShow,
-                  callback: addToPathCallback,
-                ),
-              ),
-              Container(
-                color: Colors.black,
-                height: 60,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-                child: Row(
-                  children: [
-                    const Text(
-                      'YEAR',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: "ProximaNova",
-                        fontSize: 16,
-                      ),
-                    ),
-                    Spacer(),
-                    Container(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 10.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              year,
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                            PopupMenuButton<String>(
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.black,
-                              ),
-                              onSelected: handleClick,
-                              itemBuilder: (context) {
-                                return availableYears.map((String choice) {
-                                  return PopupMenuItem<String>(
-                                    value: choice,
-                                    child: Text(choice),
-                                  );
-                                }).toList();
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          // TODO create share link
+                          String link = "link";
+                          Clipboard.setData(ClipboardData(
+                            text: link,
+                          )).then((_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: EdgeInsets.only(bottom: 125.0),
+                                    duration: Duration(seconds: 1),
+                                    content: Text(
+                                        'Share link copied to your clipboard!')));
+                          });
+                        }),
                   ],
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+            Expanded(
+              child: FolderExplorer(
+                data: dataToShow,
+                callback: addToPathCallback,
+              ),
+            ),
+            Container(
+              color: Colors.black,
+              height: 60,
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+              child: Row(
+                children: [
+                  const Text(
+                    'YEAR',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      fontFamily: "ProximaNova",
+                      fontSize: 16,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0, horizontal: 10.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            year,
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          PopupMenuButton<String>(
+                            onSelected: handleClick,
+                            itemBuilder: (context) {
+                              return availableYears.map((String choice) {
+                                return PopupMenuItem<String>(
+                                  value: choice,
+                                  child: Text(choice),
+                                );
+                              }).toList();
+                            },
+                            child: const Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
         );
       },
     );
