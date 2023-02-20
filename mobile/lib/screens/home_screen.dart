@@ -12,99 +12,92 @@ import '../models/course.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<Box> getCurrentUser() async {
-    var box = Hive.openBox('coursehub-data');
-
-    return box;
+  Future<User> getCurrentUser() async {
+    var box = await Hive.openBox('coursehub-data');
+    final user_json = (box.get('user'));
+    final user = User.fromJson(user_json);
+    return user;
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Box>(
+    return FutureBuilder<User>(
         future: getCurrentUser(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final user_json = (snapshot.data!.get('user'));
-            print(user_json['name']);
-
-            final user = User.fromJson(user_json);
-            print(user.name);
-            return SafeArea(
-              child: Scaffold(
-                backgroundColor: Colors.black,
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 26.0,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Welcome,",
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: "ProximaNova",
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.white,
-                                  ),
+            var user = snapshot.data!;
+            return Container(
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 26.0,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Welcome,",
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontFamily: "ProximaNova",
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
                                 ),
-                                Text(
-                                  user.name,
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: "ProximaNova",
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
+                              ),
+                              Text(
+                                user.name,
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontFamily: "ProximaNova",
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
                                 ),
-                              ],
-                            ),
-                          ),
-                          SvgPicture.asset("assets/home_books.svg"),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 26.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 26.0),
-                        child: Text(
-                          "MY COURSES",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontFamily: "ProximaNova",
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                              ),
+                            ],
                           ),
                         ),
+                        SvgPicture.asset("assets/home_books.svg"),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 26.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 26.0),
+                      child: Text(
+                        "MY COURSES",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontFamily: "ProximaNova",
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 26.0),
-                        child: Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 0.0, vertical: 19.0),
-                          child: GridView.count(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 23.0,
-                            mainAxisSpacing: 16.0,
-                            childAspectRatio: 1.25,
-                            shrinkWrap: true,
-                            children: user.courses.map((e) {
-                              return CourseCard(course: e);
-                            }).toList(),
-                          ),
-                        )),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 26.0, vertical: 19.0),
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 23.0,
+                          mainAxisSpacing: 16.0,
+                          childAspectRatio: 1.25,
+                          shrinkWrap: true,
+                          children: user.courses.map((e) {
+                            return CourseCard(course: e);
+                          }).toList(),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );
