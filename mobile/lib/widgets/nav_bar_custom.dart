@@ -25,28 +25,28 @@ class _NavBarCustom extends State<NavBarCustom> {
   }
 
   List<Widget> screens = [
-    HomeScreen(),
+    const HomeScreen(),
     BrowseScreen(
       code: "ma101",
       callback: () {},
     ),
-    ContributeScreen(),
+    const ContributeScreen(),
     FavouritesScreen(),
-    Wrapper(),
+    const Wrapper(),
   ];
 
   @override
   void initState() {
     super.initState();
     screens = [
-      HomeScreen(),
+      const HomeScreen(),
       BrowseScreen(
         code: "ce101",
         callback: returnToHomeCallback,
       ),
-      ContributeScreen(),
+      const ContributeScreen(),
       FavouritesScreen(),
-      Profile(),
+      const Profile(),
     ];
   }
 
@@ -81,24 +81,24 @@ class _NavBarCustom extends State<NavBarCustom> {
                 Column(
                   children: [
                     Expanded(child: screens[currentPageNumber]),
-                    SizedBox(
+                    const SizedBox(
                       height: 68.0,
                     ),
                   ],
                 ),
                 Column(
                   children: [
-                    Spacer(),
-                    Container(
+                    const Spacer(),
+                    SizedBox(
                       height: 90.0,
                       child: Stack(
                         children: [
                           Column(
                             children: [
-                              Spacer(),
+                              const Spacer(),
                               Container(
                                 height: 68.0,
-                                color: Color.fromRGBO(254, 207, 111, 1),
+                                color: const Color.fromRGBO(254, 207, 111, 1),
                               )
                             ],
                           ),
@@ -107,7 +107,7 @@ class _NavBarCustom extends State<NavBarCustom> {
                             children: [
                               Column(
                                 children: [
-                                  Spacer(),
+                                  const Spacer(),
                                   Ink(
                                     child: InkWell(
                                       onTap: () {
@@ -117,15 +117,15 @@ class _NavBarCustom extends State<NavBarCustom> {
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(12.0),
                                           ),
                                           color: (currentPageNumber == 0)
                                               ? Colors.white
                                               : Colors.transparent,
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(4.0),
                                           child: Icon(
                                             Icons.home,
                                             color: Colors.black,
@@ -135,15 +135,15 @@ class _NavBarCustom extends State<NavBarCustom> {
                                       ),
                                     ),
                                   ),
-                                  Text("Home"),
-                                  SizedBox(
+                                  const Text("Home"),
+                                  const SizedBox(
                                     height: 8.0,
                                   )
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Spacer(),
+                                  const Spacer(),
                                   Ink(
                                     child: InkWell(
                                       onTap: () {
@@ -153,15 +153,15 @@ class _NavBarCustom extends State<NavBarCustom> {
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(12.0),
                                           ),
                                           color: (currentPageNumber == 1)
                                               ? Colors.white
                                               : Colors.transparent,
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(4.0),
                                           child: Icon(
                                             Icons.folder,
                                             color: Colors.black,
@@ -171,8 +171,8 @@ class _NavBarCustom extends State<NavBarCustom> {
                                       ),
                                     ),
                                   ),
-                                  Text("Browse"),
-                                  SizedBox(
+                                  const Text("Browse"),
+                                  const SizedBox(
                                     height: 8.0,
                                   )
                                 ],
@@ -193,8 +193,8 @@ class _NavBarCustom extends State<NavBarCustom> {
                                           border: Border.all(
                                               color: Colors.black, width: 2.0),
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16.0),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(16.0),
                                           child: Icon(
                                             Icons.add,
                                             color: Colors.black,
@@ -204,16 +204,16 @@ class _NavBarCustom extends State<NavBarCustom> {
                                       ),
                                     ),
                                   ),
-                                  Spacer(),
-                                  Text("Contribute"),
-                                  SizedBox(
+                                  const Spacer(),
+                                  const Text("Contribute"),
+                                  const SizedBox(
                                     height: 8.0,
                                   )
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Spacer(),
+                                  const Spacer(),
                                   Ink(
                                     child: InkWell(
                                       onTap: () {
@@ -223,15 +223,15 @@ class _NavBarCustom extends State<NavBarCustom> {
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(12.0),
                                           ),
                                           color: (currentPageNumber == 3)
                                               ? Colors.white
                                               : Colors.transparent,
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(4.0),
                                           child: Icon(
                                             Icons.star,
                                             color: Colors.black,
@@ -241,15 +241,15 @@ class _NavBarCustom extends State<NavBarCustom> {
                                       ),
                                     ),
                                   ),
-                                  Text("Favourites"),
-                                  SizedBox(
+                                  const Text("Favourites"),
+                                  const SizedBox(
                                     height: 8.0,
                                   )
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Spacer(),
+                                  const Spacer(),
                                   Ink(
                                     child: InkWell(
                                       onTap: () {
@@ -259,15 +259,15 @@ class _NavBarCustom extends State<NavBarCustom> {
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(12.0),
                                           ),
                                           color: (currentPageNumber == 4)
                                               ? Colors.white
                                               : Colors.transparent,
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(4.0),
                                           child: Icon(
                                             Icons.person,
                                             color: Colors.black,
@@ -277,8 +277,8 @@ class _NavBarCustom extends State<NavBarCustom> {
                                       ),
                                     ),
                                   ),
-                                  Text("Profile"),
-                                  SizedBox(
+                                  const Text("Profile"),
+                                  const SizedBox(
                                     height: 8.0,
                                   )
                                 ],

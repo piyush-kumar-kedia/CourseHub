@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:test1/screens/dummy_screen.dart';
 
+import 'package:test1/screens/browse_screen.dart';
+import 'package:test1/screens/login_screen.dart';
+
 import 'package:test1/widgets/nav_bar_custom.dart';
 
 
