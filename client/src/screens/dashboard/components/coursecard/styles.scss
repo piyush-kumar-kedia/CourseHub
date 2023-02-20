@@ -16,13 +16,15 @@
     .remove-course{
         display: none;
         position: absolute;
-        width: 10px;
-        height: 10px;
-        background-color: rgb(255, 255, 255);
+        width: 15px;
+        height: 15px;
+        background: url(./close.png);
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
         right: 0;
         top: 0;
-        margin-top: -10px;
-
+        margin-top: -15px;
         z-index: 99;
     }
     .code{

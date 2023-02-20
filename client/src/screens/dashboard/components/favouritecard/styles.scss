@@ -36,7 +36,10 @@
         width: 10px;
         height: 10px;
         margin-left: auto;
-        background-color: #000;
+        background: url(./close.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
         // display: block;
         display: none;
 
