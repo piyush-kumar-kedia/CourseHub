@@ -67,10 +67,20 @@ const App = () => {
     ) : (
         <div
             style={{
+                minHeight: "100vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 textAlign: "center",
             }}
         >
-            Device not supported :| Coming soon
+            <p
+                style={{
+                    fontSize: "1.5rem",
+                }}
+            >
+                Coming soon on mobile. Please open on Desktop.
+            </p>
         </div>
     );
 };
