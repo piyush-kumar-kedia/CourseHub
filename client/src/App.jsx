@@ -79,7 +79,7 @@ const App = () => {
                     fontSize: "1.5rem",
                 }}
             >
-                Coming soon on mobile. Please open on Desktop.
+                Coming soon on mobile. <br/>Please open on Desktop.
             </p>
         </div>
     );
