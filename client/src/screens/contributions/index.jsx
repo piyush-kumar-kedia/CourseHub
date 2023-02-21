@@ -120,6 +120,7 @@ const Contributions = () => {
                             className="select_section"
                             onChange={(e) => setFolder(e.target.value)}
                         >
+                            <option value="Books">Books</option>
                             <option value="Lecture Slides">Lecture Slides</option>
                             <option value="Tutorials">Tutorials</option>
                             <option value="Exams">Exams</option>
@@ -185,24 +186,25 @@ const Contributions = () => {
                         </span>
                     </div>
                 </form>
-
-                <FilePond
-                    allowMultiple={true}
-                    maxFiles={40}
-                    server={{
-                        url: "https://www.coursehubiitg.in/api/contribution/upload",
-                        process: {
-                            headers: {
-                                "contribution-id": contributionId,
-                                username: userName,
+                <div className="file_pond">
+                    <FilePond
+                        allowMultiple={true}
+                        maxFiles={40}
+                        server={{
+                            url: "https://www.coursehubiitg.in/api/contribution/upload",
+                            process: {
+                                headers: {
+                                    "contribution-id": contributionId,
+                                    username: userName,
+                                },
                             },
-                        },
-                    }}
-                    instantUpload={false}
-                    ref={(ref) => {
-                        pond = ref;
-                    }}
-                />
+                        }}
+                        instantUpload={false}
+                        ref={(ref) => {
+                            pond = ref;
+                        }}
+                    />
+                </div>
                 <div className="uploaded">
                     {/* <span>UPLOADED:</span> folder/file */}
                     Or submit link on{" "}
