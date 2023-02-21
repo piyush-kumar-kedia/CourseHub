@@ -45,7 +45,7 @@ const Footer = () => {
                     Atharva Tagalpallewar
                 </span>
                 <span className="span-name footer-lead">
-                    <span className="bold-text">Mentor: </span>
+                    <span className="bold-text">Founder: </span>
                     Atishay Jain
                 </span>
             </div>
