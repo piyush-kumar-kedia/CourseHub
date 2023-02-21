@@ -177,6 +177,7 @@ export const redirectHandler = async (req, res, next) => {
         secure: false,
         expires: new Date(Date.now() + 2073600000),
         httpOnly: true,
+        domain: "coursehubiitg.in",
     });
 
     return res.redirect(appConfig.clientURL);
