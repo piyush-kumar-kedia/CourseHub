@@ -30,7 +30,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div className="right">
+            {/* <div className="right">
                 <span className="right-heading">CourseHub Team</span>
                 <span className="span-name website-and-backend">
                     <span className="bold-text">Website and Backend: </span>
@@ -48,7 +48,7 @@ const Footer = () => {
                     <span className="bold-text">Founder and Mentor: </span>
                     Atishay Jain, Kunal Garg
                 </span>
-            </div>
+            </div> */}
         </footer>
     );
 };
