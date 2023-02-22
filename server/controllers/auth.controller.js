@@ -251,6 +251,13 @@ export const mobileRedirectHandler = async (req, res, next) => {
 };
 
 export const logoutHandler = (req, res, next) => {
-    res.clearCookie("token");
+//     res.clearCookie("token");
+    res.cookie("token", "loggedout", {
+        maxAge: 0,
+        sameSite: "lax",
+        secure: false,
+        expires: new Date(Date.now()),
+        httpOnly: true,
+    });
     res.redirect(appConfig.clientURL);
 };
