@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:test1/constants/themes.dart';
 import 'package:test1/widgets/browser_nav_crumb.dart';
 import 'package:test1/widgets/folder_explorer.dart';
 
@@ -7,7 +8,7 @@ import '../apis/courses/course_api.dart';
 
 class BrowseScreen extends StatefulWidget {
   final String code;
-  final Function() callback;
+  final Function(int a) callback;
 
   const BrowseScreen({super.key, required this.code, required this.callback});
   @override
@@ -84,7 +85,7 @@ class _BrowseScreen extends State<BrowseScreen> {
               BrowserNavCrumb(
                 name: "Home",
                 level: 0,
-                callback: (level) => widget.callback(),
+                callback: (level) => widget.callback(0),
               ),
             );
             navigation_crumbs.add(
@@ -210,14 +211,9 @@ class _BrowseScreen extends State<BrowseScreen> {
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
               child: Row(
                 children: [
-                  const Text(
+                  Text(
                     'YEAR',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      fontFamily: "ProximaNova",
-                      fontSize: 16,
-                    ),
+                    style: Themes.theme.textTheme.labelMedium,
                   ),
                   const Spacer(),
                   Container(

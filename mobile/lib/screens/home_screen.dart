@@ -1,28 +1,27 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:test1/constants/themes.dart';
 import 'package:test1/models/user.dart';
-import 'package:test1/widgets/course_card.dart';
-
-import '../apis/courses/course_api.dart';
-import '../models/course.dart';
+import 'package:test1/widgets/common/custom_linear_progress.dart';
+import 'package:test1/widgets/home_screen/course_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<User> getCurrentUser() async {
+  Future<User> getDetails() async {
     var box = await Hive.openBox('coursehub-data');
-    final user_json = (box.get('user'));
-    final user = User.fromJson(user_json);
+    final userJson = box.get('user');
+
+    final user = User.fromJson(userJson);
+
     return user;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<User>(
-        future: getCurrentUser(),
+        future: getDetails(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var user = snapshot.data!;
@@ -35,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        SizedBox(
+                       const SizedBox(
                           width: 26.0,
                         ),
                         Expanded(
@@ -44,21 +43,11 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               Text(
                                 "Welcome,",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: "ProximaNova",
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                ),
+                                style: Themes.theme.textTheme.displaySmall,
                               ),
                               Text(
                                 user.name,
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: "ProximaNova",
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
+                                style: Themes.theme.textTheme.bodyLarge,
                               ),
                             ],
                           ),
@@ -66,19 +55,14 @@ class HomeScreen extends StatelessWidget {
                         SvgPicture.asset("assets/home_books.svg"),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 26.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 26.0),
                       child: Text(
                         "MY COURSES",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontFamily: "ProximaNova",
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
+                        style: Themes.theme.textTheme.bodyMedium
                       ),
                     ),
                     Expanded(
@@ -86,6 +70,8 @@ class HomeScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 26.0, vertical: 19.0),
                         child: GridView.count(
+                          physics: const ScrollPhysics(
+                              parent: BouncingScrollPhysics()),
                           crossAxisCount: 2,
                           crossAxisSpacing: 23.0,
                           mainAxisSpacing: 16.0,
@@ -102,15 +88,7 @@ class HomeScreen extends StatelessWidget {
               ),
             );
           } else {
-            return Center(
-              child: SizedBox(
-                width: 100,
-                child: LinearProgressIndicator(
-                  color: Color.fromRGBO(254, 217, 111, 1),
-                  backgroundColor: Colors.black,
-                ),
-              ),
-            );
+            return const CustomLinearProgress();
           }
         });
   }
