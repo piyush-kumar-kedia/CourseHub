@@ -46,6 +46,7 @@ dependencies:
   hive: any
   hive_flutter: any
   file_picker: ^5.2.5
+  intl: ^0.18.0
 
 
 

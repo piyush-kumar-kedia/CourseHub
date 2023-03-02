@@ -6,6 +6,9 @@ import 'package:test1/widgets/common/custom_snackbar.dart';
 import 'package:test1/widgets/login_screen/cc_branding.dart';
 import 'package:test1/widgets/login_screen/login_button.dart';
 
+import '../apis/contributions/contribution.dart';
+import '../apis/user/user.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -66,10 +69,10 @@ class LoginScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const Expanded(
-                          child:  Text(
+                          child: Text(
                             'Your go-to platform for all your academic needs. Get access to past papers, lecture slides, assignments, tutorials, notes and more to help you ace your exams',
                             textAlign: TextAlign.left,
-                            style:  TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.black,
                               fontSize: 14.0,
@@ -81,6 +84,9 @@ class LoginScreen extends StatelessWidget {
                             onTap: () async {
                               try {
                                 await authenticate();
+                                await getCurrentUser();
+                                await getContribution();
+                                await setHiveStore();
                                 // ignore: use_build_context_synchronously
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(

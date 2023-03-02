@@ -1,39 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:test1/constants/themes.dart';
+import 'package:test1/models/contribution.dart';
 
-class ContributionCard extends StatefulWidget {
-  const ContributionCard({Key? key}) : super(key: key);
-
-  @override
-  State<ContributionCard> createState() => _ContributionCardState();
-}
-
-class _ContributionCardState extends State<ContributionCard> {
-  final String courseName = "CL303";
-
-  final int year = 2022;
-
-  final String contextType = "Lecture Slides";
-
-  String description =
-      "Description description description cription description Descrip Descripcription description Description description descriptionDescription description description Your go-to platform for all your academic needs. Get access to past papers, lecture slides, assignments, tutorials, notes and more to help you ace your exams";
-
-  bool isApproved = true;
-
-  // TODO set format of date
-
+class ContributionCard extends StatelessWidget {
+  final Contribution contribution;
+  const ContributionCard({Key? key, required this.contribution})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final pathString =
+        '${contribution.courseCode.toUpperCase()}  >  ${contribution.year}  >  ${contribution.folder}';
+
+
+    var formatter = DateFormat("MMMM dd, yyyy");
+    String formattedTime = DateFormat('kk:mm:a').format(contribution.createdAt).toLowerCase();
+    String formattedDate = formatter.format(contribution.createdAt);
+   
+
     return Container(
       color: Themes.kYellow,
       padding: const EdgeInsets.all(20),
       margin: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(courseName,
+              Text(pathString,
                   overflow: TextOverflow.ellipsis,
                   style: Themes.darkTextTheme.displaySmall),
             ],
@@ -41,8 +36,9 @@ class _ContributionCardState extends State<ContributionCard> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
             child: Text(
-              description,
+              contribution.description,
               maxLines: 2,
+              textAlign: TextAlign.start,
               overflow: TextOverflow.ellipsis,
               style: Themes.darkTextTheme.bodySmall,
             ),
@@ -50,12 +46,14 @@ class _ContributionCardState extends State<ContributionCard> {
           Row(
             children: [
               Text(
-                '12 June 2022',
+                formattedDate,
                 style: Themes.darkTextTheme.bodySmall,
               ),
-              const SizedBox(width: 10,),
+              const SizedBox(
+                width: 10,
+              ),
               Text(
-                '12:58 pm',
+                formattedTime,
                 style: Themes.darkTextTheme.bodySmall,
               ),
               const Spacer(),
@@ -71,7 +69,7 @@ class _ContributionCardState extends State<ContributionCard> {
                   ),
                 ),
                 child: Text(
-                  isApproved ? 'APPROVED' : 'PENDING',
+                  contribution.approved ? 'APPROVED' : 'PENDING',
                   style: const TextStyle(
                     fontFamily: 'Proxima Nova',
                     fontWeight: FontWeight.w700,

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:test1/apis/contributions/contribution.dart';
 import 'package:test1/constants/endpoints.dart';
 import 'package:test1/apis/user/user.dart';
 import 'package:test1/screens/login_screen.dart';
@@ -17,8 +18,6 @@ Future<void> authenticate() async {
     final prefs = await SharedPreferences.getInstance();
     var accessToken = result.split('=')[1];
     prefs.setString('access_token', accessToken);
-
-    await getCurrentUser();
   } on PlatformException catch (_) {
     rethrow;
   } catch (e) {
@@ -38,16 +37,19 @@ Future<void> logoutHandler(context) async {
       (route) => false);
 }
 
-Future<bool> isLoggedInAndSetData() async {
+Future<bool> isLoggedIn() async {
   final access = await getAccessToken();
 
   if (access != 'error') {
-    final box = await Hive.openBox('coursehub-data');
-    HiveStore.userData = box.get('user');
-
+    await setHiveStore();
     return true;
   } else {
     return false;
   }
 }
 
+Future<void> setHiveStore() async {
+  final box = await Hive.openBox('coursehub-data');
+  HiveStore.userData = box.get('user');
+  HiveStore.contribution = box.get('contribution');
+}

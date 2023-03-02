@@ -1,10 +1,10 @@
-
+import 'package:test1/models/contribution.dart';
 import 'package:test1/models/favourites.dart';
 import 'package:test1/models/user.dart';
 
-
 class HiveStore {
   static Map<dynamic, dynamic> userData = {};
+  static List<dynamic> contribution = [];
 
   static User getUserDetails() {
     return User.fromJson(userData);
@@ -14,5 +14,8 @@ class HiveStore {
     final userFav = userData['favourites'] as List<dynamic>;
     return userFav.map((e) => Favourite.fromJson(e)).toList();
   }
-}
 
+  static List<Contribution> getContribution() {
+    return contribution.map((e) => Contribution.fromJson(e)).toList();
+  }
+}

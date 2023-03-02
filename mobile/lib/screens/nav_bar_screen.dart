@@ -34,7 +34,7 @@ class _NavBarScreen extends State<NavBarScreen> {
     ),
     const ContributeScreen(),
     FavouritesScreen(),
-    const Profile(),
+    ProfileScreen(),
   ];
 
   @override
@@ -48,7 +48,7 @@ class _NavBarScreen extends State<NavBarScreen> {
       ),
       const ContributeScreen(),
       FavouritesScreen(),
-      const Profile(),
+      ProfileScreen(),
     ];
   }
 

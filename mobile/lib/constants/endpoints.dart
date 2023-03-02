@@ -3,7 +3,7 @@ const String baseUrl = "https://coursehubiitg.in/api";
 class MiscellaneousEndpoints {
   static const String examDates =
       '$baseUrl/exam'; //Needs params : semester_number
-  static const String contributionList = '$baseUrl/contributions/';
+  static const String contributionList = '$baseUrl/contribution/';
 }
 
 class CoursesEndpoints {

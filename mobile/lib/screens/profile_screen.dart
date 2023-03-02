@@ -1,29 +1,24 @@
 import "package:flutter/material.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:test1/constants/themes.dart';
-import 'package:test1/widgets/common/custom_snackbar.dart';
 import 'package:test1/widgets/profile_screen/contribution_card.dart';
 import 'package:test1/widgets/profile_screen/semester_card.dart';
 
 import '../database/hive_store.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
-  @override
-  State<Profile> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-  int contriCount = 0;
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final user = HiveStore.getUserDetails();
     final branch = calculateBranch(user.rollNumber);
+    final contributionList = HiveStore.getContribution();
 
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             width: double.infinity,
@@ -88,14 +83,17 @@ class _ProfileState extends State<Profile> {
               ),
             ),
           ),
-          contriCount != 1
+          contributionList.isNotEmpty
               ? Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 20),
                     child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) => const ContributionCard(),
-                      itemCount: 10,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) => ContributionCard(
+                        contribution: contributionList[index],
+                      ),
+                      itemCount: contributionList.length,
                     ),
                   ),
                 )

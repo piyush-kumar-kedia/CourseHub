@@ -11,51 +11,53 @@ class FavouritesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final favourites = HiveStore.getFavourites();
     return Scaffold(
-        body: favourites.isEmpty
-            ? const EmptyList()
-            : Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "FAVOURITES",
-                      style: Themes.darkTextTheme.displayLarge,
+      body: favourites.isEmpty
+          ? const EmptyList()
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "FAVOURITES",
+                    style: Themes.darkTextTheme.displayLarge,
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  Expanded(
+                    child: GridView.builder(
+                      physics:
+                          const ScrollPhysics(parent: BouncingScrollPhysics()),
+                      itemCount: favourites.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 20.0,
+                              mainAxisSpacing: 2.0),
+                      itemBuilder: (context, index) {
+                        String myPath =
+                            "${favourites[index].path.split("/")[1]} > ${favourites[index].path.split("/")[2]}";
+                        return FavouriteCard(
+                          index: favourites[index].code.toUpperCase(),
+                          address: myPath,
+                          name: favourites[index].name.length >= 30
+                              ? "${favourites[index].name.substring(0, 30)} ...${favourites[index].name.substring(favourites[index].name.length - 4, favourites[index].name.length)}"
+                              : favourites[index].name,
+                        );
+                      },
                     ),
-                    const SizedBox(
-                      height: 10.0,
+                  ),
+                  Visibility(
+                    visible: favourites.length <= 4,
+                    child: Center(
+                      child: SvgPicture.asset('assets/favourites.svg'),
                     ),
-                    Expanded(
-                      child: GridView.builder(
-                        physics: const ScrollPhysics(
-                            parent: BouncingScrollPhysics()),
-                        itemCount: favourites.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 20.0,
-                                mainAxisSpacing: 2.0),
-                        itemBuilder: (context, index) {
-                          String myPath =
-                              "${favourites[index].path.split("/")[1]} > ${favourites[index].path.split("/")[2]}";
-                          return FavouriteCard(
-                            index: favourites[index].code.toUpperCase(),
-                            address: myPath,
-                            name: favourites[index].name.length >= 30
-                                ? "${favourites[index].name.substring(0, 30)} ...${favourites[index].name.substring(favourites[index].name.length - 4, favourites[index].name.length)}"
-                                : favourites[index].name,
-                          );
-                        },
-                      ),
-                    ),
-                    Visibility(
-                        visible: favourites.length <= 4,
-                        child: Center(
-                            child: SvgPicture.asset('assets/favourites.svg')))
-                  ],
-                ),
-              ));
+                  )
+                ],
+              ),
+            ),
+    );
   }
 }
 
