@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:hive/hive.dart';
-import 'package:test1/widgets/common/custom_snackbar.dart';
-import '../endpoints.dart';
+import '../../constants/endpoints.dart';
 import 'package:http/http.dart' as http;
 
+import '../authentication/login.dart';
 import '../protected.dart';
 
 Future<void> getCurrentUser() async {
@@ -22,6 +22,7 @@ Future<void> getCurrentUser() async {
 
     var box = await Hive.openBox('coursehub-data');
     box.put('user', body);
+    isLoggedInAndSetData();
   } catch (e) {
     rethrow;
   }

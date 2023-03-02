@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final favourite = favouriteFromJson(jsonString);
+
 import 'dart:convert';
 
 Favourite favouriteFromJson(String str) => Favourite.fromJson(json.decode(str));
@@ -19,7 +23,7 @@ class Favourite {
   String code;
   String id;
 
-  factory Favourite.fromJson(Map<dynamic, dynamic> json) => Favourite(
+  factory Favourite.fromJson(Map<String, dynamic> json) => Favourite(
         name: json["name"],
         favouriteId: json["id"],
         path: json["path"],

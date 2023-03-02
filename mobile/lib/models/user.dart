@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:test1/models/course.dart';
+import 'package:test1/models/favourites.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 
@@ -45,7 +46,7 @@ class User {
         courses:
             List<Course>.from(json["courses"].map((x) => Course.fromJson(x))),
         department: json["department"],
-        favourites: List<dynamic>.from(json["favourites"].map((x) => x)),
+        favourites: List<Favourite>.from(json["favourites"].map((x) =>Favourite.fromJson(x))),
         v: json["__v"],
       );
 

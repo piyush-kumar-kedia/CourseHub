@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:test1/apis/authentication/login.dart';
 import 'package:test1/constants/themes.dart';
 
 import 'package:test1/screens/browse_screen.dart';
@@ -63,9 +64,15 @@ class _NavBarScreen extends State<NavBarScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'CourseHub',
-                    style: Themes.theme.textTheme.displayMedium,
+                  //TODO:Remove this Gesture Detector
+                  GestureDetector(
+                    onTap: () async {
+                      await logoutHandler(context);
+                    },
+                    child: Text(
+                      'CourseHub',
+                      style: Themes.theme.textTheme.displayMedium,
+                    ),
                   ),
                   SvgPicture.asset('assets/search.svg')
                 ],
@@ -102,12 +109,11 @@ class _NavBarScreen extends State<NavBarScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 NavBarIcon(
-                                  pageChangeCallback: returnToPageCallback,
+                                    pageChangeCallback: returnToPageCallback,
                                     isSelected: currentPageNumber == 0,
                                     label: 'Home'),
                                 NavBarIcon(
-                                  pageChangeCallback: returnToPageCallback,
-
+                                    pageChangeCallback: returnToPageCallback,
                                     isSelected: currentPageNumber == 1,
                                     label: 'Browse'),
                                 Column(
@@ -147,12 +153,11 @@ class _NavBarScreen extends State<NavBarScreen> {
                                   ],
                                 ),
                                 NavBarIcon(
-                                  pageChangeCallback: returnToPageCallback,
-
+                                    pageChangeCallback: returnToPageCallback,
                                     isSelected: currentPageNumber == 3,
                                     label: 'Favourites'),
                                 NavBarIcon(
-                                  pageChangeCallback: returnToPageCallback,
+                                    pageChangeCallback: returnToPageCallback,
                                     isSelected: currentPageNumber == 4,
                                     label: 'Profile')
                               ],

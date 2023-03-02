@@ -56,7 +56,7 @@ class _ContributeScreenState extends State<ContributeScreen> {
             Container(
                 margin: const EdgeInsets.fromLTRB(30, 50, 30, 0),
                 alignment: Alignment.topLeft,
-                child: Text("Contribute To CourseHub",
+                child: const Text("Contribute To CourseHub",
                     style: TextStyle(
                         fontFamily: "ProximaNova",
                         fontSize: 24,
@@ -67,7 +67,7 @@ class _ContributeScreenState extends State<ContributeScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                   children:[
-                    Expanded(
+                    const Expanded(
                       flex:6,
                       child: Padding(
                           padding: EdgeInsets.fromLTRB(30,10,0,0),

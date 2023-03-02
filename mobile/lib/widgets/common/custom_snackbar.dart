@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:test1/main.dart';
+import 'package:test1/constants/themes.dart';
 
 void showSnackBar(String message,context) {
   final snackbar = SnackBar(
+   elevation: 10,
+   duration: const Duration(milliseconds: 1000),
     content: Center(
       child: Text(
         message,
@@ -10,7 +12,7 @@ void showSnackBar(String message,context) {
       ),
     ),
     backgroundColor:
-        const Color.fromRGBO(254, 207, 111, 1), 
+    Themes.kYellow, 
     behavior: SnackBarBehavior.floating,
     margin: const EdgeInsets.all(50),
   );

@@ -1,8 +1,11 @@
-import 'dart:ui';
-
 import "package:flutter/material.dart";
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:test1/widgets/contribution.dart';
+import 'package:test1/constants/themes.dart';
+import 'package:test1/widgets/common/custom_snackbar.dart';
+import 'package:test1/widgets/profile_screen/contribution_card.dart';
+import 'package:test1/widgets/profile_screen/semester_card.dart';
+
+import '../database/hive_store.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -11,79 +14,46 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String name = "Atharva Tagalpallewar";
-  String branch = "Chemical Engineering";
-  int sem = 6;
-  String th = "th";
   int contriCount = 0;
-  void setupC() {
-    if (sem == 1) {
-      th = "st";
-    } else if (sem == 2) {
-      th = "nd";
-    } else if (sem == 3) {
-      th = "rd";
-    }
-  }
-
-  bool isVisible = true;
-  void showHide() {
-    setState(() {
-      isVisible = !isVisible;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    setupC();
+    final user = HiveStore.getUserDetails();
+    final branch = calculateBranch(user.rollNumber);
+
     return Scaffold(
-      // backgroundColor: Color(0x1F1F1F),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (isVisible)
-            Container(
-              color: Colors.black,
-              child: Column(children: [
-                Container(
-                  alignment: Alignment.topLeft,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 30),
-                  width: double.infinity,
-                  child: const Text(
-                    "MY PROFILE",
-                    style: TextStyle(
-                      fontFamily: 'ProximaNova',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 30, top: 30, right: 20),
+            color: Colors.black,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "MY PROFILE",
+                  style: TextStyle(
+                    fontFamily: 'ProximaNova',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(
                   height: 16.0,
                 ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
-                  width: double.infinity,
-                  child: Text(
-                    name,
-                    style: const TextStyle(
-                      fontFamily: 'ProximaNova',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 28,
-                      color: Colors.white,
-                    ),
-                  ),
+                Text(
+                  user.name,
+                  style: Themes.theme.textTheme.displayLarge,
                 ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
-                  width: double.infinity,
+                const SizedBox(
+                  height: 10,
+                ),
+                FittedBox(
                   child: Text(
-                    "B.tech, $branch",
+                    "B.Tech in $branch",
                     style: const TextStyle(
                       fontFamily: 'ProximaNova',
                       fontWeight: FontWeight.w400,
@@ -92,113 +62,62 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                 ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                  width: double.infinity,
-                  child: Card(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero),
-                    color: const Color(0xffFECF6F),
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 5),
-                      width: 80,
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                          child: Wrap(
-                            children: [
-                              Text(
-                                sem.toString(),
-                                style: const TextStyle(
-                                  fontFamily: 'ProximaNova',
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 18.8,
-                                ),
-                              ),
-                              Text(
-                                th,
-                                style: const TextStyle(
-                                  fontFeatures: [FontFeature.superscripts()],
-                                  fontFamily: 'ProximaNova',
-                                  fontWeight: FontWeight.w700,
-                                  // fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                          child: const Text(
-                            "Semester",
-                            style: TextStyle(
-                              fontFamily: 'ProximaNova',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.1,
-                            ),
-                          ),
-                        ),
-                      ]),
-                    ),
-                  ),
+                const SizedBox(
+                  height: 20,
                 ),
+                const SizedBox(
+                  height: 25,
+                ),
+                SemesterCard(sem: user.semester),
                 SvgPicture.asset(
-                  './assets/images/my_profile.svg',
+                  'assets/my_profile.svg',
                   fit: BoxFit.scaleDown,
                 ),
-              ]),
+              ],
             ),
-          Container(
-            color: Colors.white,
-            alignment: Alignment.topLeft,
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-            // width: double.infinity,
-            child: GestureDetector(
-              onTap: showHide,
-              child: const Text(
-                "MY CONTRIBUTIONS",
-                style: TextStyle(
-                  fontFamily: 'ProximaNova',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 20, top: 30),
+            child: Text(
+              "MY CONTRIBUTIONS",
+              style: TextStyle(
+                fontFamily: 'ProximaNova',
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                color: Colors.black,
               ),
             ),
           ),
-          contriCount > 0
+          contriCount != 1
               ? Expanded(
-                  child: Container(
-                    color: Colors.white,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
                     child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: contriCount,
-                      itemBuilder: (ctx, index) {
-                        return const ContributionCard();
-                      },
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, index) => const ContributionCard(),
+                      itemCount: 10,
                     ),
                   ),
                 )
               : Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(0),
-                    color: Colors.white,
-                    child: Center(
-                      child: SvgPicture.asset(
-                        './assets/images/my_profile_no_contri.svg',
-                        fit: BoxFit.scaleDown,
-                        height: 150,
+                  child: Center(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/my_profile_no_contri.svg',
+                        width: 120,
                       ),
-                    ),
-                  ),
+                      const Text(
+                        'Nothing Here!',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                      )
+                    ],
+                  )),
                 )
         ],
       ),

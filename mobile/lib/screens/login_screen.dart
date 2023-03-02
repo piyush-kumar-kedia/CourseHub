@@ -66,10 +66,14 @@ class LoginScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const Expanded(
-                          child: Text(
+                          child:  Text(
                             'Your go-to platform for all your academic needs. Get access to past papers, lecture slides, assignments, tutorials, notes and more to help you ace your exams',
                             textAlign: TextAlign.left,
-                            style: TextStyle(fontWeight: FontWeight.w700),
+                            style:  TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                              fontSize: 14.0,
+                            ),
                           ),
                         ),
                         Expanded(

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:test1/apis/endpoints.dart';
+import 'package:test1/constants/endpoints.dart';
 
 import '../../models/course.dart';
 

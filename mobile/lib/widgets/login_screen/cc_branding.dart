@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:test1/constants/themes.dart';
 
 class CCBranding extends StatelessWidget {
@@ -22,14 +21,14 @@ class CCBranding extends StatelessWidget {
         const SizedBox(height: 20,),
         RichText(
           textAlign: TextAlign.center,
-          text: TextSpan(children: [
+          text: const TextSpan(children: [
             TextSpan(
               text: 'Coding Club\n',
-              style: GoogleFonts.raleway(fontWeight: FontWeight.w700),
+              style: TextStyle(fontWeight: FontWeight.w700),
             ),
             TextSpan(
               text: 'IIT Guwahati',
-              style: GoogleFonts.raleway(fontWeight: FontWeight.w500),
+              style: TextStyle(fontWeight: FontWeight.w400,fontSize: 12),
             )
           ]),
         )

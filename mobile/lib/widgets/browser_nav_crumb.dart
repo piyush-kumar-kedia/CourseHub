@@ -17,7 +17,7 @@ class BrowserNavCrumb extends StatelessWidget {
               onTap: () => callback(level),
               child: Text(
                 name,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: "ProximaNova",
                   color: Colors.black,
                   decorationColor: Colors.black,
@@ -28,10 +28,10 @@ class BrowserNavCrumb extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+         const  SizedBox(
             width: 8.0,
           ),
-          Icon(Icons.chevron_right),
+          const Icon(Icons.chevron_right),
         ],
       ),
     );

@@ -15,6 +15,6 @@ class CustomLinearProgress extends StatelessWidget {
         ),
       ),
     );
-    ;
+    
   }
 }
