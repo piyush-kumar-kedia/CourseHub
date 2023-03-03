@@ -4,6 +4,7 @@ import axios from "axios";
 import jwt from "jsonwebtoken";
 import config from "../config/default.js";
 import { logger } from "@azure/identity";
+import { getRandomColor } from "../utils/generateRandomColor.js";
 
 const userSchema = Schema({
     name: { type: String, required: true },
@@ -125,9 +126,11 @@ export const addToFavourites = async (userid, name, id, path, code) => {
 };
 export const AddNewCourse = async (userid, code, name) => {
     const UserData = await User.findById(userid);
+    const color = getRandomColor();
     UserData.courses.push({
         code,
         name,
+        color,
     });
     const updatedUser = await UserData.save();
     return updatedUser;
