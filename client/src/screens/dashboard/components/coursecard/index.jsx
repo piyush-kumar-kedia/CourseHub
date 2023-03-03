@@ -12,7 +12,7 @@ const CourseCard = ({ code, color, name, type, setClicked }) => {
             try {
                 const { data } = await IsCourseAvailable(code);
                 setIsAvailable(data.isAvailable);
-                console.log(data.isAvailable);
+                // console.log(data.isAvailable);
             } catch (error) {
                 // console.log(error);
                 setIsAvailable(false);

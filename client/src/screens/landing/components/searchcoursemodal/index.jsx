@@ -25,7 +25,7 @@ const SearchCourseModal = ({ handleAddCourse }) => {
 
     async function handleSearch() {
         if (btnState === "disabled") return;
-        console.log("search");
+        // console.log("search");
         try {
             setLoading(true);
             setErr(null);

@@ -56,7 +56,7 @@ const UserReducer = (
                     );
                 }
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
             return { ...state, localCourses: [...state.localCourses, action.payload.course] };
         case "LOAD_LOCAL_COURSES":
@@ -64,7 +64,7 @@ const UserReducer = (
         case "CLEAR_LOCAL_COURSES":
             return { ...state, localCourses: [] };
         case "UPDATE_USER":
-            console.log(action.payload);
+            // console.log(action.payload);
             if (action.payload.newUserData.newUserName) {
                 return {
                     ...state,

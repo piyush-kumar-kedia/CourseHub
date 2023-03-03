@@ -40,7 +40,7 @@ const SearchBar = ({ type, handleSetCourse }) => {
             setSearched(true);
             setLoading(true);
             const fetched = await GetSearchResult(value.split(" "));
-            console.log(fetched.data);
+            // console.log(fetched.data);
             setFetched(fetched.data);
             setError(false);
             setLoading(false);

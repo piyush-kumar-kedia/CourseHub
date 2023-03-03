@@ -19,12 +19,12 @@ export const handleLogin = () => {
 };
 export const AddNewCourseAPI = async (code, name) => {
     const resp = await axios.post(`${serverRoot}/api/user/course`, { code, name });
-    console.log(resp);
+    // console.log(resp);
     return resp;
 };
 export const DeleteCourseAPI = async (code) => {
     const resp = await axios.delete(`${serverRoot}/api/user/course/${code}`);
-    console.log(resp);
+    // console.log(resp);
     return resp;
 };
 
@@ -36,12 +36,12 @@ export const AddToFavourites = async (id, name, path, code) => {
         code: code,
     };
     const resp = await axios.post(`${serverRoot}/api/user/favourites`, data);
-    console.log(resp);
+    // console.log(resp);
     return resp;
 };
 export const RemoveFromFavourites = async (id) => {
     const resp = await axios.delete(`${serverRoot}/api/user/favourites/${id}`);
-    console.log(resp);
+    // console.log(resp);
     return resp;
 };
 export const GetExamDates = async () => {

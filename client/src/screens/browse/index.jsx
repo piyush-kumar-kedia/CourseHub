@@ -47,7 +47,7 @@ const BrowseScreen = () => {
                 dispatch(LoadCourses(JSON.parse(localStorage.getItem("AllCourses"))));
             } catch (error) {
                 dispatch(LoadCourses([]));
-                console.log("load error");
+                // console.log("load error");
             }
         }
     }, []);
@@ -65,7 +65,7 @@ const BrowseScreen = () => {
                 setLoading(false);
             } catch (error) {
                 dispatch(LogoutUser());
-                console.log(error.message);
+                // console.log(error.message);
                 setLoading(false);
             }
         }
@@ -98,7 +98,7 @@ const BrowseScreen = () => {
             );
             let root = [];
             if (present || currCourse) {
-                console.log("found in localstorage");
+                // console.log("found in localstorage");
                 fetchedData = present;
                 // console.log(fetchedData);
                 root = fetchedData;
@@ -119,13 +119,13 @@ const BrowseScreen = () => {
             dispatch(ChangeCurrentCourse(null, code));
         };
         run();
-        console.log("code search");
+        // console.log("code search");
     }, [loading]);
 
-    useEffect(() => {
-        console.log(fb);
-        // console.log(user);
-    }, [fb, user]);
+    // useEffect(() => {
+    // console.log(fb);
+    // console.log(user);
+    // }, [fb, user]);
     return (
         <Container color={"light"} type={"fluid"}>
             <div className="navbar-browse-screen">

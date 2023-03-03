@@ -48,15 +48,15 @@ const Contributions = () => {
             toast.error("Invalid course code length!");
             return;
         }
-        console.log(courseCode, folder, description, year);
+        // console.log(courseCode, folder, description, year);
         await pond.processFiles();
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
         pond.removeFiles();
         const toggle = document.getElementById("toggle");
-        console.log(toggle);
+        // console.log(toggle);
         let isAnoynmous = toggle.checked;
-        console.log(isAnoynmous);
+        // console.log(isAnoynmous);
 
         try {
             setSubmitEnabled(false);
@@ -70,7 +70,7 @@ const Contributions = () => {
                     contributionId,
                     uploadedBy: `63ef67f7ab9bcbea9195147c`,
                 });
-                console.log(resp);
+                // console.log(resp);
             } else {
                 let resp = await CreateNewContribution({
                     courseCode,
@@ -81,7 +81,7 @@ const Contributions = () => {
                     contributionId,
                     uploadedBy,
                 });
-                console.log(resp);
+                // console.log(resp);
             }
             contributionSection.classList.remove("show");
             toast.success("Files uploaded successfully!");

@@ -14,7 +14,7 @@ const FileBrowserReducer = (
         case "LOAD_COURSES":
             return { ...state, allCourseData: action.payload.allCourseData };
         case "CHANGE_CURRENT_COURSE":
-            console.log("Changed Current Course");
+            // console.log("Changed Current Course");
 
             return {
                 ...state,
@@ -22,7 +22,7 @@ const FileBrowserReducer = (
                 currentCourseCode: action.payload.currentCourseCode,
             };
         case "UPDATE_COURSES":
-            console.log("Updated");
+            // console.log("Updated");
             let arr = state.allCourseData;
             if (
                 !arr.find(

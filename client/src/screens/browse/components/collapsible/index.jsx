@@ -50,13 +50,13 @@ const Collapsible = ({ course, color, state }) => {
             location.reload();
         }
         if (currCourse || inLocalStorage) {
-            console.log("Already present...");
+            // console.log("Already present...");
         }
         if (!currCourse) {
             try {
                 let loadingCourseToastId = toast.loading("Loading course data...");
                 currCourse = await getCourse(code.toLowerCase());
-                console.log("req");
+                // console.log("req");
                 const { data } = currCourse;
                 if (!data.found) {
                     setError(false);
@@ -106,7 +106,7 @@ const Collapsible = ({ course, color, state }) => {
                             folderId = null;
                         }
                     } catch (error) {
-                        console.log(error);
+                        // console.log(error);
                         dispatch(
                             ChangeCurrentYearData(
                                 t.children.length - 1,
@@ -130,7 +130,7 @@ const Collapsible = ({ course, color, state }) => {
         // console.log(course);
         if (currCourseCode?.toLowerCase() !== course.code?.toLowerCase()) setOpen(false);
         if (currCourseCode?.toLowerCase() === course.code?.toLowerCase()) {
-            console.log("called");
+            // console.log("called");
             triggerGetCourse();
             setOpen(true);
         }
@@ -151,7 +151,7 @@ const Collapsible = ({ course, color, state }) => {
             // console.log(course);
             try {
                 let searchedFolder = searchFolderById(currentCourse, folderId);
-                console.log("searched folder", searchedFolder);
+                // console.log("searched folder", searchedFolder);
                 if (searchedFolder) {
                     dispatch(ChangeFolder(searchedFolder));
                 }

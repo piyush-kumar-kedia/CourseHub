@@ -86,7 +86,7 @@ const Dashboard = () => {
     useEffect(() => {
         async function run() {
             try {
-                console.log("Exam Dates");
+                // console.log("Exam Dates");
                 const { data } = await GetExamDates();
                 const { dates } = data;
                 const midSemDate = new Date(dates.midSem);
@@ -107,7 +107,7 @@ const Dashboard = () => {
         dispatch(ChangeCurrentCourse(null, code.toUpperCase()));
         navigate("/browse");
     };
-    console.log(user);
+    // console.log(user);
 
     useEffect(() => {
         dispatch(ResetFileBrowserState());
