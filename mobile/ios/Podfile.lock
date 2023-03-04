@@ -99,8 +99,8 @@ SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_appauth: 525652bda90e43ca5eb7ed748ecc106b79d1f5a1
   flutter_web_auth: c25208760459cec375a3c39f6a8759165ca0fa4d
-  local_auth_ios: 0d333dde7780f669e66f19d2ff6005f3ea84008d
-  path_provider_foundation: 37748e03f12783f9de2cb2c4eadfaa25fe6d4852
+  local_auth_ios: c6cf091ded637a88f24f86a8875d8b0f526e2605
+  path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   SDWebImage: 1c39de67663e5eebb2f41324d5d580eeea12dd4c
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f

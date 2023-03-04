@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test1/constants/themes.dart';
+import 'package:test1/widgets/browse_screen.dart/year_div.dart';
 import 'package:test1/widgets/browser_nav_crumb.dart';
+import 'package:test1/widgets/common/custom_linear_progress.dart';
 import 'package:test1/widgets/folder_explorer.dart';
 
 import '../apis/courses/course_api.dart';
@@ -50,9 +52,7 @@ class _BrowseScreen extends State<BrowseScreen> {
       future: CourseApiClient.getCourseDetail(widget.code),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const CustomLinearProgress();
         }
         Map<String, dynamic> data = snapshot.data!;
         List<String> pathArgs = path.split("/");
@@ -117,13 +117,11 @@ class _BrowseScreen extends State<BrowseScreen> {
         return Column(
           children: [
             Container(
-              color: const Color.fromRGBO(254, 207, 111, 1),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: SingleChildScrollView(
-                  child: Row(
-                    children: navigation_crumbs,
-                  ),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              color: Themes.kYellow,
+              child: SingleChildScrollView(
+                child: Row(
+                  children: navigation_crumbs,
                 ),
               ),
             ),
@@ -133,14 +131,8 @@ class _BrowseScreen extends State<BrowseScreen> {
                 padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 12.0),
                 child: Row(
                   children: [
-                    Text(
-                      currentTitle,
-                      style: const TextStyle(
-                        fontFamily: "ProximaNova",
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    Text(currentTitle,
+                        style: Themes.darkTextTheme.displayLarge),
                     const Spacer(),
                     IconButton(
                         icon: const Icon(
@@ -154,13 +146,15 @@ class _BrowseScreen extends State<BrowseScreen> {
                               action: SnackBarAction(
                                 label: "UNDO",
                                 onPressed: () {
+                                  
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          behavior: SnackBarBehavior.floating,
-                                          margin:
-                                              EdgeInsets.only(bottom: 125.0),
-                                          duration: Duration(seconds: 1),
-                                          content: Text('UNDO SUCCESSFUL!')));
+                                    const SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      margin: EdgeInsets.only(bottom: 125.0),
+                                      duration: Duration(seconds: 1),
+                                      content: Text('UNDO SUCCESSFUL!'),
+                                    ),
+                                  );
                                 },
                               ),
                               behavior: SnackBarBehavior.floating,
@@ -200,56 +194,18 @@ class _BrowseScreen extends State<BrowseScreen> {
               ),
             ),
             Expanded(
+              flex: 20,
               child: FolderExplorer(
                 data: dataToShow,
                 callback: addToPathCallback,
               ),
             ),
-            Container(
-              color: Colors.black,
-              height: 60,
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-              child: Row(
-                children: [
-                  Text(
-                    'YEAR',
-                    style: Themes.theme.textTheme.labelMedium,
-                  ),
-                  const Spacer(),
-                  Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 10.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            year,
-                            style: const TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          PopupMenuButton<String>(
-                            onSelected: handleClick,
-                            itemBuilder: (context) {
-                              return availableYears.map((String choice) {
-                                return PopupMenuItem<String>(
-                                  value: choice,
-                                  child: Text(choice),
-                                );
-                              }).toList();
-                            },
-                            child: const Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            Expanded(
+              flex: 3,
+              child: YearDiv(
+                  callback: handleClick,
+                  availableYears: availableYears,
+                  year: year),
             )
           ],
         );

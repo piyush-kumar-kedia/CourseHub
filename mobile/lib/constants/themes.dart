@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Themes {
-  static const  kYellow = Color.fromRGBO(254, 207, 111, 1);
+  static const kYellow = Color.fromRGBO(254, 207, 111, 1);
   static final theme = ThemeData(
     primaryColor: kYellow,
     fontFamily: 'ProximaNova',
     splashColor: kYellow,
-    textTheme:  const TextTheme(
+    textTheme: const TextTheme(
       labelMedium: TextStyle(
         color: Colors.white,
         fontWeight: FontWeight.w800,
@@ -42,23 +42,23 @@ class Themes {
     colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.black),
   );
 
-  static const darkTextTheme =   TextTheme(
-    displayMedium:  TextStyle(
+  static const darkTextTheme = TextTheme(
+    displayMedium: TextStyle(
       fontWeight: FontWeight.w700,
       color: Colors.black,
       fontSize: 18.0,
     ),
-    displayLarge:  TextStyle(
+    displayLarge: TextStyle(
       fontWeight: FontWeight.w700,
       color: Colors.black,
       fontSize: 24.0,
     ),
-    displaySmall:  TextStyle(
+    displaySmall: TextStyle(
       fontWeight: FontWeight.w700,
       color: Colors.black,
       fontSize: 12.0,
     ),
-    bodyMedium:  TextStyle(
+    bodyMedium: TextStyle(
       fontWeight: FontWeight.w400,
       color: Colors.black,
       fontSize: 14.0,
@@ -68,20 +68,31 @@ class Themes {
       fontWeight: FontWeight.w400,
       color: Colors.black,
     ),
-    labelSmall:  TextStyle(
+    labelSmall: TextStyle(
       fontWeight: FontWeight.w800,
       color: Colors.black,
       fontSize: 10.0,
     ),
-    labelLarge:  TextStyle(
+    labelLarge: TextStyle(
         fontFamily: "ProximaNova",
         fontSize: 16,
         fontWeight: FontWeight.w700,
         color: Colors.black),
-    labelMedium:  TextStyle(
+    labelMedium: TextStyle(
       fontWeight: FontWeight.w800,
       color: Colors.black,
       fontSize: 14.0,
     ),
   );
 }
+
+List<Color> colors = const [
+  Color.fromRGBO(219, 206, 255, 1),
+  Color.fromRGBO(219, 206, 255, 1),
+  Color.fromRGBO(255, 167, 212, 1),
+  Color.fromRGBO(255, 167, 212, 1),
+  Color.fromRGBO(111, 143, 254, 1),
+  Color.fromRGBO(111, 143, 254, 1),
+  Color.fromRGBO(237, 244, 146, 1),
+  Color.fromRGBO(237, 244, 146, 1),
+];

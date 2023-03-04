@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LoginButton extends StatelessWidget {
   const LoginButton({super.key});
@@ -11,7 +12,7 @@ class LoginButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/microsoft.png', height: 30),
+         SvgPicture.asset('assets/microsoft.svg', height: 30),
           const SizedBox(
             width: 20,
           ),

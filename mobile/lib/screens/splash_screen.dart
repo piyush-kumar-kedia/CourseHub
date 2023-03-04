@@ -1,7 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:test1/widgets/common/custom_linear_progress.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
 import '../apis/authentication/login.dart';
 import 'login_screen.dart';
 import 'nav_bar_screen.dart';
@@ -14,14 +13,40 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  @override
   void initState() {
     super.initState();
     _navigateToHome();
   }
 
   _navigateToHome() async {
-    await Future.delayed(const Duration(seconds: 2), () {});
-    // ignore: use_build_context_synchronously
+    await Future.delayed(const Duration(seconds: 2), () async {
+      //TODO: Add all svgs here
+      const loaders = [
+        SvgAssetLoader('assets/cc_logo.svg'),
+        SvgAssetLoader('assets/favourites_card.svg'),
+        SvgAssetLoader('assets/favourites.svg'),
+        SvgAssetLoader('assets/folder_card.svg'),
+        SvgAssetLoader('assets/home_books.svg'),
+        SvgAssetLoader('assets/my_profile_no_contri.svg'),
+        SvgAssetLoader('assets/my_profile.svg'),
+        SvgAssetLoader('assets/search.svg'),
+        SvgAssetLoader('assets/microsoft.svg'),
+        SvgAssetLoader('assets/landing.svg'),
+        SvgAssetLoader(''),
+        SvgAssetLoader(''),
+        SvgAssetLoader(''),
+        SvgAssetLoader(''),
+      ];
+      loaders.map(
+        (loader) => svg.cache.putIfAbsent(
+          loader.cacheKey(null),
+          () => loader.loadBytes(null),
+        ),
+      );
+    });
+
+    if (!mounted) return;
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -39,7 +64,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 } else {
                   return const Scaffold(
                     backgroundColor: Colors.white,
-
                   );
                 }
               }),

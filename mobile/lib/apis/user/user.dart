@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import '../../constants/endpoints.dart';
 import 'package:http/http.dart' as http;
-
-import '../authentication/login.dart';
 import '../protected.dart';
 
 Future<void> getCurrentUser() async {

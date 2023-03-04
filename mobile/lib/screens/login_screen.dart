@@ -9,8 +9,21 @@ import 'package:test1/widgets/login_screen/login_button.dart';
 import '../apis/contributions/contribution.dart';
 import '../apis/user/user.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final theImage = const AssetImage('assets/landing.jpg');
+
+  @override
+  void didChangeDependencies() {
+    precacheImage(theImage, context);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +32,9 @@ class LoginScreen extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/landing.jpg'),
+                  image: theImage,
                   fit: BoxFit.cover,
                 ),
               ),

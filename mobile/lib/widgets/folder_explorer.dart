@@ -21,7 +21,7 @@ class FolderExplorer extends StatelessWidget {
                 child: Stack(
                   children: [
                     SvgPicture.asset(
-                      "assets/folder.svg",
+                      "assets/folder_card.svg",
                       width: double.infinity,
                     ),
                     Padding(
