@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:test1/apis/authentication/login.dart';
-import 'package:test1/screens/login_screen.dart';
-import 'package:test1/screens/nav_bar_screen.dart';
 import 'package:test1/screens/splash_screen.dart';
 import './constants/themes.dart';
 

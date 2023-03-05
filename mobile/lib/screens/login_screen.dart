@@ -19,11 +19,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final theImage = const AssetImage('assets/landing.jpg');
 
-  @override
-  void didChangeDependencies() {
-    precacheImage(theImage, context);
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() async{
+  //   await precacheImage(theImage, context);
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {

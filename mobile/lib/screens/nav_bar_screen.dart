@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:test1/apis/authentication/login.dart';
 import 'package:test1/constants/themes.dart';
-
 import 'package:test1/screens/browse_screen.dart';
 import 'package:test1/screens/contribute_screen.dart';
 import 'package:test1/screens/favourites_screen.dart';
 import 'package:test1/screens/home_screen.dart';
 import 'package:test1/screens/profile_screen.dart';
 import 'package:test1/widgets/nav_bar/nav_bar_icon.dart';
+import 'package:test1/widgets/nav_bar/search_card.dart';
 
 class NavBarScreen extends StatefulWidget {
   const NavBarScreen({super.key});
@@ -19,6 +18,9 @@ class NavBarScreen extends StatefulWidget {
 
 class _NavBarScreen extends State<NavBarScreen> {
   int currentPageNumber = 0;
+  var _isSearched = false;
+  final _searchController = TextEditingController();
+  var _searchResult = '';
 
   void returnToPageCallback(int a) {
     setState(() {
@@ -32,9 +34,11 @@ class _NavBarScreen extends State<NavBarScreen> {
       code: "ma101",
       callback: (int a) {},
     ),
-    const ContributeScreen(),
-    FavouritesScreen(),
-    ProfileScreen(),
+    ContributeScreen(
+      callback: (int a) {},
+    ),
+    const FavouritesScreen(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -46,35 +50,70 @@ class _NavBarScreen extends State<NavBarScreen> {
         code: "ee207",
         callback: returnToPageCallback,
       ),
-      const ContributeScreen(),
-      FavouritesScreen(),
-      ProfileScreen(),
+      ContributeScreen(
+        callback: returnToPageCallback,
+      ),
+      const FavouritesScreen(),
+      const ProfileScreen(),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              color: Colors.black,
+              color: _isSearched ? Colors.white : Colors.black,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  //TODO:Remove this Gesture Detector
-                  GestureDetector(
-                    onTap: () async {
-                      await logoutHandler(context);
-                    },
-                    child: Text(
-                      'CourseHub',
-                      style: Themes.theme.textTheme.displayMedium,
-                    ),
+                  !_isSearched
+                      ? Expanded(
+                          flex: 10,
+                          child: Text(
+                            'CourseHub',
+                            style: Themes.theme.textTheme.displayMedium,
+                          ),
+                        )
+                      : Expanded(
+                          flex: 10,
+                          child: TextField(
+                            controller: _searchController,
+                            cursorColor: Colors.grey,
+                            decoration: const InputDecoration(
+                              hintText: 'Search Courses',
+                              focusedBorder: UnderlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                  const SizedBox(
+                    width: 20,
                   ),
-                  SvgPicture.asset('assets/search.svg')
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                        onTap: () {
+                          if (!_isSearched) {
+                            setState(() {
+                              _isSearched = true;
+                            });
+                          } else {
+
+
+                            
+                          }
+                        },
+                        child: SvgPicture.asset(
+                          'assets/search.svg',
+                          colorFilter: ColorFilter.mode(
+                              _isSearched ? Colors.black : Colors.white,
+                              BlendMode.srcIn),
+                        )),
+                  )
                 ],
               ),
             ),
@@ -167,6 +206,33 @@ class _NavBarScreen extends State<NavBarScreen> {
                       ),
                     ],
                   ),
+                  Visibility(
+                    visible: _isSearched,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isSearched = false;
+                        });
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: const Color.fromRGBO(255, 255, 255, 0.8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 30),
+                        // child: Text('Press Enter to Search'),
+                        child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: 1,
+                          itemBuilder: (context, index) => const SearchCard(
+                            isAvailable: true,
+                            courseCode: 'ee101',
+                            courseName: 'mathematics',
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

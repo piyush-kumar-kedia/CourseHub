@@ -12,7 +12,7 @@ import '../protected.dart';
 Future<void> authenticate() async {
   try {
     final result = await FlutterWebAuth.authenticate(
-        url: AuthEndpints.getAccess, callbackUrlScheme: "foobar");
+        url: AuthEndpoints.getAccess, callbackUrlScheme: "foobar");
     final prefs = await SharedPreferences.getInstance();
     var accessToken = result.split('=')[1];
     prefs.setString('access_token', accessToken);

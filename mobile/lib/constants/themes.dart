@@ -83,6 +83,11 @@ class Themes {
       color: Colors.black,
       fontSize: 14.0,
     ),
+  bodyLarge: TextStyle(
+      fontWeight: FontWeight.w700,
+      color: Colors.black,
+      fontSize: 14.0,
+    ),
   );
 }
 

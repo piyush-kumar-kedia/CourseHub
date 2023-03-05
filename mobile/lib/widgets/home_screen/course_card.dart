@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:test1/apis/courses/course_availability.dart';
 import 'package:test1/constants/themes.dart';
+import 'package:test1/controllers/letter_capitalizer.dart';
 import 'package:test1/models/course.dart';
 
 class CourseCard extends StatelessWidget {
@@ -54,7 +55,7 @@ class AvailableCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Text(
-                      course.code,
+                      course.code.toUpperCase(),
                       style: Themes.theme.textTheme.labelSmall,
                     ),
                   ),
@@ -73,8 +74,8 @@ class AvailableCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              course.name,
-              maxLines: 3,
+              letterCapitalizer(course.name),
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: Themes.darkTextTheme.displayMedium,
             ),
