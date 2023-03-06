@@ -83,6 +83,7 @@ const FileDisplay = ({ file, path, code }) => {
             return;
         }
         const response = previewFile(file.id);
+
         toast.promise(response, {
             pending: "Loading preview...",
             error: "Something went wrong!",
