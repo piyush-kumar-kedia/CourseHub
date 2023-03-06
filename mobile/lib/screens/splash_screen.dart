@@ -34,7 +34,6 @@ class _SplashScreenState extends State<SplashScreen> {
                   if (!isLoggedIn) {
                     return const LoginScreen();
                   } else {
-       
                     return const NavBarScreen();
                   }
                 } else {

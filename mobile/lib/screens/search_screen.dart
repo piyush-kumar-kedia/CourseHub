@@ -23,7 +23,7 @@ class _SearchScreenState extends State<SearchScreen> {
       text = 'Loading...';
     });
     try {
-      final res = await searchCourse(value);
+      final res = await searchCourse(value.toString().trim());
 
       setState(() {
         found = res['found'];

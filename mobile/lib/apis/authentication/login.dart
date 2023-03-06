@@ -4,8 +4,10 @@ import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:test1/apis/contributions/contribution.dart';
+import 'package:test1/apis/courses/get_courses.dart';
 import 'package:test1/apis/user/user.dart';
 import 'package:test1/constants/endpoints.dart';
+import 'package:test1/models/user.dart';
 import 'package:test1/screens/login_screen.dart';
 
 import '../../database/hive_store.dart';
@@ -20,6 +22,12 @@ Future<void> authenticate() async {
     prefs.setString('access_token', accessToken);
     await getCurrentUser();
     await getContribution();
+    await setHiveStore();
+
+    final user = User.fromJson(HiveStore.userData);
+    for (var i = 0; i < user.courses.length; i++) {
+      await getUserCourses(user.courses[i].code);
+    }
     await setHiveStore();
   } on PlatformException catch (_) {
     rethrow;
@@ -36,7 +44,9 @@ Future<void> logoutHandler(context) async {
   box.clear();
 
   Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
       (route) => false);
 }
 
@@ -53,6 +63,7 @@ Future<bool> isLoggedIn() async {
 
 Future<void> setHiveStore() async {
   final box = await Hive.openBox('coursehub-data');
-  HiveStore.userData = box.get('user');
-  HiveStore.contribution = box.get('contribution');
+  HiveStore.userData = box.get('user') ?? {};
+  HiveStore.contribution = box.get('contribution') ?? [];
+  HiveStore.coursesData = box.get('courses-data') ?? {};
 }

@@ -22,6 +22,7 @@ Future<void> getContribution() async {
     final body = jsonDecode(res.body);
     final box = await Hive.openBox('coursehub-data');
     box.put('contribution', body);
+
   }
 }
 

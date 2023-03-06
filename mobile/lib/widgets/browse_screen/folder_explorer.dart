@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FolderExplorer extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final Map<dynamic, dynamic> data;
   final Function(String) callback;
   const FolderExplorer({super.key, required this.data, required this.callback});
 

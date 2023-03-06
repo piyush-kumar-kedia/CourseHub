@@ -20,7 +20,7 @@ Future<void> getCurrentUser() async {
 
     var box = await Hive.openBox('coursehub-data');
     box.put('user', body);
-   
+
   } catch (e) {
     rethrow;
   }

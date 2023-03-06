@@ -5,6 +5,7 @@ import 'package:test1/models/user.dart';
 class HiveStore {
   static Map<dynamic, dynamic> userData = {};
   static List<dynamic> contribution = [];
+  static Map<dynamic, dynamic> coursesData = {};
 
   static User getUserDetails() {
     return User.fromJson(userData);

@@ -3,59 +3,115 @@ import 'package:test1/constants/themes.dart';
 import 'package:test1/database/hive_store.dart';
 import 'package:test1/widgets/favourite_screen/favourite_card.dart';
 
-class FavouritesScreen extends StatelessWidget {
+import '../widgets/common/custom_linear_progress.dart';
+
+class FavouritesScreen extends StatefulWidget {
   const FavouritesScreen({super.key});
+
+  @override
+  State<FavouritesScreen> createState() => _FavouritesScreenState();
+}
+
+class _FavouritesScreenState extends State<FavouritesScreen> {
+  var _isLoading = false;
+
+
+  void setloading(){
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+  }
+  
 
   @override
   Widget build(BuildContext context) {
     final favourites = HiveStore.getFavourites();
+
     return Scaffold(
       body: favourites.isEmpty
           ? const EmptyList()
-          : Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "FAVOURITES",
-                    style: Themes.darkTextTheme.displayLarge,
+          : Stack(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "FAVOURITES",
+                        style: Themes.darkTextTheme.displayLarge,
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      Expanded(
+                        child: GridView.builder(
+                          physics:
+                              const ScrollPhysics(parent: BouncingScrollPhysics()),
+                          itemCount: favourites.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10.0,
+                                  mainAxisSpacing: 2.0,
+                                  childAspectRatio: 1.2),
+                          itemBuilder: (context, index) {
+                            String myPath =
+                                "${favourites[index].path.split("/")[1]} > ${favourites[index].path.split("/")[2]}";
+                            return FavouriteCard(
+                              callback: setloading,
+                              id: favourites[index].favouriteId,
+                              index: favourites[index].code.toUpperCase(),
+                              address: myPath,
+                              name: favourites[index].name.length >= 30
+                                  ? "${favourites[index].name.substring(0, 30)} ...${favourites[index].name.substring(favourites[index].name.length - 4, favourites[index].name.length)}"
+                                  : favourites[index].name,
+                            );
+                          },
+                        ),
+                      ),
+                      Visibility(
+                        visible: favourites.length <= 4,
+                        child: Center(
+                          child: Image.asset(
+                            'assets/favourites.png',
+                            height: 280,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Expanded(
-                    child: GridView.builder(
-                      physics:
-                          const ScrollPhysics(parent: BouncingScrollPhysics()),
-                      itemCount: favourites.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 20.0,
-                              mainAxisSpacing: 2.0),
-                      itemBuilder: (context, index) {
-                        String myPath =
-                            "${favourites[index].path.split("/")[1]} > ${favourites[index].path.split("/")[2]}";
-                        return FavouriteCard(
-                          index: favourites[index].code.toUpperCase(),
-                          address: myPath,
-                          name: favourites[index].name.length >= 30
-                              ? "${favourites[index].name.substring(0, 30)} ...${favourites[index].name.substring(favourites[index].name.length - 4, favourites[index].name.length)}"
-                              : favourites[index].name,
-                        );
-                      },
+                ),
+                 Visibility(
+                  visible: _isLoading,
+                  child: Expanded(
+                    child: Container(
+                      color: const Color.fromRGBO(255, 255, 255, 0.9),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          CustomLinearProgress(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: 300,
+                            child: Text(
+                              'Generating Preview Link',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                  Visibility(
-                    visible: favourites.length <= 4,
-                    child: Center(
-                      child: Image.asset('assets/favourites.png',height: 280,),
-                    ),
-                  )
-                ],
-              ),
-            ),
+                )
+
+
+
+            ],
+          ),
     );
   }
 }
@@ -89,7 +145,10 @@ class EmptyList extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          Image.asset('assets/my_profile_no_contri.png',width: 300,),
+          Image.asset(
+            'assets/my_profile_no_contri.png',
+            width: 300,
+          ),
         ],
       ),
     );

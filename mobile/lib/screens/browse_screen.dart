@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:test1/constants/themes.dart';
-import 'package:test1/widgets/browse_screen.dart/year_div.dart';
-import 'package:test1/widgets/browser_nav_crumb.dart';
-import 'package:test1/widgets/common/custom_linear_progress.dart';
-import 'package:test1/widgets/folder_explorer.dart';
-
-import '../apis/courses/course_api.dart';
+import 'package:test1/database/hive_store.dart';
+import 'package:test1/widgets/browse_screen/year_div.dart';
+import 'package:test1/widgets/browse_screen/bread_crumbs.dart';
+import 'package:test1/widgets/browse_screen/folder_explorer.dart';
 
 class BrowseScreen extends StatefulWidget {
-  final String code;
   final Function(int a) callback;
 
-  const BrowseScreen({super.key, required this.code, required this.callback});
+  const BrowseScreen({super.key, required this.callback});
   @override
   State<StatefulWidget> createState() => _BrowseScreen();
 }
@@ -48,168 +44,139 @@ class _BrowseScreen extends State<BrowseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: CourseApiClient.getCourseDetail(widget.code),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const CustomLinearProgress();
-        }
-        Map<String, dynamic> data = snapshot.data!;
-        List<String> pathArgs = path.split("/");
+    Map<dynamic, dynamic> data = HiveStore.coursesData['ee206'];
+    List<String> pathArgs = path.split("/");
 
-        availableYears.clear();
-        String lastYear = "";
-        for (var c in data["children"]) {
-          availableYears.add(c["name"]);
-          lastYear = c["name"];
-        }
+    availableYears.clear();
+    String lastYear = "";
+    for (var c in data["children"]) {
+      availableYears.add(c["name"]);
+      lastYear = c["name"];
+    }
 
-        if (year == "") {
-          year = lastYear;
-        }
+    if (year == "") {
+      year = lastYear;
+    }
 
-        Map<String, dynamic> dataToShow = data;
-        List<Widget> navigationCrumbs = [];
-        String currentTitle = widget.code.toUpperCase();
-        int level = 1;
-        for (var p in pathArgs) {
-          if (p == "") continue;
-          if (p == "Home") {
-            for (var child in dataToShow["children"]) {
-              if (child["name"] == year) {
-                dataToShow = child;
-                break;
-              }
-            }
-            navigationCrumbs.add(
-              BrowserNavCrumb(
-                name: "Home",
-                level: 0,
-                callback: (level) => widget.callback(0),
-              ),
-            );
-            navigationCrumbs.add(
-              BrowserNavCrumb(
-                name: widget.code.toUpperCase(),
-                level: level,
-                callback: removeFromPath,
-              ),
-            );
-          } else {
-            for (var child in dataToShow["children"]) {
-              if (child["name"] == p) {
-                dataToShow = child;
-                break;
-              }
-            }
-            navigationCrumbs.add(
-              BrowserNavCrumb(
-                name: p,
-                level: level,
-                callback: removeFromPath,
-              ),
-            );
-            currentTitle = p;
+    Map<dynamic, dynamic> dataToShow = data;
+    List<Widget> navigationCrumbs = [];
+    String currentTitle = data['code'].toUpperCase();
+    int level = 1;
+    for (var p in pathArgs) {
+      if (p == "") continue;
+      if (p == "Home") {
+        for (var child in dataToShow["children"]) {
+          if (child["name"] == year) {
+            dataToShow = child;
+            break;
           }
-          level++;
         }
-        navigationCrumbs.removeLast();
-        return Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              color: Themes.kYellow,
-              child: SingleChildScrollView(
-                child: Row(
-                  children: navigationCrumbs,
-                ),
-              ),
-            ),
-            Container(
-              color: const Color.fromRGBO(254, 207, 111, 1),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 12.0),
-                child: Row(
-                  children: [
-                    Text(currentTitle,
-                        style: Themes.darkTextTheme.displayLarge),
-                    const Spacer(),
-                    IconButton(
-                        icon: const Icon(
-                          Icons.star,
-                          size: 30.0,
-                        ),
-                        color: const Color(0x7F000000),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              action: SnackBarAction(
-                                label: "UNDO",
-                                onPressed: () {
-                                  
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      behavior: SnackBarBehavior.floating,
-                                      margin: EdgeInsets.only(bottom: 125.0),
-                                      duration: Duration(seconds: 1),
-                                      content: Text('UNDO SUCCESSFUL!'),
-                                    ),
-                                  );
-                                },
-                              ),
-                              behavior: SnackBarBehavior.floating,
-                              margin: const EdgeInsets.only(bottom: 125.0),
-                              duration: const Duration(seconds: 1),
-                              content: const Text('Added to Favourites!'),
-                            ),
-                          );
-                          //TODO action of fav
-                        }),
-                    const SizedBox(
-                      width: 8.0,
-                    ),
-                    IconButton(
-                        icon: const Icon(
-                          Icons.share,
-                          size: 30.0,
-                        ),
-                        color: const Color(0x7F000000),
-                        onPressed: () {
-                          // TODO create share link
-                          String link = "link";
-                          Clipboard.setData(ClipboardData(
-                            text: link,
-                          )).then((_) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    behavior: SnackBarBehavior.floating,
-                                    margin: EdgeInsets.only(bottom: 125.0),
-                                    duration: Duration(seconds: 1),
-                                    content: Text(
-                                        'Share link copied to your clipboard!')));
-                          });
-                        }),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 20,
-              child: FolderExplorer(
-                data: dataToShow,
-                callback: addToPathCallback,
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: YearDiv(
-                  callback: handleClick,
-                  availableYears: availableYears,
-                  year: year),
-            )
-          ],
+        navigationCrumbs.add(
+          BreadCrumb(
+            name: "Home",
+            level: 0,
+            callback: (level) => widget.callback(0),
+          ),
         );
-      },
+        navigationCrumbs.add(
+          BreadCrumb(
+            name: data['code'].toUpperCase(),
+            level: level,
+            callback: removeFromPath,
+          ),
+        );
+      } else {
+        for (var child in dataToShow["children"]) {
+          if (child["name"] == p) {
+            dataToShow = child;
+            break;
+          }
+        }
+        navigationCrumbs.add(
+          BreadCrumb(
+            name: p,
+            level: level,
+            callback: removeFromPath,
+          ),
+        );
+        currentTitle = p;
+      }
+      level++;
+    }
+    navigationCrumbs.removeLast();
+    return Column(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            color: Themes.kYellow,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) => navigationCrumbs[index],
+              itemCount: navigationCrumbs.length,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            color: Themes.kYellow,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: Text(
+                    currentTitle,
+                    overflow: TextOverflow.ellipsis,
+                    style: Themes.darkTextTheme.displayLarge,
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                    icon: const Icon(
+                      Icons.star,
+                      size: 30.0,
+                    ),
+                    color: Colors.black54,
+                    onPressed: () {
+                      //TODO action of fav
+                    }),
+                const SizedBox(
+                  width: 8.0,
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.share,
+                    size: 30.0,
+                  ),
+                  color: Colors.black54,
+                  onPressed: () {
+                    // TODO create share link
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 20,
+          child: FolderExplorer(
+            data: dataToShow,
+            callback: addToPathCallback,
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: YearDiv(
+            callback: handleClick,
+            availableYears: availableYears,
+            year: year,
+          ),
+        )
+      ],
     );
   }
 }

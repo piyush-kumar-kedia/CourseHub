@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:test1/apis/authentication/login.dart';
 import 'package:test1/constants/themes.dart';
 import 'package:test1/screens/browse_screen.dart';
 import 'package:test1/screens/contribute_screen.dart';
@@ -35,7 +36,7 @@ class _NavBarScreen extends State<NavBarScreen> {
   List<Widget> screens = [
     const HomeScreen(),
     BrowseScreen(
-      code: "ma101",
+
       callback: (int a) {},
     ),
     ContributeScreen(
@@ -51,7 +52,7 @@ class _NavBarScreen extends State<NavBarScreen> {
     screens = [
       const HomeScreen(),
       BrowseScreen(
-        code: "ee207",
+
         callback: returnToPageCallback,
       ),
       ContributeScreen(
@@ -80,9 +81,12 @@ class _NavBarScreen extends State<NavBarScreen> {
                     children: [
                       Expanded(
                         flex: 10,
-                        child: Text(
-                          'CourseHub',
-                          style: Themes.theme.textTheme.displayMedium,
+                        child: GestureDetector(
+                          onTap: () => logoutHandler(context),
+                          child: Text(
+                            'CourseHub',
+                            style: Themes.theme.textTheme.displayMedium,
+                          ),
                         ),
                       ),
                       const SizedBox(
