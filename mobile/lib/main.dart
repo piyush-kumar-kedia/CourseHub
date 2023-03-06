@@ -6,6 +6,7 @@ import './constants/themes.dart';
 
 void main() async {
   await Hive.initFlutter();
+
   runApp(const MyApp());
 }
 
@@ -18,14 +19,10 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.black),
     );
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Themes.theme,
       home: const SplashScreen(),
-    
     );
   }
 }
-
-

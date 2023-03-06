@@ -7,7 +7,7 @@ class MiscellaneousEndpoints {
 }
 
 class CoursesEndpoints {
-  static const String search = '$baseUrl/search/'; // Needs params :course_code
+  static const String search = '$baseUrl/search/'; 
   static const String searchAvailable =
       '$baseUrl/search/available/'; // Needs params :course_code
   static const String course = '$baseUrl/course/'; //Needs params : course_code

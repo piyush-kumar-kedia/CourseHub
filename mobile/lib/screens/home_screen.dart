@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:test1/constants/themes.dart';
 import 'package:test1/database/hive_store.dart';
 import 'package:test1/widgets/home_screen/course_card.dart';
@@ -38,7 +37,7 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SvgPicture.asset("assets/home_books.svg"),
+                Image.asset("assets/home_books.png",width: 140,),
               ],
             ),
             const SizedBox(

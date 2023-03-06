@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:test1/constants/themes.dart';
 import 'package:test1/database/hive_store.dart';
 import 'package:test1/widgets/favourite_screen/favourite_card.dart';
@@ -51,7 +50,7 @@ class FavouritesScreen extends StatelessWidget {
                   Visibility(
                     visible: favourites.length <= 4,
                     child: Center(
-                      child: SvgPicture.asset('assets/favourites.svg'),
+                      child: Image.asset('assets/favourites.png',height: 280,),
                     ),
                   )
                 ],
@@ -90,11 +89,7 @@ class EmptyList extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          SvgPicture.asset(
-            "assets/my_profile_no_contri.svg",
-            fit: BoxFit.fill,
-            alignment: Alignment.center,
-          ),
+          Image.asset('assets/my_profile_no_contri.png',width: 300,),
         ],
       ),
     );

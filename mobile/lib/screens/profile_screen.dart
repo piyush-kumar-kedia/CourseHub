@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:test1/constants/themes.dart';
 import 'package:test1/widgets/profile_screen/contribution_card.dart';
 import 'package:test1/widgets/profile_screen/semester_card.dart';
@@ -74,8 +73,8 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SvgPicture.asset(
-                'assets/my_profile.svg',
+              Image.asset(
+                'assets/my_profile.png',
                 fit: BoxFit.scaleDown,
               ),
             ],
@@ -112,8 +111,8 @@ class ProfileScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(
-                        'assets/my_profile_no_contri.svg',
+                      Image.asset(
+                        'assets/my_profile_no_contri.png',
                         width: 120,
                       ),
                       const Text(

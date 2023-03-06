@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:test1/constants/themes.dart';
 
 class CCBranding extends StatelessWidget {
@@ -17,7 +17,7 @@ class CCBranding extends StatelessWidget {
           height: 10,
         ),
 
-        SvgPicture.asset('assets/cc_logo.svg'),
+        Image.asset('assets/cc_logo.png'),
         const SizedBox(height: 20,),
         RichText(
           textAlign: TextAlign.center,

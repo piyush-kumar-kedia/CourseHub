@@ -69,7 +69,7 @@ class _BrowseScreen extends State<BrowseScreen> {
         }
 
         Map<String, dynamic> dataToShow = data;
-        List<Widget> navigation_crumbs = [];
+        List<Widget> navigationCrumbs = [];
         String currentTitle = widget.code.toUpperCase();
         int level = 1;
         for (var p in pathArgs) {
@@ -81,14 +81,14 @@ class _BrowseScreen extends State<BrowseScreen> {
                 break;
               }
             }
-            navigation_crumbs.add(
+            navigationCrumbs.add(
               BrowserNavCrumb(
                 name: "Home",
                 level: 0,
                 callback: (level) => widget.callback(0),
               ),
             );
-            navigation_crumbs.add(
+            navigationCrumbs.add(
               BrowserNavCrumb(
                 name: widget.code.toUpperCase(),
                 level: level,
@@ -102,7 +102,7 @@ class _BrowseScreen extends State<BrowseScreen> {
                 break;
               }
             }
-            navigation_crumbs.add(
+            navigationCrumbs.add(
               BrowserNavCrumb(
                 name: p,
                 level: level,
@@ -113,7 +113,7 @@ class _BrowseScreen extends State<BrowseScreen> {
           }
           level++;
         }
-        navigation_crumbs.removeLast();
+        navigationCrumbs.removeLast();
         return Column(
           children: [
             Container(
@@ -121,7 +121,7 @@ class _BrowseScreen extends State<BrowseScreen> {
               color: Themes.kYellow,
               child: SingleChildScrollView(
                 child: Row(
-                  children: navigation_crumbs,
+                  children: navigationCrumbs,
                 ),
               ),
             ),

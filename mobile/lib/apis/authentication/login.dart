@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:test1/apis/contributions/contribution.dart';
+import 'package:test1/apis/user/user.dart';
 import 'package:test1/constants/endpoints.dart';
 import 'package:test1/screens/login_screen.dart';
 
@@ -16,6 +18,9 @@ Future<void> authenticate() async {
     final prefs = await SharedPreferences.getInstance();
     var accessToken = result.split('=')[1];
     prefs.setString('access_token', accessToken);
+    await getCurrentUser();
+    await getContribution();
+    await setHiveStore();
   } on PlatformException catch (_) {
     rethrow;
   } catch (e) {

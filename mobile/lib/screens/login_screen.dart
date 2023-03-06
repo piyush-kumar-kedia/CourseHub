@@ -6,8 +6,6 @@ import 'package:test1/widgets/common/custom_snackbar.dart';
 import 'package:test1/widgets/login_screen/cc_branding.dart';
 import 'package:test1/widgets/login_screen/login_button.dart';
 
-import '../apis/contributions/contribution.dart';
-import '../apis/user/user.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final theImage = const AssetImage('assets/landing.jpg');
+  final theImage = const AssetImage('assets/landing.png');
 
   // @override
   // void didChangeDependencies() async{
@@ -97,16 +95,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             onTap: () async {
                               try {
                                 await authenticate();
-                                await getCurrentUser();
-                                await getContribution();
-                                await setHiveStore();
-                                // ignore: use_build_context_synchronously
+                                if (!mounted) return;
+
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) => const NavBarScreen(),
                                   ),
                                 );
-                                // ignore: use_build_context_synchronously
+
                                 showSnackBar(
                                     'Successfully Logged In!', context);
                               } catch (e) {
