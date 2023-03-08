@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:test1/apis/files/get_link.dart';
-import 'package:test1/constants/themes.dart';
-import 'package:test1/widgets/common/custom_snackbar.dart';
+import 'package:CourseHub/apis/files/get_link.dart';
+import 'package:CourseHub/constants/themes.dart';
+import 'package:CourseHub/widgets/common/custom_snackbar.dart';
 
 class FavouriteCard extends StatelessWidget {
   final String index;
@@ -22,15 +22,16 @@ class FavouriteCard extends StatelessWidget {
 
   Future<void> _launchUrl(String url) async {
     callback();
-    await launch(
-      url,
-      customTabsOption: CustomTabsOption(
-        animation: CustomTabsSystemAnimation.fade(),
-        toolbarColor: Colors.black,
-        showPageTitle: true,
-        enableDefaultShare: false,
-      ),
-    );
+    await launch(url,
+        customTabsOption: CustomTabsOption(
+          animation: CustomTabsSystemAnimation.fade(),
+          toolbarColor: Colors.black,
+          showPageTitle: true,
+          enableDefaultShare: false,
+        ),
+        safariVCOption: const SafariViewControllerOption(
+            preferredBarTintColor: Colors.black,
+            preferredControlTintColor: Colors.white));
     callback();
   }
 

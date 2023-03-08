@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test1/constants/themes.dart';
+import 'package:CourseHub/constants/themes.dart';
 
 class NavBarIcon extends StatelessWidget {
   final bool isSelected;

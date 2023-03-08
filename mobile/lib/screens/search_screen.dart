@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:test1/apis/courses/search_course.dart';
-import 'package:test1/models/search_result.dart';
-import 'package:test1/widgets/common/custom_snackbar.dart';
-import 'package:test1/widgets/nav_bar/search_card.dart';
+import 'package:CourseHub/apis/courses/search_course.dart';
+import 'package:CourseHub/models/search_result.dart';
+import 'package:CourseHub/widgets/common/custom_snackbar.dart';
+import 'package:CourseHub/widgets/nav_bar/search_card.dart';
 
 class SearchScreen extends StatefulWidget {
   final Function callback;
@@ -16,7 +16,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
   late List<SearchResult> searchResult;
-  var found;
+  bool? found;
   var text = 'Search by name or course code,\nPress Enter to Search';
   Future<void> search(value) async {
     setState(() {
@@ -30,7 +30,7 @@ class _SearchScreenState extends State<SearchScreen> {
       });
 
       List<dynamic> results = res['results'];
-      if (found) {
+      if (found ?? false) {
         searchResult = results.map((e) => SearchResult.fromJson(e)).toList();
       }
 
@@ -92,14 +92,14 @@ class _SearchScreenState extends State<SearchScreen> {
               },
               child: SizedBox(
                 child: found == null
-                    ?  Text(
+                    ? Text(
                         text,
                         maxLines: 2,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             color: Colors.black, fontWeight: FontWeight.w500),
                       )
-                    : found
+                    : found ?? false
                         ? ListView.builder(
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) => SearchCard(

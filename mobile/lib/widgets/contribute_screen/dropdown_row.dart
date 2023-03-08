@@ -1,9 +1,9 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:test1/constants/all_courses.dart';
-import 'package:test1/constants/themes.dart';
-import 'package:test1/constants/years_sections.dart';
-import 'package:test1/controllers/letter_capitalizer.dart';
+import 'package:CourseHub/constants/all_courses.dart';
+import 'package:CourseHub/constants/themes.dart';
+import 'package:CourseHub/constants/years_sections.dart';
+import 'package:CourseHub/controllers/letter_capitalizer.dart';
 
 class DropdownRow extends StatefulWidget {
   final String label;

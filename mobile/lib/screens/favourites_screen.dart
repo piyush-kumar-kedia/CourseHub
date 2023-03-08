@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test1/constants/themes.dart';
-import 'package:test1/database/hive_store.dart';
-import 'package:test1/widgets/favourite_screen/favourite_card.dart';
+import 'package:CourseHub/constants/themes.dart';
+import 'package:CourseHub/database/hive_store.dart';
+import 'package:CourseHub/widgets/favourite_screen/favourite_card.dart';
 
 import '../widgets/common/custom_linear_progress.dart';
 
@@ -15,13 +15,11 @@ class FavouritesScreen extends StatefulWidget {
 class _FavouritesScreenState extends State<FavouritesScreen> {
   var _isLoading = false;
 
-
-  void setloading(){
+  void setloading() {
     setState(() {
       _isLoading = !_isLoading;
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +29,10 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
       body: favourites.isEmpty
           ? const EmptyList()
           : Stack(
-            children: [
-              Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -46,8 +45,8 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                       ),
                       Expanded(
                         child: GridView.builder(
-                          physics:
-                              const ScrollPhysics(parent: BouncingScrollPhysics()),
+                          physics: const ScrollPhysics(
+                              parent: BouncingScrollPhysics()),
                           itemCount: favourites.length,
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
@@ -82,36 +81,33 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                     ],
                   ),
                 ),
-                 Visibility(
+                Visibility(
                   visible: _isLoading,
-                  child: Expanded(
-                    child: Container(
-                      color: const Color.fromRGBO(255, 255, 255, 0.9),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          CustomLinearProgress(),
-                          SizedBox(
-                            height: 20,
+                  child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: const Color.fromRGBO(255, 255, 255, 0.9),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CustomLinearProgress(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: Text(
+                            'Generating Preview Link',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.black),
                           ),
-                          SizedBox(
-                            width: 300,
-                            child: Text(
-                              'Generating Preview Link',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
                 )
-
-
-
-            ],
-          ),
+              ],
+            ),
     );
   }
 }

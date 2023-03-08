@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:test1/constants/themes.dart';
+import 'package:CourseHub/constants/themes.dart';
 
 class CCBranding extends StatelessWidget {
   const CCBranding({super.key});
@@ -16,9 +16,10 @@ class CCBranding extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-
         Image.asset('assets/cc_logo.png'),
-        const SizedBox(height: 20,),
+        const SizedBox(
+          height: 20,
+        ),
         RichText(
           textAlign: TextAlign.center,
           text: const TextSpan(children: [
@@ -28,7 +29,7 @@ class CCBranding extends StatelessWidget {
             ),
             TextSpan(
               text: 'IIT Guwahati',
-              style: TextStyle(fontWeight: FontWeight.w400,fontSize: 12),
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
             )
           ]),
         )

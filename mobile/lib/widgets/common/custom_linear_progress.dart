@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test1/constants/themes.dart';
+import 'package:CourseHub/constants/themes.dart';
 
 class CustomLinearProgress extends StatelessWidget {
   const CustomLinearProgress({super.key});
@@ -15,6 +15,5 @@ class CustomLinearProgress extends StatelessWidget {
         ),
       ),
     );
-    
   }
 }

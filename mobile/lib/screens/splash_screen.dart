@@ -30,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final isLoggedIn = snapshot.data ?? false;
-
                   if (!isLoggedIn) {
                     return const LoginScreen();
                   } else {

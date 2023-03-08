@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:test1/apis/courses/course_availability.dart';
-import 'package:test1/constants/themes.dart';
-import 'package:test1/controllers/letter_capitalizer.dart';
-import 'package:test1/models/course.dart';
+import 'package:CourseHub/apis/courses/course_availability.dart';
+import 'package:CourseHub/constants/themes.dart';
+import 'package:CourseHub/controllers/letter_capitalizer.dart';
+import 'package:CourseHub/models/course.dart';
 
 class CourseCard extends StatelessWidget {
   final Course course;

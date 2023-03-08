@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:test1/apis/contributions/contribution.dart';
-import 'package:test1/constants/themes.dart';
-import 'package:test1/constants/years_sections.dart';
-import 'package:test1/widgets/common/custom_linear_progress.dart';
-import 'package:test1/widgets/common/custom_snackbar.dart';
-import 'package:test1/widgets/contribute_screen/custom_textformfield.dart';
-import 'package:test1/widgets/contribute_screen/dropdown_row.dart';
-import 'package:test1/widgets/contribute_screen/upload.dart';
+import 'package:CourseHub/apis/contributions/contribution.dart';
+import 'package:CourseHub/constants/themes.dart';
+import 'package:CourseHub/constants/years_sections.dart';
+import 'package:CourseHub/widgets/common/custom_linear_progress.dart';
+import 'package:CourseHub/widgets/common/custom_snackbar.dart';
+import 'package:CourseHub/widgets/contribute_screen/custom_textformfield.dart';
+import 'package:CourseHub/widgets/contribute_screen/dropdown_row.dart';
+import 'package:CourseHub/widgets/contribute_screen/upload.dart';
 
 class ContributeScreen extends StatefulWidget {
   final Function(int a) callback;
@@ -121,7 +121,6 @@ class _ContributeScreenState extends State<ContributeScreen> {
                     child: InkWell(
                       splashColor: const Color.fromRGBO(0, 0, 0, 0.1),
                       onTap: () async {
-            
                         if (_key.currentState!.validate()) {
                           if (file == null) {
                             setState(() {

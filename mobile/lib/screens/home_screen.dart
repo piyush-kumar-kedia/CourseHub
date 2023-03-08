@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test1/constants/themes.dart';
-import 'package:test1/database/hive_store.dart';
-import 'package:test1/widgets/home_screen/course_card.dart';
+import 'package:CourseHub/constants/themes.dart';
+import 'package:CourseHub/database/hive_store.dart';
+import 'package:CourseHub/widgets/home_screen/course_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -37,7 +37,10 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Image.asset("assets/home_books.png",width: 140,),
+                Image.asset(
+                  "assets/home_books.png",
+                  width: 140,
+                ),
               ],
             ),
             const SizedBox(
@@ -53,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 26.0, vertical: 19.0),
                 child: GridView.count(
-                  physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
+                  physics: const BouncingScrollPhysics(),
                   crossAxisCount: 2,
                   crossAxisSpacing: 23.0,
                   mainAxisSpacing: 16.0,

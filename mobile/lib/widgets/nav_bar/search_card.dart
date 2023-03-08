@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test1/controllers/letter_capitalizer.dart';
+import 'package:CourseHub/controllers/letter_capitalizer.dart';
 
 class SearchCard extends StatelessWidget {
   final bool isAvailable;
@@ -20,7 +20,6 @@ class SearchCard extends StatelessWidget {
       height: 60,
       color: isAvailable ? Colors.black : const Color.fromRGBO(71, 71, 71, 1),
       child: LayoutBuilder(builder: (context, constraints) {
-
         return Row(
           children: [
             Text(courseCode.toUpperCase()),
@@ -28,10 +27,10 @@ class SearchCard extends StatelessWidget {
               width: 20,
             ),
             SizedBox(
-              width: constraints.maxWidth*(0.5),
+              width: constraints.maxWidth * (0.5),
               child: Text(
                 letterCapitalizer(courseName),
-                style:const TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

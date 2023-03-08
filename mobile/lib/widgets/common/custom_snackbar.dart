@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test1/constants/themes.dart';
 
 void showSnackBar(String message,context) {
   final snackbar = SnackBar(
@@ -8,11 +7,12 @@ void showSnackBar(String message,context) {
     content: Center(
       child: Text(
         message,
-        style: const TextStyle(color: Colors.black),
+        textAlign: TextAlign.center,
+        style: const TextStyle(color: Colors.white),
       ),
     ),
     backgroundColor:
-    Themes.kYellow, 
+    Colors.black, 
     behavior: SnackBarBehavior.floating,
     margin: const EdgeInsets.all(50),
   );

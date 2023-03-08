@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:test1/apis/contributions/contribution.dart';
-import 'package:test1/apis/courses/get_courses.dart';
-import 'package:test1/apis/user/user.dart';
-import 'package:test1/constants/endpoints.dart';
-import 'package:test1/models/user.dart';
-import 'package:test1/screens/login_screen.dart';
+import 'package:CourseHub/apis/contributions/contribution.dart';
+import 'package:CourseHub/apis/courses/get_courses.dart';
+import 'package:CourseHub/apis/user/user.dart';
+import 'package:CourseHub/constants/endpoints.dart';
+import 'package:CourseHub/models/user.dart';
+import 'package:CourseHub/screens/login_screen.dart';
 
 import '../../database/hive_store.dart';
 import '../protected.dart';
@@ -16,9 +16,16 @@ import '../protected.dart';
 Future<void> authenticate() async {
   try {
     final result = await FlutterWebAuth.authenticate(
-        url: AuthEndpoints.getAccess, callbackUrlScheme: "foobar");
+        url: AuthEndpoints.getAccess, callbackUrlScheme: "coursehub");
+
+    print(result);
+
     final prefs = await SharedPreferences.getInstance();
-    var accessToken = result.split('=')[1];
+    var accessToken = Uri.parse(result).queryParameters['token'];
+    if (accessToken == null) {
+      throw ('access token not in query params');
+    }
+
     prefs.setString('access_token', accessToken);
     await getCurrentUser();
     await getContribution();
@@ -51,7 +58,7 @@ Future<void> logoutHandler(context) async {
 }
 
 Future<bool> isLoggedIn() async {
-  final access = await getAccessToken();
+  var access = await getAccessToken();
 
   if (access != 'error') {
     await setHiveStore();

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:test1/constants/endpoints.dart';
+import 'package:CourseHub/constants/endpoints.dart';
 
 Future<bool> isCourseAvailable(String coursecode) async {
   try {

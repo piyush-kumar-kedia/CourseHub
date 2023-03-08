@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:test1/apis/authentication/login.dart';
-import 'package:test1/apis/protected.dart';
-import 'package:test1/constants/endpoints.dart';
-import 'package:test1/database/hive_store.dart';
-import 'package:test1/models/user.dart';
+import 'package:CourseHub/apis/authentication/login.dart';
+import 'package:CourseHub/apis/protected.dart';
+import 'package:CourseHub/constants/endpoints.dart';
+import 'package:CourseHub/database/hive_store.dart';
+import 'package:CourseHub/models/user.dart';
 
 Future<void> getContribution() async {
   final token = await getAccessToken();
@@ -19,10 +19,12 @@ Future<void> getContribution() async {
       headers: {"Authorization": token},
     );
 
+
     final body = jsonDecode(res.body);
+  
+
     final box = await Hive.openBox('coursehub-data');
     box.put('contribution', body);
-
   }
 }
 

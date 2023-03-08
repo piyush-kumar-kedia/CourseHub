@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:test1/constants/themes.dart';
-import 'package:test1/database/hive_store.dart';
-import 'package:test1/widgets/browse_screen/year_div.dart';
-import 'package:test1/widgets/browse_screen/bread_crumbs.dart';
-import 'package:test1/widgets/browse_screen/folder_explorer.dart';
+import 'package:CourseHub/constants/themes.dart';
+import 'package:CourseHub/database/hive_store.dart';
+import 'package:CourseHub/widgets/browse_screen/year_div.dart';
+import 'package:CourseHub/widgets/browse_screen/bread_crumbs.dart';
+import 'package:CourseHub/widgets/browse_screen/folder_explorer.dart';
 
 class BrowseScreen extends StatefulWidget {
   final Function(int a) callback;
@@ -45,6 +45,7 @@ class _BrowseScreen extends State<BrowseScreen> {
   @override
   Widget build(BuildContext context) {
     Map<dynamic, dynamic> data = HiveStore.coursesData['ee206'];
+
     List<String> pathArgs = path.split("/");
 
     availableYears.clear();

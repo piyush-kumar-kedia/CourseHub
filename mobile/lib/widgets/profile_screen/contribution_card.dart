@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:test1/constants/themes.dart';
-import 'package:test1/models/contribution.dart';
+import 'package:CourseHub/constants/themes.dart';
+import 'package:CourseHub/models/contribution.dart';
 
 class ContributionCard extends StatelessWidget {
   final Contribution contribution;
@@ -13,11 +13,10 @@ class ContributionCard extends StatelessWidget {
     final pathString =
         '${contribution.courseCode.toUpperCase()}  >  ${contribution.year}  >  ${contribution.folder}';
 
-
     var formatter = DateFormat("MMMM dd, yyyy");
-    String formattedTime = DateFormat('kk:mm:a').format(contribution.createdAt).toLowerCase();
+    String formattedTime =
+        DateFormat('kk:mm:a').format(contribution.createdAt).toLowerCase();
     String formattedDate = formatter.format(contribution.createdAt);
-   
 
     return Container(
       color: Themes.kYellow,

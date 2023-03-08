@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:test1/apis/authentication/login.dart';
-import 'package:test1/constants/themes.dart';
-import 'package:test1/screens/browse_screen.dart';
-import 'package:test1/screens/contribute_screen.dart';
-import 'package:test1/screens/favourites_screen.dart';
-import 'package:test1/screens/home_screen.dart';
-import 'package:test1/screens/profile_screen.dart';
-import 'package:test1/screens/search_screen.dart';
-import 'package:test1/widgets/nav_bar/nav_bar_icon.dart';
+import 'package:CourseHub/apis/authentication/login.dart';
+import 'package:CourseHub/constants/themes.dart';
+import 'package:CourseHub/screens/browse_screen.dart';
+import 'package:CourseHub/screens/contribute_screen.dart';
+import 'package:CourseHub/screens/favourites_screen.dart';
+import 'package:CourseHub/screens/home_screen.dart';
+import 'package:CourseHub/screens/profile_screen.dart';
+import 'package:CourseHub/screens/search_screen.dart';
+import 'package:CourseHub/widgets/common/custom_snackbar.dart';
+import 'package:CourseHub/widgets/nav_bar/nav_bar_icon.dart';
 
 class NavBarScreen extends StatefulWidget {
   const NavBarScreen({super.key});
@@ -36,7 +37,6 @@ class _NavBarScreen extends State<NavBarScreen> {
   List<Widget> screens = [
     const HomeScreen(),
     BrowseScreen(
-
       callback: (int a) {},
     ),
     ContributeScreen(
@@ -52,7 +52,6 @@ class _NavBarScreen extends State<NavBarScreen> {
     screens = [
       const HomeScreen(),
       BrowseScreen(
-
         callback: returnToPageCallback,
       ),
       ContributeScreen(

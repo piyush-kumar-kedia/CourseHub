@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:test1/screens/splash_screen.dart';
+import 'package:CourseHub/screens/login_screen.dart';
+import 'package:CourseHub/screens/splash_screen.dart';
 import './constants/themes.dart';
 
 //TODO: Do skl caching for android and ios flutter and bundle the apk
