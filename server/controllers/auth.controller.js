@@ -231,7 +231,7 @@ export const mobileRedirectHandler = async (req, res, next) => {
             rollNumber: userFromToken.data.surname,
             email: userFromToken.data.mail,
             // branch: department, //calculate branch
-            semester: 2, //calculate sem
+            semester: calculateSemester(userFromToken.data.surname),
             courses: courses,
             department: department,
         };
