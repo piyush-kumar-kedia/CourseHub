@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - master-dev
+
+name: "Build & Release"
+jobs:
+  build:
+    name: Build & Release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '12.x'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.6'
+          channel: 'stable'
+      - run: cd mobile    
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "mobile/build/app/outputs/flutter-apk/*"
+          tag: v1.0.${{ github.run_number }}
+          token: ${{ secrets.TOKEN }}
+
+
+
+
+

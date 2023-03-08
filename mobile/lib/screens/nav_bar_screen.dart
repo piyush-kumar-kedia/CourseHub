@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import '../apis/authentication/login.dart';
 import '../constants/themes.dart';
@@ -9,7 +8,6 @@ import '../screens/favourites_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/search_screen.dart';
-import '../widgets/common/custom_snackbar.dart';
 import '../widgets/nav_bar/nav_bar_icon.dart';
 
 import '../widgets/common/empty_app_bar.dart';
