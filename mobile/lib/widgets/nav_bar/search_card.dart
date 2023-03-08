@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:CourseHub/controllers/letter_capitalizer.dart';
+import '../../controllers/letter_capitalizer.dart';
 
 class SearchCard extends StatelessWidget {
   final bool isAvailable;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:CourseHub/screens/login_screen.dart';
-import 'package:CourseHub/screens/splash_screen.dart';
+
+import '../screens/splash_screen.dart';
 import './constants/themes.dart';
 
 //TODO: Do skl caching for android and ios flutter and bundle the apk
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: Colors.black),
+      const SystemUiOverlayStyle(statusBarColor: Colors.black,),
     );
     return MaterialApp(
       debugShowCheckedModeBanner: false,

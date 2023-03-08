@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:CourseHub/apis/protected.dart';
-import 'package:CourseHub/constants/endpoints.dart';
+
+import '../../constants/endpoints.dart';
+import '../protected.dart';
+
 
 Future<String> getPreviewLink(String id) async {
   final token = await getAccessToken();

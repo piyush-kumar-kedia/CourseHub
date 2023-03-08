@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:CourseHub/apis/authentication/login.dart';
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/screens/browse_screen.dart';
-import 'package:CourseHub/screens/contribute_screen.dart';
-import 'package:CourseHub/screens/favourites_screen.dart';
-import 'package:CourseHub/screens/home_screen.dart';
-import 'package:CourseHub/screens/profile_screen.dart';
-import 'package:CourseHub/screens/search_screen.dart';
-import 'package:CourseHub/widgets/common/custom_snackbar.dart';
-import 'package:CourseHub/widgets/nav_bar/nav_bar_icon.dart';
+import '../apis/authentication/login.dart';
+import '../constants/themes.dart';
+import '../screens/browse_screen.dart';
+import '../screens/contribute_screen.dart';
+import '../screens/favourites_screen.dart';
+import '../screens/home_screen.dart';
+import '../screens/profile_screen.dart';
+import '../screens/search_screen.dart';
+import '../widgets/common/custom_snackbar.dart';
+import '../widgets/nav_bar/nav_bar_icon.dart';
+
+import '../widgets/common/empty_app_bar.dart';
 
 class NavBarScreen extends StatefulWidget {
   const NavBarScreen({super.key});
@@ -65,6 +68,7 @@ class _NavBarScreen extends State<NavBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const EmptyAppBar(),
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
@@ -222,3 +226,5 @@ class _NavBarScreen extends State<NavBarScreen> {
     );
   }
 }
+
+

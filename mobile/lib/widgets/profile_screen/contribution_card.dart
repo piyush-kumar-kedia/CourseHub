@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/models/contribution.dart';
+import '../../constants/themes.dart';
+import '../../models/contribution.dart';
 
 class ContributionCard extends StatelessWidget {
   final Contribution contribution;

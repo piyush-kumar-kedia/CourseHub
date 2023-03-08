@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:CourseHub/apis/files/get_link.dart';
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/widgets/common/custom_snackbar.dart';
+import '../../apis/files/get_link.dart';
+import '../../constants/themes.dart';
+import '../../widgets/common/custom_snackbar.dart';
 
 class FavouriteCard extends StatelessWidget {
   final String index;

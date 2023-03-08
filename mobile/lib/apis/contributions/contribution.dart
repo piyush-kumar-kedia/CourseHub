@@ -3,11 +3,13 @@ import 'dart:io';
 
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:CourseHub/apis/authentication/login.dart';
-import 'package:CourseHub/apis/protected.dart';
-import 'package:CourseHub/constants/endpoints.dart';
-import 'package:CourseHub/database/hive_store.dart';
-import 'package:CourseHub/models/user.dart';
+
+import '../../constants/endpoints.dart';
+import '../../database/hive_store.dart';
+import '../../models/user.dart';
+import '../authentication/login.dart';
+import '../protected.dart';
+
 
 Future<void> getContribution() async {
   final token = await getAccessToken();

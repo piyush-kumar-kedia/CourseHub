@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:CourseHub/constants/endpoints.dart';
+import '../../constants/endpoints.dart';
 
 Future<dynamic> searchCourse(String coursename) async {
   final res = await http.post(

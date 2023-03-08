@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:CourseHub/apis/courses/search_course.dart';
-import 'package:CourseHub/models/search_result.dart';
-import 'package:CourseHub/widgets/common/custom_snackbar.dart';
-import 'package:CourseHub/widgets/nav_bar/search_card.dart';
+import '../apis/courses/search_course.dart';
+import '../models/search_result.dart';
+import '../widgets/common/custom_snackbar.dart';
+import '../widgets/nav_bar/search_card.dart';
 
 class SearchScreen extends StatefulWidget {
   final Function callback;

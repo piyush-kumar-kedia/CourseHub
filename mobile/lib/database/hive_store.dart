@@ -1,6 +1,6 @@
-import 'package:CourseHub/models/contribution.dart';
-import 'package:CourseHub/models/favourites.dart';
-import 'package:CourseHub/models/user.dart';
+import 'package:coursehub/models/contribution.dart';
+import 'package:coursehub/models/favourites.dart';
+import 'package:coursehub/models/user.dart';
 
 class HiveStore {
   static Map<dynamic, dynamic> userData = {};

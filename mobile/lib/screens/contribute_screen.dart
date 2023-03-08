@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:CourseHub/apis/contributions/contribution.dart';
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/constants/years_sections.dart';
-import 'package:CourseHub/widgets/common/custom_linear_progress.dart';
-import 'package:CourseHub/widgets/common/custom_snackbar.dart';
-import 'package:CourseHub/widgets/contribute_screen/custom_textformfield.dart';
-import 'package:CourseHub/widgets/contribute_screen/dropdown_row.dart';
-import 'package:CourseHub/widgets/contribute_screen/upload.dart';
+import 'package:coursehub/apis/contributions/contribution.dart';
+import 'package:coursehub/constants/themes.dart';
+import 'package:coursehub/constants/years_sections.dart';
+import 'package:coursehub/widgets/common/custom_linear_progress.dart';
+import 'package:coursehub/widgets/common/custom_snackbar.dart';
+import 'package:coursehub/widgets/contribute_screen/custom_textformfield.dart';
+import 'package:coursehub/widgets/contribute_screen/dropdown_row.dart';
+import 'package:coursehub/widgets/contribute_screen/upload.dart';
 
 class ContributeScreen extends StatefulWidget {
   final Function(int a) callback;

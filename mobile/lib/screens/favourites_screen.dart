@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/database/hive_store.dart';
-import 'package:CourseHub/widgets/favourite_screen/favourite_card.dart';
 
+
+import '../constants/themes.dart';
+import '../database/hive_store.dart';
 import '../widgets/common/custom_linear_progress.dart';
+import '../widgets/favourite_screen/favourite_card.dart';
 
 class FavouritesScreen extends StatefulWidget {
   const FavouritesScreen({super.key});

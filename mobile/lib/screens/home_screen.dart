@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/database/hive_store.dart';
-import 'package:CourseHub/widgets/home_screen/course_card.dart';
+import '../constants/themes.dart';
+import '../database/hive_store.dart';
+import '../widgets/home_screen/course_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

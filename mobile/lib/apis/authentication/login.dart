@@ -3,22 +3,23 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:CourseHub/apis/contributions/contribution.dart';
-import 'package:CourseHub/apis/courses/get_courses.dart';
-import 'package:CourseHub/apis/user/user.dart';
-import 'package:CourseHub/constants/endpoints.dart';
-import 'package:CourseHub/models/user.dart';
-import 'package:CourseHub/screens/login_screen.dart';
 
+
+import '../../constants/endpoints.dart';
 import '../../database/hive_store.dart';
+import '../../models/user.dart';
+import '../../screens/login_screen.dart';
+import '../contributions/contribution.dart';
+import '../courses/get_courses.dart';
 import '../protected.dart';
+import '../user/user.dart';
 
 Future<void> authenticate() async {
   try {
     final result = await FlutterWebAuth.authenticate(
         url: AuthEndpoints.getAccess, callbackUrlScheme: "coursehub");
 
-    print(result);
+
 
     final prefs = await SharedPreferences.getInstance();
     var accessToken = Uri.parse(result).queryParameters['token'];

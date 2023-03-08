@@ -1,10 +1,9 @@
-import 'dart:math';
-
+import '../../controllers/color_from_hex.dart';
 import 'package:flutter/material.dart';
-import 'package:CourseHub/apis/courses/course_availability.dart';
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/controllers/letter_capitalizer.dart';
-import 'package:CourseHub/models/course.dart';
+import '../../apis/courses/course_availability.dart';
+import '../../constants/themes.dart';
+import '../../controllers/letter_capitalizer.dart';
+import '../../models/course.dart';
 
 class CourseCard extends StatelessWidget {
   final Course course;
@@ -12,6 +11,8 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   
+
     return FutureBuilder<bool>(
         future: isCourseAvailable(course.code),
         builder: (context, snapshot) {
@@ -23,7 +24,7 @@ class CourseCard extends StatelessWidget {
           } else {
             return AvailableCard(
               course: course,
-              isAvailable: false,
+              isAvailable: true,
             );
           }
         });
@@ -40,7 +41,7 @@ class AvailableCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: isAvailable
-          ? colors[Random().nextInt(7)]
+          ? hexToColor(course.color ?? '') 
           : const Color.fromRGBO(99, 99, 99, 1),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -8,5 +8,6 @@ extension StringCasingExtension on String {
 }
 
 String letterCapitalizer(String c) {
+
   return c.toTitleCase();
 }

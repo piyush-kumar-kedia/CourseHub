@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:CourseHub/constants/endpoints.dart';
+
+import '../../constants/endpoints.dart';
+
 
 Future<void> getUserCourses(String code) async {
   try {

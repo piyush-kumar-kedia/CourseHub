@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/database/hive_store.dart';
-import 'package:CourseHub/widgets/browse_screen/year_div.dart';
-import 'package:CourseHub/widgets/browse_screen/bread_crumbs.dart';
-import 'package:CourseHub/widgets/browse_screen/folder_explorer.dart';
+import 'package:coursehub/constants/themes.dart';
+import 'package:coursehub/database/hive_store.dart';
+import 'package:coursehub/widgets/browse_screen/year_div.dart';
+import 'package:coursehub/widgets/browse_screen/bread_crumbs.dart';
+import 'package:coursehub/widgets/browse_screen/folder_explorer.dart';
 
 class BrowseScreen extends StatefulWidget {
   final Function(int a) callback;
@@ -105,79 +105,82 @@ class _BrowseScreen extends State<BrowseScreen> {
       level++;
     }
     navigationCrumbs.removeLast();
-    return Column(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            color: Themes.kYellow,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) => navigationCrumbs[index],
-              itemCount: navigationCrumbs.length,
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              color: Themes.kYellow,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) => navigationCrumbs[index],
+                itemCount: navigationCrumbs.length,
+              ),
             ),
           ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            color: Themes.kYellow,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: Text(
-                    currentTitle,
-                    overflow: TextOverflow.ellipsis,
-                    style: Themes.darkTextTheme.displayLarge,
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              color: Themes.kYellow,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text(
+                      currentTitle,
+                      overflow: TextOverflow.ellipsis,
+                      style: Themes.darkTextTheme.displayLarge,
+                    ),
                   ),
-                ),
-                const Spacer(),
-                IconButton(
+                  const Spacer(),
+                  IconButton(
+                      icon: const Icon(
+                        Icons.star,
+                        size: 30.0,
+                      ),
+                      color: Colors.black54,
+                      onPressed: () {
+                        //TODO action of fav
+                      }),
+                  const SizedBox(
+                    width: 8.0,
+                  ),
+                  IconButton(
                     icon: const Icon(
-                      Icons.star,
+                      Icons.share,
                       size: 30.0,
                     ),
                     color: Colors.black54,
                     onPressed: () {
-                      //TODO action of fav
-                    }),
-                const SizedBox(
-                  width: 8.0,
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.share,
-                    size: 30.0,
+                      // TODO create share link
+                    },
                   ),
-                  color: Colors.black54,
-                  onPressed: () {
-                    // TODO create share link
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        Expanded(
-          flex: 20,
-          child: FolderExplorer(
-            data: dataToShow,
-            callback: addToPathCallback,
+          Expanded(
+            flex: 20,
+            child: FolderExplorer(
+              data: dataToShow,
+              callback: addToPathCallback,
+            ),
           ),
-        ),
-        Expanded(
-          flex: 3,
-          child: YearDiv(
-            callback: handleClick,
-            availableYears: availableYears,
-            year: year,
-          ),
-        )
-      ],
+          Expanded(
+            flex: 3,
+            child: YearDiv(
+              callback: handleClick,
+              availableYears: availableYears,
+              year: year,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

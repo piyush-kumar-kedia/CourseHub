@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-import 'package:CourseHub/models/course.dart';
-import 'package:CourseHub/models/favourites.dart';
+import 'package:coursehub/models/course.dart';
+import 'package:coursehub/models/favourites.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 

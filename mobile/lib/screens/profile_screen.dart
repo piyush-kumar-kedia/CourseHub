@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/widgets/profile_screen/contribution_card.dart';
-import 'package:CourseHub/widgets/profile_screen/semester_card.dart';
+import '../constants/themes.dart';
+import '../widgets/profile_screen/contribution_card.dart';
+import '../widgets/profile_screen/semester_card.dart';
 
 import '../database/hive_store.dart';
 

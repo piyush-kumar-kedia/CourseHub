@@ -1,11 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:CourseHub/apis/authentication/login.dart';
-import 'package:CourseHub/constants/themes.dart';
-import 'package:CourseHub/screens/nav_bar_screen.dart';
-import 'package:CourseHub/widgets/common/custom_linear_progress.dart';
-import 'package:CourseHub/widgets/common/custom_snackbar.dart';
-import 'package:CourseHub/widgets/login_screen/cc_branding.dart';
-import 'package:CourseHub/widgets/login_screen/login_button.dart';
+import '../apis/authentication/login.dart';
+import '../constants/themes.dart';
+import '../screens/nav_bar_screen.dart';
+import '../widgets/common/custom_linear_progress.dart';
+import '../widgets/common/custom_snackbar.dart';
+import '../widgets/login_screen/cc_branding.dart';
+import '../widgets/login_screen/login_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,6 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+
+        top: Platform.isAndroid,
         child: Stack(
           children: [
             Container(

@@ -1,4 +1,4 @@
-name: CourseHub
+name: coursehub
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -51,6 +51,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   dropdown_search: ^5.0.6
   flutter_custom_tabs: ^1.0.4
+
 
 
 
