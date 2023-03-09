@@ -77,7 +77,7 @@ class _NavBarScreen extends State<NavBarScreen> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
                   color: Colors.black,
-                  child: Row(
+                  child: !_isSearched ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
@@ -109,7 +109,7 @@ class _NavBarScreen extends State<NavBarScreen> {
                         ),
                       )
                     ],
-                  ),
+                  ) : Container(),
                 ),
                 Expanded(
                   child: Stack(

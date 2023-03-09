@@ -19,8 +19,6 @@ Future<void> authenticate() async {
     final result = await FlutterWebAuth.authenticate(
         url: AuthEndpoints.getAccess, callbackUrlScheme: "coursehub");
 
-
-
     final prefs = await SharedPreferences.getInstance();
     var accessToken = Uri.parse(result).queryParameters['token'];
     if (accessToken == null) {

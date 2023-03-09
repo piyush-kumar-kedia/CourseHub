@@ -1,3 +1,4 @@
+import 'package:coursehub/animations/fade_in_animation.dart';
 import 'package:flutter/material.dart';
 
 
@@ -27,88 +28,90 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
     final favourites = HiveStore.getFavourites();
 
     return Scaffold(
-      body: favourites.isEmpty
-          ? const EmptyList()
-          : Stack(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "FAVOURITES",
-                        style: Themes.darkTextTheme.displayLarge,
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      Expanded(
-                        child: GridView.builder(
-                          physics: const ScrollPhysics(
-                              parent: BouncingScrollPhysics()),
-                          itemCount: favourites.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 10.0,
-                                  mainAxisSpacing: 2.0,
-                                  childAspectRatio: 1.2),
-                          itemBuilder: (context, index) {
-                            String myPath =
-                                "${favourites[index].path.split("/")[1]} > ${favourites[index].path.split("/")[2]}";
-                            return FavouriteCard(
-                              callback: setloading,
-                              id: favourites[index].favouriteId,
-                              index: favourites[index].code.toUpperCase(),
-                              address: myPath,
-                              name: favourites[index].name.length >= 30
-                                  ? "${favourites[index].name.substring(0, 30)} ...${favourites[index].name.substring(favourites[index].name.length - 4, favourites[index].name.length)}"
-                                  : favourites[index].name,
-                            );
-                          },
+      body: CustomFadeInAnimation(
+        child: favourites.isEmpty
+            ? const EmptyList()
+            : Stack(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "FAVOURITES",
+                          style: Themes.darkTextTheme.displayLarge,
                         ),
-                      ),
-                      Visibility(
-                        visible: favourites.length <= 4,
-                        child: Center(
-                          child: Image.asset(
-                            'assets/favourites.png',
-                            height: 280,
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Expanded(
+                          child: GridView.builder(
+                            physics: const ScrollPhysics(
+                                parent: BouncingScrollPhysics()),
+                            itemCount: favourites.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10.0,
+                                    mainAxisSpacing: 2.0,
+                                    childAspectRatio: 1.2),
+                            itemBuilder: (context, index) {
+                              String myPath =
+                                  "${favourites[index].path.split("/")[1]} > ${favourites[index].path.split("/")[2]}";
+                              return FavouriteCard(
+                                callback: setloading,
+                                id: favourites[index].favouriteId,
+                                index: favourites[index].code.toUpperCase(),
+                                address: myPath,
+                                name: favourites[index].name.length >= 30
+                                    ? "${favourites[index].name.substring(0, 30)} ...${favourites[index].name.substring(favourites[index].name.length - 4, favourites[index].name.length)}"
+                                    : favourites[index].name,
+                              );
+                            },
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: _isLoading,
-                  child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: const Color.fromRGBO(255, 255, 255, 0.9),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        CustomLinearProgress(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: Text(
-                            'Generating Preview Link',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.black),
+                        Visibility(
+                          visible: favourites.length <= 4,
+                          child: Center(
+                            child: Image.asset(
+                              'assets/favourites.png',
+                              height: 280,
+                            ),
                           ),
                         )
                       ],
                     ),
                   ),
-                )
-              ],
-            ),
+                  Visibility(
+                    visible: _isLoading,
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: const Color.fromRGBO(255, 255, 255, 0.9),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          CustomLinearProgress(),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: 300,
+                            child: Text(
+                              'Generating Preview Link',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+      ),
     );
   }
 }
