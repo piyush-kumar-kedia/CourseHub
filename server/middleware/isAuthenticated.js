@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+import User from "../modules/user/user.model.js";
 import AppError from "../utils/appError.js";
 
 const isAuthenticated = async function (req, res, next) {

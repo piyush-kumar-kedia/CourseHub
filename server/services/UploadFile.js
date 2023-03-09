@@ -1,5 +1,5 @@
 import fs from "fs";
-import { getAccessToken } from "../routes/onedrive/onedrive.routes.js";
+import { getAccessToken } from "../modules/onedrive/onedrive.routes.js";
 import axios from "axios";
 
 async function GetFolderId(contributionId) {
