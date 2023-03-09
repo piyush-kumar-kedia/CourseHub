@@ -17,6 +17,7 @@ import courseRoutes from "./modules/course/course.routes.js";
 import searchRoutes from "./modules/search/search.routes.js";
 import eventRoutes from "./modules/event/event.routes.js";
 import contributionRoutes from "./modules/contribution/contribution.routes.js";
+import adminRoutes from "./modules/admin/admin.routes.js";
 
 const app = express();
 const PORT = config.port;
@@ -37,6 +38,7 @@ app.use("/api/course", courseRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/event", eventRoutes);
 app.use("/api/contribution", contributionRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use(
     "/homepage",

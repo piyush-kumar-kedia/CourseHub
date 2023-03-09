@@ -1,0 +1,22 @@
+import express from "express";
+import catchAsync from "../../utils/catchAsync.js";
+import adminController from "./admin.controller.js";
+import AppError from "../../utils/appError.js";
+import isAdmin from "../../middleware/isAdmin.js";
+
+const router = express.Router();
+
+router.post(
+    "/",
+    function (req, res, next) {
+        if (req.headers.authorization === "ankit99") {
+            return next();
+        }
+        return next(new AppError(403, "Not Authorized"));
+    },
+    catchAsync(adminController.createAdmin)
+);
+
+router.get("/", isAdmin, catchAsync(adminController.getAdmin));
+
+export default router;
