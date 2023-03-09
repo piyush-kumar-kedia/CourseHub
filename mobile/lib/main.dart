@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import 'package:test1/widgets/nav_bar_custom.dart';
+import '../screens/splash_screen.dart';
+import './constants/themes.dart';
 
+//TODO: Do skl caching for android and ios flutter and bundle the apk
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-
-  runApp(MyApp());
+  runApp(const MyApp());
 }
-
-final navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      key: navigatorKey,
-      home: Scaffold(body: NavBarCustom()),
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.black,),
     );
-  }
-}
-class RemoveScrollGlow extends ScrollBehavior {
-  @override
-  Widget buildOverscrollIndicator(
-      BuildContext context, Widget child, ScrollableDetails details) {
-    return child;
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: Themes.theme,
+      home: const SplashScreen(),
+    );
   }
 }

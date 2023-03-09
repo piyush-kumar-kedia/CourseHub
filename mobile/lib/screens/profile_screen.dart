@@ -1,194 +1,133 @@
-import 'dart:ui';
-
+import 'package:coursehub/animations/fade_in_animation.dart';
 import "package:flutter/material.dart";
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:test1/widgets/contribution.dart';
+import '../constants/themes.dart';
+import '../widgets/profile_screen/contribution_card.dart';
+import '../widgets/profile_screen/semester_card.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+import '../database/hive_store.dart';
 
-  @override
-  State<Profile> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-  String name = "Atharva Tagalpallewar";
-  String branch = "Chemical Engineering";
-  int sem = 6;
-  String th = "th";
-  int contriCount = 4;
-  void setupC() {
-    if (sem == 1) {
-      th = "st";
-    } else if (sem == 2) {
-      th = "nd";
-    } else if (sem == 3) {
-      th = "rd";
-    }
-  }
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    setupC();
+    final user = HiveStore.getUserDetails();
+    final branch = calculateBranch(user.rollNumber);
+    final contributionList = HiveStore.getContribution();
+
     return Scaffold(
-      // backgroundColor: Color(0x1F1F1F),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-            color: Colors.black,
-            child: Column(children: [
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
               Container(
-                alignment: Alignment.topLeft,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 4, horizontal: 30),
                 width: double.infinity,
-                child: const Text(
-                  "MY PROFILE",
-                  style: TextStyle(
-                    fontFamily: 'ProximaNova',
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.0,),
-              Container(
-                alignment: Alignment.topLeft,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
-                width: double.infinity,
-                child: Text(
-                  name,
-                  style: const TextStyle(
-                    fontFamily: 'ProximaNova',
-                    fontWeight: FontWeight.w700,
-                    fontSize: 28,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
-                width: double.infinity,
-                child: Text(
-                  "B.tech, $branch",
-                  style: const TextStyle(
-                    fontFamily: 'ProximaNova',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                width: double.infinity,
-                child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  color: const Color(0xffFECF6F),
-                  child: Container(
-                    alignment: Alignment.topLeft,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                    width: 80,
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Container(
-                        alignment: Alignment.topLeft,
-                        margin: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                        child: Wrap(
-                          children: [
-                            Text(
-                              sem.toString(),
-                              style: const TextStyle(
-                                fontFamily: 'ProximaNova',
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18.8,
-                              ),
-                            ),
-                            Text(
-                              th,
-                              style: const TextStyle(
-                                fontFeatures: [FontFeature.superscripts()],
-                                fontFamily: 'ProximaNova',
-                                fontWeight: FontWeight.w700,
-                                // fontSize: 16,
-                              ),
-                            ),
-                          ],
+                padding: const EdgeInsets.only(
+                    left: 30, top: 30, right: 20, bottom: 0),
+                color: Colors.black,
+                child: CustomFadeInAnimation(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "MY PROFILE",
+                        style: TextStyle(
+                          fontFamily: 'ProximaNova',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: Colors.white,
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.topLeft,
-                        margin: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                        child: const Text(
-                          "Semester",
-                          style: TextStyle(
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Text(
+                        user.name,
+                        style: Themes.theme.textTheme.displayLarge,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      FittedBox(
+                        child: Text(
+                          "B.Tech in $branch",
+                          style: const TextStyle(
                             fontFamily: 'ProximaNova',
                             fontWeight: FontWeight.w400,
-                            fontSize: 14.1,
+                            fontSize: 16,
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                    ]),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      SemesterCard(sem: user.semester),
+                      const SizedBox(
+                        height: 100,
+                      )
+                    ],
                   ),
                 ),
               ),
-              SvgPicture.asset(
-                './assets/images/my_profile.svg',
+              Image.asset(
+                'assets/my_profile.png',
                 fit: BoxFit.scaleDown,
-              )
-            ]),
+              ),
+            ],
           ),
-          Expanded(
-            child: Column(
-              children: [
-                Container(
-                  alignment: Alignment.topLeft,
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 20, horizontal: 30),
-                  width: double.infinity,
-                  child: const Text(
-                    "MY CONTRIBUTIONS",
-                    style: TextStyle(
-                      fontFamily: 'ProximaNova',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      color: Colors.black,
+          const Padding(
+            padding: EdgeInsets.only(left: 20, top: 30),
+            child: Text(
+              "MY CONTRIBUTIONS",
+              style: TextStyle(
+                fontFamily: 'ProximaNova',
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          contributionList.isNotEmpty
+              ? Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 20),
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) => ContributionCard(
+                        contribution: contributionList[index],
+                      ),
+                      itemCount: contributionList.length,
                     ),
                   ),
-                ),
-                contriCount>0?
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 15),
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: contriCount,
-                        itemBuilder: (ctx, index) {
-                          return const ContributionCard();
-                        },
+                )
+              : Expanded(
+                  child: Center(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/my_profile_no_contri.png',
+                        width: 120,
                       ),
-                    ),
-                  ):Expanded(
-                    child: Center(
-                      child: SvgPicture.asset(
-                      './assets/images/my_profile_no_contri.svg',
-                      fit: BoxFit.scaleDown,
-                ),
-                    ),
-                  )
-
-
-
-              ],
-            ),
-          )
+                      const Text(
+                        'Nothing Here!',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                      )
+                    ],
+                  )),
+                )
         ],
       ),
     );

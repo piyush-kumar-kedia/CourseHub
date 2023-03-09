@@ -17,7 +17,7 @@ class Course {
 
   String code;
   String name;
-  String color;
+  String? color;
 
   factory Course.fromJson(Map<dynamic, dynamic> json) => Course(
         code: json["code"],

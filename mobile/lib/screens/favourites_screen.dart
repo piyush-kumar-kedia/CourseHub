@@ -1,157 +1,135 @@
+import 'package:coursehub/animations/fade_in_animation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:test1/widgets/file_card.dart';
 
-class FavouritesScreen extends StatelessWidget {
-  FavouritesScreen({
-    Key? key,
-  }) : super(key: key);
-  var fav = <Map>[
-    {
-      "name": "02_Tutorial 5_Monday_AL1_Lab group 8.docx",
-      "id": "01OXYV3754ESP2EMFC6VB2E6QI6BKEJSFH",
-      "path": "CE101/2020/Tutorials/",
-      "code": "CE101",
-      "_id": "63c033fd5e59fd2129fa1dd5"
-    },
-    {
-      "name": "01 Lettering and dimensioning.pdf",
-      "id": "01OXYV37ZE4E7SGVKYURDJAMAYI2S25OBN",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334968f2188184c67f96"
-    },
-    {
-      "name": "03. Conics_read only.pptx",
-      "id": "01OXYV375D5N4V2GYNNNF3UTTAVE6LGFRL",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334a68f2188184c67f9e"
-    },
-    {
-      "name": "03. Conics_read only.pptx",
-      "id": "01OXYV375D5N4V2GYNNNF3UTTAVE6LGFRL",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334a68f2188184c67f9e"
-    },
-    {
-      "name": "03. Conics_read only.pptx",
-      "id": "01OXYV375D5N4V2GYNNNF3UTTAVE6LGFRL",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334a68f2188184c67f9e"
-    },
-    {
-      "name": "03. Conics_read only.pptx",
-      "id": "01OXYV375D5N4V2GYNNNF3UTTAVE6LGFRL",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334a68f2188184c67f9e"
-    },
-    {
-      "name": "03. Conics_read only.pptx",
-      "id": "01OXYV375D5N4V2GYNNNF3UTTAVE6LGFRL",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334a68f2188184c67f9e"
-    },
-    {
-      "name": "03. Conics_read only.pptx",
-      "id": "01OXYV375D5N4V2GYNNNF3UTTAVE6LGFRL",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334a68f2188184c67f9e"
-    },
-    {
-      "name": "03. Conics_read only.pptx",
-      "id": "01OXYV375D5N4V2GYNNNF3UTTAVE6LGFRL",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334a68f2188184c67f9e"
-    },
-    {
-      "name": "03. Conics_read only.pptx",
-      "id": "01OXYV375D5N4V2GYNNNF3UTTAVE6LGFRL",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334a68f2188184c67f9e"
-    },
-    {
-      "name": "03. Conics_read only.pptx",
-      "id": "01OXYV375D5N4V2GYNNNF3UTTAVE6LGFRL",
-      "path": "CE101 - Engineering Design/2020/Slides/",
-      "code": "ce101",
-      "_id": "63d6334a68f2188184c67f9e"
-    }
-  ];
+
+import '../constants/themes.dart';
+import '../database/hive_store.dart';
+import '../widgets/common/custom_linear_progress.dart';
+import '../widgets/favourite_screen/favourite_card.dart';
+
+class FavouritesScreen extends StatefulWidget {
+  const FavouritesScreen({super.key});
+
+  @override
+  State<FavouritesScreen> createState() => _FavouritesScreenState();
+}
+
+class _FavouritesScreenState extends State<FavouritesScreen> {
+  var _isLoading = false;
+
+  void setloading() {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final favourites = HiveStore.getFavourites();
+
     return Scaffold(
-      body: fav.length == 0
-          ? Center(
-              child: SvgPicture.asset(
-                "assets/images/my_profile_no_contri.svg",
-                fit: BoxFit.fill,
-                alignment: Alignment.center,
-              ),
-            )
-          : Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(30, 25, 30, 0),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "FAVOURITES",
-                    style: TextStyle(
-                        fontFamily: "ProximaNova",
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black),
-                  ),
-                ),
-                SizedBox(height: 10.0,),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                    child: Container(
-                      child: GridView.builder(
-                        itemCount: fav.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 20.0,
-                            mainAxisSpacing: 2.0),
-                        itemBuilder: (BuildContext context, int index) {
-                          String myPath = fav[index]['path'].split("/")[1] + " > " + fav[index]['path'].split("/")[2];
-                          return FileCard(
-                            index: fav[index]['code'].toUpperCase(),
-                            address: myPath,
-                            name: fav[index]['name'].length >= 30
-                                ? fav[index]['name'].substring(0, 30) +
-                                    " ..." +
-                                    fav[index]['name'].substring(
-                                        fav[index]['name'].length - 4,
-                                        fav[index]['name'].length)
-                                : fav[index]['name'],
-                          );
-                        },
-                      ),
+      body: CustomFadeInAnimation(
+        child: favourites.isEmpty
+            ? const EmptyList()
+            : Stack(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "FAVOURITES",
+                          style: Themes.darkTextTheme.displayLarge,
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Expanded(
+                          child: GridView.builder(
+                            physics: const ScrollPhysics(
+                                parent: BouncingScrollPhysics()),
+                            itemCount: favourites.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10.0,
+                                    mainAxisSpacing: 2.0,
+                                    childAspectRatio: 1.2),
+                            itemBuilder: (context, index) {
+                              String myPath =
+                                  "${favourites[index].path.split("/")[1]} > ${favourites[index].path.split("/")[2]}";
+                              return FavouriteCard(
+                                callback: setloading,
+                                id: favourites[index].favouriteId,
+                                index: favourites[index].code.toUpperCase(),
+                                address: myPath,
+                                name: favourites[index].name.length >= 30
+                                    ? "${favourites[index].name.substring(0, 30)} ...${favourites[index].name.substring(favourites[index].name.length - 4, favourites[index].name.length)}"
+                                    : favourites[index].name,
+                              );
+                            },
+                          ),
+                        ),
+                        Visibility(
+                          visible: favourites.length <= 4,
+                          child: Center(
+                            child: Image.asset(
+                              'assets/favourites.png',
+                              height: 280,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ),
-                fav.length <= 2
-                    ? Container(
-                        transform: Matrix4.translationValues(0, 12, 0),
-                        margin: const EdgeInsets.fromLTRB(30, 16, 30, 0),
-                        child: SvgPicture.asset(
-                          "assets/g10.svg",
-                          alignment: Alignment.center,
-                        ),
-                      )
-                    : Column(),
-              ],
+                  Visibility(
+                    visible: _isLoading,
+                    child: const CustomLinearProgress(text: 'Generating Preview Link',)
+                  )
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+class EmptyList extends StatelessWidget {
+  const EmptyList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Nothing Here!',
+            style: Themes.darkTextTheme.displayLarge,
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          const Text(
+            'Click on the "star" icon next to any\n file to add files to your favourites',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              color: Color.fromRGBO(108, 108, 108, 1),
+              fontSize: 14.0,
             ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Image.asset(
+            'assets/my_profile_no_contri.png',
+            width: 300,
+          ),
+        ],
+      ),
     );
   }
 }
