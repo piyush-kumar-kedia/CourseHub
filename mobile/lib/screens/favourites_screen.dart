@@ -86,28 +86,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                   ),
                   Visibility(
                     visible: _isLoading,
-                    child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: const Color.fromRGBO(255, 255, 255, 0.9),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          CustomLinearProgress(),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            width: 300,
-                            child: Text(
-                              'Generating Preview Link',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    child: const CustomLinearProgress(text: 'Generating Preview Link',)
                   )
                 ],
               ),

@@ -1,3 +1,4 @@
+import 'package:coursehub/animations/fade_in_animation.dart';
 import "package:flutter/material.dart";
 import '../constants/themes.dart';
 import '../widgets/profile_screen/contribution_card.dart';
@@ -27,50 +28,52 @@ class ProfileScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     left: 30, top: 30, right: 20, bottom: 0),
                 color: Colors.black,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "MY PROFILE",
-                      style: TextStyle(
-                        fontFamily: 'ProximaNova',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Text(
-                      user.name,
-                      style: Themes.theme.textTheme.displayLarge,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    FittedBox(
-                      child: Text(
-                        "B.Tech in $branch",
-                        style: const TextStyle(
+                child: CustomFadeInAnimation(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "MY PROFILE",
+                        style: TextStyle(
                           fontFamily: 'ProximaNova',
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w700,
                           fontSize: 16,
                           color: Colors.white,
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    SemesterCard(sem: user.semester),
-                    const SizedBox(
-                      height: 100,
-                    )
-                  ],
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Text(
+                        user.name,
+                        style: Themes.theme.textTheme.displayLarge,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      FittedBox(
+                        child: Text(
+                          "B.Tech in $branch",
+                          style: const TextStyle(
+                            fontFamily: 'ProximaNova',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      SemesterCard(sem: user.semester),
+                      const SizedBox(
+                        height: 100,
+                      )
+                    ],
+                  ),
                 ),
               ),
               Image.asset(
