@@ -11,7 +11,7 @@ import {
 import catchAsync from "../../utils/catchAsync.js";
 const router = Router();
 import validate from "../../utils/validator.js";
-import { validateUser } from "../../models/user.model.js";
+import { validateUser } from "./user.model.js";
 
 import isAuthenticated from "../../middleware/isAuthenticated.js";
 

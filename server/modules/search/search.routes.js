@@ -1,6 +1,6 @@
 import { Router } from "express";
 import catchAsync from "../../utils/catchAsync.js";
-import SearchResult from "../../models/search.model.js";
+import SearchResult from "./search.model.js";
 import isAuthenticated from "../../middleware/isAuthenticated.js";
 const router = Router();
 
