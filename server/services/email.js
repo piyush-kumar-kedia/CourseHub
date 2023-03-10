@@ -1,10 +1,10 @@
 import nodemailer from "nodemailer";
 let emailClient = {
-    email: "@outlook.com",
-    password: "Qw3rty###",
+    email: "coursehubiitg@outlook.com",
+    password: "Xidc4545#",
 };
 
-function sendEmail(to: string, otp: Number) {
+function sendEmail(to, subject, msg) {
     const transporter = nodemailer.createTransport({
         service: "outlook",
         auth: {
@@ -15,8 +15,8 @@ function sendEmail(to: string, otp: Number) {
     const options = {
         from: emailClient.email,
         to: to,
-        subject: "CourseHub Admin Login",
-        text: "Your OTP is " + otp,
+        subject: subject,
+        text: msg,
     };
     transporter.sendMail(options, function (err, info) {
         if (err) {

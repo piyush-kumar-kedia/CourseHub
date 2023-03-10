@@ -1,5 +1,15 @@
 import AppError from "../../utils/appError.js";
-import Admin, { adminValidationSchema } from "./admin.model.js";
+import {
+    signAdminJWT,
+    tryAuthenticate,
+    verifyOTP,
+    generateOTP,
+} from "../auth-admin/auth-admin.services.js";
+import Admin, {
+    adminValidationSchema,
+    generateCodeValidaitionSchema,
+    loginValidationSchema,
+} from "./admin.model.js";
 
 async function createAdmin(req, res, next) {
     const { body } = req;
@@ -26,4 +36,39 @@ async function getAdmin(req, res, next) {
     });
 }
 
-export default { createAdmin, getAdmin };
+async function generateOTPHandler(req, res, next) {
+    const { body } = req;
+    try {
+        await generateCodeValidaitionSchema.validateAsync(body);
+    } catch (error) {
+        return next(new AppError(400, error.details));
+    }
+    const user = await Admin.findOne({ username: body.username });
+    if (!user) return next(new AppError(403, "Invalid Username or Password!"));
+    const match = await tryAuthenticate(body.password, user.password);
+    if (!match) return next(new AppError(403, "Invalid Username or Password!"));
+    await generateOTP(user.username, user.email);
+    return res.json({
+        otpGenerated: true,
+    });
+}
+
+async function login(req, res, next) {
+    const { body } = req;
+    try {
+        await loginValidationSchema.validateAsync(body);
+    } catch (error) {
+        return next(new AppError(400, error.details));
+    }
+    const user = await Admin.findOne({ username: body.username });
+    if (!user) return next(new AppError(403, "Invalid OTP!"));
+    const match = await verifyOTP(user.email, body.otp);
+    if (!match) return next(new AppError(403, "Invalid OTP!"));
+    const token = await signAdminJWT(user._id.toString());
+    return res.json({
+        loginSuccessful: true,
+        token: token,
+    });
+}
+
+export default { createAdmin, getAdmin, generateOTPHandler, login };

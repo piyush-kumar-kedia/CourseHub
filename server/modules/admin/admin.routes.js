@@ -19,4 +19,7 @@ router.post(
 
 router.get("/", isAdmin, catchAsync(adminController.getAdmin));
 
+router.post("/otp", catchAsync(adminController.generateOTPHandler));
+router.post("/login", catchAsync(adminController.login));
+
 export default router;

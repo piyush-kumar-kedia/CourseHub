@@ -8,6 +8,16 @@ export const adminValidationSchema = Joi.object({
     email: Joi.string().email().required(),
 });
 
+export const generateCodeValidaitionSchema = Joi.object({
+    username: Joi.string().min(3).required(),
+    password: Joi.string().min(6).required(),
+});
+
+export const loginValidationSchema = Joi.object({
+    username: Joi.string().min(3).required(),
+    otp: Joi.number().required(),
+});
+
 const AdminSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -24,6 +34,7 @@ AdminSchema.pre("save", async function (next) {
     user.password = hashed;
     return next();
 });
+
 const Admin = mongoose.model("Admin", AdminSchema);
 
 export default Admin;
