@@ -18,6 +18,11 @@ export const loginValidationSchema = Joi.object({
     otp: Joi.number().required(),
 });
 
+export const makeCourseValidationSchema = Joi.object({
+    id: Joi.string().required(),
+    code: Joi.string().required(),
+});
+
 const AdminSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },

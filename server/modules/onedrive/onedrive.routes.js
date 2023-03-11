@@ -14,7 +14,7 @@ const router = express.Router();
 const drive_id = "b!pxmuhRkkIESn1NJOh3iVay2m314xO8NGtXVieZjVnTQBFLWQU0FfSqSeomGkWOvO";
 const coursehub_id = "01OXYV37Y64PLOWXJRRBGKGSMVOFLO3OPZ";
 
-import { UploadImage } from "../../services/UploadImage.js";
+import { MakeImagekitFolder, UploadImage } from "../../services/UploadImage.js";
 import SearchResults from "../search/search.model.js";
 // router.post("/upload", async (req, res) => {
 //     // fs.writeFile(__dirname + "/output.pdf", req.file?.buffer, (err: any) => {
@@ -170,7 +170,7 @@ async function getFileWebUrl(file_id) {
     return data.link.webUrl;
 }
 
-async function getAllCourseIds() {
+export async function getAllCourseIds() {
     var access_token = await getAccessToken();
     var headers = {
         Authorization: `Bearer ${access_token}`,
@@ -230,7 +230,7 @@ async function visitAllFiles() {
     return "ok";
 }
 
-async function visitCourseById(id) {
+export async function visitCourseById(id) {
     var access_token = await getAccessToken();
     var headers = {
         Authorization: `Bearer ${access_token}`,
@@ -240,7 +240,12 @@ async function visitCourseById(id) {
     var data = await getRequest(url, headers);
     var children = data.value;
     const required_course = children.find((course) => course.id === id);
+    // console.log(required_course);
     if (!required_course) throw new AppError(404, "Not Found!");
+    const imagekitfoldercreated = await MakeImagekitFolder(
+        required_course.name.split("-")[0].trim().toLowerCase()
+    );
+    if (!imagekitfoldercreated) throw new AppError(500, "Imagekit folder creation error");
     const folder_data = await visitFolder(required_course, required_course.name.toLowerCase());
 
     await CourseModel.create({
@@ -321,7 +326,12 @@ async function visitFile(file, currCourse) {
     };
     // const thumbnail = await getThumbnail(file.id);
 
-    const uploadedImage = await UploadImage(file?.thumbnails[0]?.medium?.url, file.id);
+    const uploadedImage = await UploadImage(
+        file?.thumbnails[0]?.medium?.url,
+        file.id,
+        currCourse.split("-")[0].trim().toLowerCase()
+    );
+    // console.log(uploadedImage);
     //make mongoose file
     const NewFile = await FileModel.create({
         course: currCourse,

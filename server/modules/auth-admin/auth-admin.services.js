@@ -35,7 +35,7 @@ export async function generateOTP(username, email) {
         otp: newOtp,
     });
     // send email
-    sendEmail(email, "CourseHub Admin Login OTP", `Your OTP is ${newOtp}`);
+    sendEmail(email, "[COURSEHUB] CourseHub Admin Login OTP", `Your OTP is ${newOtp}`);
     return otp;
 }
 
@@ -45,7 +45,7 @@ export async function verifyOTP(email, otp) {
     if (otp !== otpFromDB.otp) {
         sendEmail(
             email,
-            "[ALERT/COURSEHUB] Login attempt",
+            "[COURSEHUB] Login attempt",
             "Login attempt using your credentials but wrong OTP"
         );
         await OTP.deleteMany({ email: email });

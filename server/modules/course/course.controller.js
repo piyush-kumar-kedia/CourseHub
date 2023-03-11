@@ -1,6 +1,7 @@
 import AppError from "../../utils/appError.js";
 import CourseModel, { FolderModel, FileModel } from "./course.model.js";
 import logger from "../../utils/logger.js";
+import SearchResults from "../search/search.model.js";
 export const getCourse = async (req, res, next) => {
     const { code } = req.params;
     logger.info(`GET /course/${code}`);
@@ -55,9 +56,12 @@ export const getCourse = async (req, res, next) => {
 export const deleteCourseByCode = async (req, res, next) => {
     const { code } = req.params;
     if (!code) throw new AppError(400, "Missing Course Id");
-    await FolderModel.deleteMany({ course: code });
-    await FileModel.deleteMany({ course: code });
-    await CourseModel.deleteOne({ code: code });
+    const search = await SearchResults.findOne({ code: code.toLowerCase() });
+    await FolderModel.deleteMany({ course: code.toLowerCase() });
+    await FileModel.deleteMany({
+        course: `${code.toLowerCase()} - ${search.modelName.toLowerCase()}`,
+    });
+    await CourseModel.deleteOne({ code: code.toLowerCase() });
     res.sendStatus(200);
 };
 
