@@ -7,4 +7,5 @@ export default {
     mobileURL: process.env.MOBILE_URL,
     jwtSecret: process.env.JWT_SECRET,
     aesKey: process.env.AESKEY,
+    adminJwtSecret: "32rytfhgv456ryt43ertfgy45rtfhh",
 };

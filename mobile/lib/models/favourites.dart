@@ -19,7 +19,7 @@ class Favourite {
   String code;
   String id;
 
-  factory Favourite.fromJson(Map<String, dynamic> json) => Favourite(
+  factory Favourite.fromJson(Map<dynamic, dynamic> json) => Favourite(
         name: json["name"],
         favouriteId: json["id"],
         path: json["path"],

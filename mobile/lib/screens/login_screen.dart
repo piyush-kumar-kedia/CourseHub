@@ -1,161 +1,141 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
 import '../apis/authentication/login.dart';
+import '../constants/themes.dart';
+import '../screens/nav_bar_screen.dart';
+import '../widgets/common/custom_linear_progress.dart';
+import '../widgets/common/custom_snackbar.dart';
+import '../widgets/login_screen/cc_branding.dart';
+import '../widgets/login_screen/login_button.dart';
 
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  var _isLoading = false;
+  final theImage = const AssetImage('assets/landing.png');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/login_page.png'),
-                fit: BoxFit.cover,
+      body: SafeArea(
+
+        top: Platform.isAndroid,
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: theImage,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            child: Column(
+            Column(
               children: [
                 Expanded(
+                  flex: 4,
                   child: Row(
                     children: [
-                      Spacer(),
-                      Container(
-                        color: Colors.black,
-                        height: double.infinity,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      const Spacer(
+                        flex: 5,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          color: Colors.black,
                           child: Column(
-                            children: [
-                              Spacer(),
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: const [
                               RotatedBox(
                                 quarterTurns: 1,
                                 child: Text(
-                                  "CourseHub",
+                                  'CourseHub',
                                   style: TextStyle(
-                                    fontFamily: "ProximaNova",
-                                    fontSize: 57.87,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
+                                      color: Colors.white,
+                                      fontSize: 70,
+                                      fontWeight: FontWeight.w700),
                                 ),
                               ),
-                              Spacer(),
-                              Text(
-                                "by",
-                                style: TextStyle(
-                                  fontFamily: "ProximaNova",
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20.0,
-                              ),
-                              SvgPicture.asset(
-                                "assets/cc_logo.svg",
-                                height: 60.0,
-                              ),
-                              SizedBox(
-                                height: 20.0,
-                              ),
-                              Text(
-                                "Coding Club",
-                                style: TextStyle(
-                                  fontFamily: "ProximaNova",
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                "IIT Guwahati",
-                                style: TextStyle(
-                                  fontFamily: "ProximaNova",
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Spacer(),
+                              CCBranding()
                             ],
                           ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  color: Color(0xFFFECF6F),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa odio nibh eu eu nulla ac vestibulum amet.",
-                          style: TextStyle(
-                            fontFamily: "ProximaNova",
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w700,
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 16),
+                    color: Themes.kYellow,
+                    child: Column(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            'Your go-to platform for all your academic needs. Get access to past papers, lecture slides, assignments, tutorials, notes and more to help you ace your exams',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                              fontSize: 14.0,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          2.0,
-                          16.0,
-                          16.0,
-                        ),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              authenticate();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
-                              child: Row(
-                                children: [
-                                  Spacer(),
-                                  Image.asset("assets/image 4.png"),
-                                  Spacer(),
-                                  Text(
-                                    "Sign in with Microsoft",
-                                    style: TextStyle(
-                                      fontFamily: "ProximaNova",
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 20.0,
-                                    ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              try {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await authenticate();
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                                if (!mounted) return;
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const NavBarScreen(),
                                   ),
-                                  Spacer(),
-                                ],
-                              ),
-                            )),
-                      ),
-                    ],
+                                );
+
+                                showSnackBar(
+                                    'Successfully Logged In!', context);
+                              } catch (e) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginScreen(),
+                                    ),
+                                    (route) => false);
+
+                                showSnackBar('Something Went Wrong!', context);
+                              }
+                            },
+                            child: const LoginButton(),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
+                )
               ],
             ),
-          ),
-        ],
+            Visibility(
+              visible: _isLoading,
+              child: const CustomLinearProgress(text:'Loading your courses,favourites and contributions...' ,)
+
+            )
+            //
+          ],
+        ),
       ),
     );
   }

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:test1/widgets/browser_nav_crumb.dart';
-import 'package:test1/widgets/folder_explorer.dart';
-
-import '../apis/courses/course_api.dart';
+import 'package:coursehub/constants/themes.dart';
+import 'package:coursehub/database/hive_store.dart';
+import 'package:coursehub/widgets/browse_screen/year_div.dart';
+import 'package:coursehub/widgets/browse_screen/bread_crumbs.dart';
+import 'package:coursehub/widgets/browse_screen/folder_explorer.dart';
 
 class BrowseScreen extends StatefulWidget {
-  final String code;
-  final Function() callback;
+  final Function(int a) callback;
 
-  const BrowseScreen({super.key, required this.code, required this.callback});
+  const BrowseScreen({super.key, required this.callback});
   @override
   State<StatefulWidget> createState() => _BrowseScreen();
 }
@@ -45,178 +44,143 @@ class _BrowseScreen extends State<BrowseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: CourseApiClient.getCourseDetail(widget.code),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        Map<String, dynamic> data = snapshot.data!;
-        List<String> pathArgs = path.split("/");
+    Map<dynamic, dynamic> data = HiveStore.coursesData['ee206'];
 
-        availableYears.clear();
-        String lastYear = "";
-        for (var c in data["children"]) {
-          availableYears.add(c["name"]);
-          lastYear = c["name"];
-        }
+    List<String> pathArgs = path.split("/");
 
-        if (year == "") {
-          year = lastYear;
-        }
+    availableYears.clear();
+    String lastYear = "";
+    for (var c in data["children"]) {
+      availableYears.add(c["name"]);
+      lastYear = c["name"];
+    }
 
-        Map<String, dynamic> dataToShow = data;
-        List<Widget> navigation_crumbs = [];
-        String currentTitle = widget.code.toUpperCase();
-        int level = 1;
-        for (var p in pathArgs) {
-          if (p == "") continue;
-          if (p == "Home") {
-            for (var child in dataToShow["children"]) {
-              if (child["name"] == year) {
-                dataToShow = child;
-                break;
-              }
-            }
-            navigation_crumbs.add(
-              BrowserNavCrumb(
-                name: "Home",
-                level: 0,
-                callback: (level) => widget.callback(),
-              ),
-            );
-            navigation_crumbs.add(
-              BrowserNavCrumb(
-                name: widget.code.toUpperCase(),
-                level: level,
-                callback: removeFromPath,
-              ),
-            );
-          } else {
-            for (var child in dataToShow["children"]) {
-              if (child["name"] == p) {
-                dataToShow = child;
-                break;
-              }
-            }
-            navigation_crumbs.add(
-              BrowserNavCrumb(
-                name: p,
-                level: level,
-                callback: removeFromPath,
-              ),
-            );
-            currentTitle = p;
+    if (year == "") {
+      year = lastYear;
+    }
+
+    Map<dynamic, dynamic> dataToShow = data;
+    List<Widget> navigationCrumbs = [];
+    String currentTitle = data['code'].toUpperCase();
+    int level = 1;
+    for (var p in pathArgs) {
+      if (p == "") continue;
+      if (p == "Home") {
+        for (var child in dataToShow["children"]) {
+          if (child["name"] == year) {
+            dataToShow = child;
+            break;
           }
-          level++;
         }
-        navigation_crumbs.removeLast();
-        return Container(
-          child: Column(
-            children: [
-              Container(
-                color: Color.fromRGBO(254, 207, 111, 1),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: SingleChildScrollView(
-                    child: Row(
-                      children: navigation_crumbs,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                color: Color.fromRGBO(254, 207, 111, 1),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      24.0, 8.0, 24.0, 12.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        currentTitle,
-                        style: TextStyle(
-                          fontFamily: "ProximaNova",
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Spacer(),
-                      SizedBox(
-                        width: 8.0,
-                      ),
-                      Icon(
-                        Icons.share,
-                        color: Color(0x7F000000),
-                        size: 30.0,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FolderExplorer(
-                  data: dataToShow,
-                  callback: addToPathCallback,
-                ),
-              ),
-              Container(
-                color: Colors.black,
-                height: 60,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-                child: Row(
-                  children: [
-                    const Text(
-                      'YEAR',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontFamily: "ProximaNova",
-                        fontSize: 16,
-                      ),
-                    ),
-                    Spacer(),
-                    Container(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 10.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              year,
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
-                            PopupMenuButton<String>(
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.black,
-                              ),
-                              onSelected: handleClick,
-                              itemBuilder: (context) {
-                                return availableYears.map((String choice) {
-                                  return PopupMenuItem<String>(
-                                    value: choice,
-                                    child: Text(choice),
-                                  );
-                                }).toList();
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+        navigationCrumbs.add(
+          BreadCrumb(
+            name: "Home",
+            level: 0,
+            callback: (level) => widget.callback(0),
           ),
         );
-      },
+        navigationCrumbs.add(
+          BreadCrumb(
+            name: data['code'].toUpperCase(),
+            level: level,
+            callback: removeFromPath,
+          ),
+        );
+      } else {
+        for (var child in dataToShow["children"]) {
+          if (child["name"] == p) {
+            dataToShow = child;
+            break;
+          }
+        }
+        navigationCrumbs.add(
+          BreadCrumb(
+            name: p,
+            level: level,
+            callback: removeFromPath,
+          ),
+        );
+        currentTitle = p;
+      }
+      level++;
+    }
+    navigationCrumbs.removeLast();
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              color: Themes.kYellow,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) => navigationCrumbs[index],
+                itemCount: navigationCrumbs.length,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              color: Themes.kYellow,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text(
+                      currentTitle,
+                      overflow: TextOverflow.ellipsis,
+                      style: Themes.darkTextTheme.displayLarge,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                      icon: const Icon(
+                        Icons.star,
+                        size: 30.0,
+                      ),
+                      color: Colors.black54,
+                      onPressed: () {
+                        //TODO action of fav
+                      }),
+                  const SizedBox(
+                    width: 8.0,
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.share,
+                      size: 30.0,
+                    ),
+                    color: Colors.black54,
+                    onPressed: () {
+                      // TODO create share link
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 20,
+            child: FolderExplorer(
+              data: dataToShow,
+              callback: addToPathCallback,
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: YearDiv(
+              callback: handleClick,
+              availableYears: availableYears,
+              year: year,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
