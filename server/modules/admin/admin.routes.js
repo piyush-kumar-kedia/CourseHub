@@ -17,14 +17,13 @@ router.post(
     catchAsync(adminController.createAdmin)
 );
 
-router.get("/", isAdmin, catchAsync(adminController.getAdmin));
-
 router.post("/otp", catchAsync(adminController.generateOTPHandler));
 router.post("/login", catchAsync(adminController.login));
 
-router.get("/onedrivecourses", catchAsync(adminController.getOnedriveCourses));
-router.get("/dbcourses", catchAsync(adminController.getDBCourses));
-router.delete("/course/:code", catchAsync(adminController.deleteCourseByCode));
-router.post("/course", catchAsync(adminController.makeCourseById));
+router.get("/", isAdmin, catchAsync(adminController.getAdmin));
+router.get("/onedrivecourses", isAdmin, catchAsync(adminController.getOnedriveCourses));
+router.get("/dbcourses", isAdmin, catchAsync(adminController.getDBCourses));
+router.delete("/course/:code", isAdmin, catchAsync(adminController.deleteCourseByCode));
+router.post("/course", isAdmin, catchAsync(adminController.makeCourseById));
 
 export default router;

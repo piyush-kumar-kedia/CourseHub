@@ -92,7 +92,7 @@ async function deleteCourseByCode(req, res, next) {
     await CourseModel.deleteOne({ code: code.toLowerCase() });
     await FolderModel.deleteMany({ course: code.toLowerCase() });
     await FileModel.deleteMany({ course: `${code.toLowerCase()} - ${search.name.toLowerCase()}` });
-    await SearchResults.updateOne({ code: code }, { isAvailable: false });
+    await SearchResults.updateOne({ code: code.toLowerCase() }, { isAvailable: false });
     return res.json({ deleted: true });
 }
 
