@@ -10,7 +10,8 @@ async function GetExamDates(req, res, next) {
 }
 
 async function GetLatestMobileVersion(req, res, next) {
-    const updateDetails = mobileUpdateModel.findOne({});
+    const { platform } = req.params;
+    const updateDetails = mobileUpdateModel.findOne({ platform: platform });
     return res.json({ details: updateDetails });
 }
 
