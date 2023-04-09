@@ -6,4 +6,5 @@ import isAuthenticated from "../../middleware/isAuthenticated.js";
 const router = Router();
 
 router.get("/examdates", isAuthenticated, catchAsync(EventController.GetExamDates));
+router.get("/mobileversion", isAuthenticated, catchAsync(EventController.GetLatestMobileVersion));
 export default router;
