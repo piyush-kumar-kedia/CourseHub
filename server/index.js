@@ -18,6 +18,7 @@ import searchRoutes from "./modules/search/search.routes.js";
 import eventRoutes from "./modules/event/event.routes.js";
 import contributionRoutes from "./modules/contribution/contribution.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
+import wellKnownRoutes from "./modules/.well-known/router.js";
 
 const app = express();
 const PORT = config.port;
@@ -31,6 +32,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use("/.well-known", wellKnownRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/file", onedriveRoutes);
