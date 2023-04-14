@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - stable-dev
-      - master
+
 
 name: "Build & Release"
 jobs:
