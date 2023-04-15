@@ -73,3 +73,5 @@ export const getAllCourses = async (req, res, next) => {
 
     res.json(allCourse);
 };
+
+export const isCourseUpdated = async (req, res, next) => {};

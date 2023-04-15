@@ -22,12 +22,15 @@ const FileSchema = Schema({
 
 export const FileModel = model("File", FileSchema);
 
-const CourseSchema = Schema({
-    name: { type: String, required: true },
-    code: { type: String, required: true },
-    children: [{ type: Schema.Types.ObjectId, ref: "Folder" }],
-    books: [{ type: String }],
-});
+const CourseSchema = Schema(
+    {
+        name: { type: String, required: true },
+        code: { type: String, required: true },
+        children: [{ type: Schema.Types.ObjectId, ref: "Folder" }],
+        books: [{ type: String }],
+    },
+    { timestamps: true }
+);
 
 const CourseModel = model("Course", CourseSchema);
 export default CourseModel;

@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import { FolderModel } from "../models/course.model.js";
+import { FolderModel } from "../modules/course/course.model.js";
 import connectDatabase from "../services/connectDB.js";
 import "dotenv/config";
 
 connectDatabase();
 const deleteAllFolders = async () => {
-	await FolderModel.deleteMany({});
+    await FolderModel.deleteMany({});
 };
 
 await deleteAllFolders();

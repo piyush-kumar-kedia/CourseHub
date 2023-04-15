@@ -4,11 +4,14 @@ import connectDatabase from "../services/connectDB.js";
 import "dotenv/config";
 
 connectDatabase();
-const deleteAllCourses = async () => {
-    await CourseModel.deleteMany({});
+const makeNewCourse = async () => {
+    await CourseModel.create({
+        name: "Test",
+        code: "TEST102",
+    });
 };
 
-await deleteAllCourses();
-console.log("DELETED ALL COURSES");
+await makeNewCourse();
+console.log("MADE NEW COURSE");
 
 process.exit(0);
