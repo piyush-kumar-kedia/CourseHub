@@ -78,7 +78,7 @@ export const isCourseUpdated = async (req, res, next) => {
     let { clientOn, code } = req.body;
     if (!clientOn || !code) return next(new AppError(500, "Invalid data provided!"));
     code = code.toLowerCase();
-    const newCourseData = await CourseModel.findOne({ code: code, updatedAt: { $gt: clientOn } });
+    const newCourseData = await CourseModel.findOne({ code: code, createdAt: { $gt: clientOn } });
     const updatedCourseData = await CourseModel.findOne({
         code: code,
         updatedAt: { $gt: clientOn },
