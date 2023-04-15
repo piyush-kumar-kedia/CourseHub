@@ -75,16 +75,25 @@ export const getAllCourses = async (req, res, next) => {
 };
 
 export const isCourseUpdated = async (req, res, next) => {
-    let { clientOn, code } = req.body;
-    if (!clientOn || !code) return next(new AppError(500, "Invalid data provided!"));
-    code = code.toLowerCase();
-    const newCourseData = await CourseModel.findOne({ code: code, createdAt: { $gt: clientOn } });
-    const updatedCourseData = await CourseModel.findOne({
-        code: code,
-        updatedAt: { $gt: clientOn },
+    let { clientOn } = req.body;
+    if (!clientOn) return next(new AppError(500, "Invalid data provided!"));
+    let outdatedOnClient = [];
+
+    let courses = req.user.courses.map((c) => c.code.toLowerCase());
+    const searchResults = await SearchResults.find({ code: courses });
+    let availableCourses = searchResults.filter((s) => s.isAvailable === true);
+    let availableCourseCodes = availableCourses.map((c) => c.code.toLowerCase());
+    let allOutdatedCourses = await CourseModel.find({
+        $and: [
+            { code: availableCourseCodes },
+            { $or: [{ createdAt: { $gt: clientOn } }, { updatedAt: { $gt: clientOn } }] },
+        ],
     });
-    if (newCourseData || updatedCourseData) {
-        return res.json({ updated: true });
-    }
-    res.json({ updated: false });
+
+    allOutdatedCourses.map((course) => {
+        outdatedOnClient.push(course.code);
+    });
+
+    if (!allOutdatedCourses.length > 0) return res.json({ updated: false });
+    return res.json({ updated: true, data: outdatedOnClient });
 };
