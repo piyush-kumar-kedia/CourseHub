@@ -10,9 +10,10 @@ const wait = async (ms) => {
 async function main() {
     const resp = await axios.get(`${baseUrl}/api/file/getCourseIds`);
     const allCourses = resp.data;
-    console.log(allCourses.length);
+    console.log("Total Courses:", allCourses.length);
 
     for (let i = 0; i < allCourses.length; i++) {
+        console.log(`Attempting to create ${i} ::  ${allCourses[i].name}`);
         try {
             const res = await axios.post(`${baseUrl}/api/admin/course`, {
                 id: allCourses[i].id,

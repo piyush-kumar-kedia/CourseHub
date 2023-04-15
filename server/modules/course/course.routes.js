@@ -12,6 +12,6 @@ import catchAsync from "../../utils/catchAsync.js";
 router.get("/", catchAsync(getAllCourses));
 router.get("/:code", catchAsync(getCourse));
 router.get("/delete/:code", catchAsync(deleteCourseByCode));
-router.get("/isUpdated/:code", catchAsync(isCourseUpdated));
+router.post("/isUpdated", catchAsync(isCourseUpdated));
 
 export default router;

@@ -74,4 +74,17 @@ export const getAllCourses = async (req, res, next) => {
     res.json(allCourse);
 };
 
-export const isCourseUpdated = async (req, res, next) => {};
+export const isCourseUpdated = async (req, res, next) => {
+    let { clientOn, code } = req.body;
+    if (!clientOn || !code) return next(new AppError(500, "Invalid data provided!"));
+    code = code.toLowerCase();
+    const newCourseData = await CourseModel.findOne({ code: code, updatedAt: { $gt: clientOn } });
+    const updatedCourseData = await CourseModel.findOne({
+        code: code,
+        updatedAt: { $gt: clientOn },
+    });
+    if (newCourseData || updatedCourseData) {
+        return res.json({ updated: true });
+    }
+    res.json({ updated: false });
+};
