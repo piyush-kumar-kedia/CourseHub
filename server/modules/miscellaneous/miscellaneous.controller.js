@@ -1,4 +1,10 @@
 import FunFacts from "./miscellaneous.model.js";
+import express from  'express'
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 
 async function GetFunFacts(_,res){
 
@@ -14,4 +20,11 @@ async function GetFunFacts(_,res){
     })
 }
 
-export default {GetFunFacts};
+
+async function GetPrivacyPolicy(req,res){
+    res.sendFile("./privacy-policy/privacy-policy.html", { root: __dirname });
+}
+
+
+
+export default {GetFunFacts,GetPrivacyPolicy,ServeFavicon};
