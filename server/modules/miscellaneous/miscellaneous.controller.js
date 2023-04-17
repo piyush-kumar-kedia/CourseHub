@@ -27,4 +27,4 @@ async function GetPrivacyPolicy(req,res){
 
 
 
-export default {GetFunFacts,GetPrivacyPolicy,ServeFavicon};
+export default {GetFunFacts,GetPrivacyPolicy};
