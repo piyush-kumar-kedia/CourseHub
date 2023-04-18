@@ -94,7 +94,9 @@ export const isCourseUpdated = async (req, res, next) => {
         outdatedOnClient.push(course.code);
     });
 
-    if (!allOutdatedCourses.length > 0) return res.json({ updated: false });
+    if (!allOutdatedCourses.length > 0) {
+        return res.json({ updated: false, subscribedCourses: courses });
+    }
     return res.json({
         updated: true,
         updatedCourses: outdatedOnClient,
