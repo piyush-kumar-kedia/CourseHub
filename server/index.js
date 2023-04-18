@@ -19,6 +19,7 @@ import eventRoutes from "./modules/event/event.routes.js";
 import contributionRoutes from "./modules/contribution/contribution.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 import wellKnownRoutes from "./modules/.well-known/router.js";
+import miscellaneousRoutes from './modules/miscellaneous/miscellaneous.routes.js'
 
 const app = express();
 const PORT = config.port;
@@ -41,6 +42,7 @@ app.use("/api/search", searchRoutes);
 app.use("/api/event", eventRoutes);
 app.use("/api/contribution", contributionRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/miscellaneous",miscellaneousRoutes);
 
 app.use(
     "/homepage",
