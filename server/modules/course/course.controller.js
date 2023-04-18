@@ -95,5 +95,9 @@ export const isCourseUpdated = async (req, res, next) => {
     });
 
     if (!allOutdatedCourses.length > 0) return res.json({ updated: false });
-    return res.json({ updated: true, data: outdatedOnClient });
+    return res.json({
+        updated: true,
+        updatedCourses: outdatedOnClient,
+        subscribedCourses: courses,
+    });
 };
