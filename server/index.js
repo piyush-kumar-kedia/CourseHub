@@ -18,11 +18,11 @@ import searchRoutes from "./modules/search/search.routes.js";
 import eventRoutes from "./modules/event/event.routes.js";
 import contributionRoutes from "./modules/contribution/contribution.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
-import wellKnownRoutes from "./modules/.well-known/router.js";
-import miscellaneousRoutes from './modules/miscellaneous/miscellaneous.routes.js'
+import timeTableRoutes from "./modules/timetable/timetable.routes.js";
 
 const app = express();
 const PORT = config.port;
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 app.use(express.static("static"));
 import path from "path";
@@ -33,7 +33,6 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
-app.use("/.well-known", wellKnownRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/file", onedriveRoutes);
@@ -42,7 +41,7 @@ app.use("/api/search", searchRoutes);
 app.use("/api/event", eventRoutes);
 app.use("/api/contribution", contributionRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/miscellaneous",miscellaneousRoutes);
+app.use("/api/timetable", timeTableRoutes);
 
 app.use(
     "/homepage",
