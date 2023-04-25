@@ -33,7 +33,21 @@ export const guestLoginHanlder = async (req, res, next) => {
     const token = guest.generateJWT();
     res.json({ token });
 };
-const fetchCourses = async (rollNumber) => {
+// export const makeGuestHanlder = async (req, res, next) => {
+//     const user = await User.create({
+//         name: "Guest",
+//         email: "guest@coursehubiitg.in",
+//         rollNumber: 123456789,
+//         semester: 2,
+//         degree: "BTECH",
+//         courses: [],
+//         department: "Guest Login",
+//         favourites: [],
+//     });
+//     res.send(user);
+// };
+
+export const fetchCourses = async (rollNumber) => {
     var config = {
         method: "post",
         url: "https://academic.iitg.ac.in/sso/gen/student2.jsp",
