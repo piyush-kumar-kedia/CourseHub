@@ -65,11 +65,11 @@ router.get(
                 toReturn.push(fromTo);
             } else {
                 // toReturn[course.code] = { notFound: true };
-                toReturn.push({ code: course.code, notFound: true });
+                toReturn.push({ code: course.code, found: false });
             }
             // console.log(toReturn);
         }
-        return res.json({data:toReturn});
+        return res.json({ data: toReturn });
         // });
         // return res.json({ error: true });
     })
