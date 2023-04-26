@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 const TimeTableSchema = new mongoose.Schema({
     code: { type: String },
     room: { type: String },
-    dateAndTime: { type: String },
+    date: { type: String },
+    time: { type: String },
     nStudents: { type: Number },
     from: { type: Number },
     to: { type: Number },
