@@ -9,6 +9,7 @@ import userRoutes from "./modules/user/user.routes.js";
 import cookieParser from "cookie-parser";
 import catchAsync from "./utils/catchAsync.js";
 import User from "./modules/user/user.model.js";
+import ua from "express-useragent";
 
 import connectDatabase from "./services/connectDB.js";
 connectDatabase();
@@ -19,7 +20,7 @@ import eventRoutes from "./modules/event/event.routes.js";
 import contributionRoutes from "./modules/contribution/contribution.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 import timeTableRoutes from "./modules/timetable/timetable.routes.js";
-import miscellaneousRoutes from './modules/miscellaneous/miscellaneous.routes.js'
+import miscellaneousRoutes from "./modules/miscellaneous/miscellaneous.routes.js";
 
 const app = express();
 const PORT = config.port;
@@ -34,6 +35,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+app.use(ua.express());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/file", onedriveRoutes);
@@ -42,7 +44,7 @@ app.use("/api/search", searchRoutes);
 app.use("/api/event", eventRoutes);
 app.use("/api/contribution", contributionRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/miscellaneous",miscellaneousRoutes);
+app.use("/api/miscellaneous", miscellaneousRoutes);
 app.use("/api/timetable", timeTableRoutes);
 
 app.use(
@@ -70,6 +72,9 @@ app.use((err, req, res, next) => {
 app.use(express.static("static"));
 
 app.get("*", (req, res) => {
+    if (req.useragent?.isMobile) {
+        return res.redirect("https://coursehubiitg.page.link/udyB");
+    }
     res.sendFile(path.resolve(__dirname, "static", "index.html"));
 });
 

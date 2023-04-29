@@ -69,6 +69,7 @@ const App = () => {
             style={{
                 minHeight: "100vh",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 textAlign: "center",
@@ -77,10 +78,34 @@ const App = () => {
             <p
                 style={{
                     fontSize: "1.5rem",
+                    marginBottom: "16px",
                 }}
             >
-                Coming soon on mobile. <br/>Please open on Desktop.
+                Get CourseHub now!
             </p>
+            <div>
+                <a href="">
+                    <img
+                        src="google-play-badge.png"
+                        alt=""
+                        style={{
+                            width: "180px",
+                            height: "100%",
+                        }}
+                    />
+                </a>
+                <br />
+                <a href="">
+                    <img
+                        src="app-store-badge.png"
+                        alt=""
+                        style={{
+                            width: "159px",
+                            height: "100%",
+                        }}
+                    />
+                </a>
+            </div>
         </div>
     );
 };
