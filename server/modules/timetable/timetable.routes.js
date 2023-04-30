@@ -57,13 +57,13 @@ router.get(
             console.log(course);
             if (all) {
                 // toReturn[course.code] = all;
-                toReturn.push({ ...all._doc, name: course.name });
+                toReturn.push({ ...all._doc, name: course.name,found:true });
             } else if (individual) {
                 // toReturn[course.code] = individual;
-                toReturn.push({ ...individual._doc, name: course.name });
+                toReturn.push({ ...individual._doc, name: course.name,found:true });
             } else if (fromTo) {
                 // toReturn[course.code] = fromTo;
-                toReturn.push({ ...fromTo._doc, name: course.name });
+                toReturn.push({ ...fromTo._doc, name: course.name,found:true });
             } else {
                 // toReturn[course.code] = { notFound: true };
                 toReturn.push({ code: course.code, found: false, name: course.name });
@@ -71,17 +71,10 @@ router.get(
             // console.log(toReturn);
         }
         
-        if(toReturn['found']==false){
              return res.json({ data: toReturn });
         
-        }
-        else{
-            toReturn['found'] = true;
-             return res.json({ data: toReturn });
-            
 
-            
-        }
+        
        
         // });
         // return res.json({ error: true });
