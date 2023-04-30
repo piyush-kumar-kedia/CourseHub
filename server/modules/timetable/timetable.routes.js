@@ -70,7 +70,19 @@ router.get(
             }
             // console.log(toReturn);
         }
-        return res.json({ data: toReturn });
+        
+        if(toReturn['found']==false){
+             return res.json({ data: toReturn });
+        
+        }
+        else{
+            toReturn['found'] = true;
+             return res.json({ data: toReturn });
+            
+
+            
+        }
+       
         // });
         // return res.json({ error: true });
     })
