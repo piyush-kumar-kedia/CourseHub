@@ -54,18 +54,19 @@ router.get(
                 ],
             });
 
+            console.log(course);
             if (all) {
                 // toReturn[course.code] = all;
-                toReturn.push(all);
+                toReturn.push({ ...all._doc, name: course.name });
             } else if (individual) {
                 // toReturn[course.code] = individual;
-                toReturn.push(individual);
+                toReturn.push({ ...individual._doc, name: course.name });
             } else if (fromTo) {
                 // toReturn[course.code] = fromTo;
-                toReturn.push(fromTo);
+                toReturn.push({ ...fromTo._doc, name: course.name });
             } else {
                 // toReturn[course.code] = { notFound: true };
-                toReturn.push({ code: course.code, found: false });
+                toReturn.push({ code: course.code, found: false, name: course.name });
             }
             // console.log(toReturn);
         }
