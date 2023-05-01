@@ -42,28 +42,40 @@ router.get(
         for (let i = 0; i < courses.length; ++i) {
             // req.user.courses.map(async (course, idx) => {
             let course = courses[i];
-            const all = await TimeTable.findOne({ code: course.code.toUpperCase(), all: true });
-            const individual = await TimeTable.findOne({
-                code: course.code.toUpperCase(),
-                individual: roll,
-            });
-            const fromTo = await TimeTable.findOne({
-                $and: [
-                    { code: course.code.toUpperCase() },
-                    { $and: [{ from: { $lte: roll } }, { to: { $gte: roll } }] },
-                ],
-            });
+            // const all = await TimeTable.findOne({ code: course.code.toUpperCase(), all: true });
+            const all = data.find(
+                (_d) => _d.code.toUpperCase() === course.code.toUpperCase() && _d.all === true
+            );
+            // const individual = await TimeTable.findOne({
+            //     code: course.code.toUpperCase(),
+            //     individual: roll,
+            // });
+            const individual = data.find(
+                (_d) => _d.code.toUpperCase() === course.code.toUpperCase() && _d.individual === roll
+            );
+            // const fromTo = await TimeTable.findOne({
+            //     $and: [
+            //         { code: course.code.toUpperCase() },
+            //         { $and: [{ from: { $lte: roll } }, { to: { $gte: roll } }] },
+            //     ],
+            // });
+            const fromTo = data.find(
+                (_d) =>
+                    _d.code.toUpperCase() === course.code.toUpperCase() &&
+                    roll >= _d.from &&
+                    roll <= _d.to
+            );
 
-            console.log(course);
+            // console.log(course);
             if (all) {
                 // toReturn[course.code] = all;
-                toReturn.push({ ...all._doc, name: course.name });
+                toReturn.push({ ...all, name: course.name, found: true });
             } else if (individual) {
                 // toReturn[course.code] = individual;
-                toReturn.push({ ...individual._doc, name: course.name });
+                toReturn.push({ ...individual, name: course.name, found: true });
             } else if (fromTo) {
                 // toReturn[course.code] = fromTo;
-                toReturn.push({ ...fromTo._doc, name: course.name });
+                toReturn.push({ ...fromTo, name: course.name, found: true });
             } else {
                 // toReturn[course.code] = { notFound: true };
                 toReturn.push({ code: course.code, found: false, name: course.name });
