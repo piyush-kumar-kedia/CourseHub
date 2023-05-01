@@ -32,64 +32,57 @@ router.get(
 );
 
 router.get(
-    "/",
+    "/courses",
     isAuthenticated,
     catchAsync(async (req, res, next) => {
         let roll = req.user.rollNumber;
         let toReturn = [];
         // let courses = req.user.courses;
         let courses = await fetchCourses(req.user.rollNumber);
+        res.json(courses);
+    })
+);
+
+router.get(
+    "/",
+    isAuthenticated,
+    catchAsync(async (req, res, next) => {
+        let roll = req.user.rollNumber;
+        let toReturn = [];
+        // let courses = req.user.courses;
+        let courses = req.user.courses;
         for (let i = 0; i < courses.length; ++i) {
             // req.user.courses.map(async (course, idx) => {
             let course = courses[i];
-            // const all = await TimeTable.findOne({ code: course.code.toUpperCase(), all: true });
-            const all = data.find(
-                (_d) => _d.code.toUpperCase() === course.code.toUpperCase() && _d.all === true
-            );
-            // const individual = await TimeTable.findOne({
-            //     code: course.code.toUpperCase(),
-            //     individual: roll,
-            // });
-            const individual = data.find(
-                (_d) => _d.code.toUpperCase() === course.code.toUpperCase() && _d.individual === roll
-            );
-            // const fromTo = await TimeTable.findOne({
-            //     $and: [
-            //         { code: course.code.toUpperCase() },
-            //         { $and: [{ from: { $lte: roll } }, { to: { $gte: roll } }] },
-            //     ],
-            // });
-            const fromTo = data.find(
-                (_d) =>
-                    _d.code.toUpperCase() === course.code.toUpperCase() &&
-                    roll >= _d.from &&
-                    roll <= _d.to
-            );
+            const all = await TimeTable.findOne({ code: course.code.toUpperCase(), all: true });
+            const individual = await TimeTable.findOne({
+                code: course.code.toUpperCase(),
+                individual: roll,
+            });
+            const fromTo = await TimeTable.findOne({
+                $and: [
+                    { code: course.code.toUpperCase() },
+                    { $and: [{ from: { $lte: roll } }, { to: { $gte: roll } }] },
+                ],
+            });
 
             // console.log(course);
             if (all) {
                 // toReturn[course.code] = all;
-                toReturn.push({ ...all, name: course.name, found: true });
+                toReturn.push({ ...all._doc, name: course.name });
             } else if (individual) {
                 // toReturn[course.code] = individual;
-                toReturn.push({ ...individual, name: course.name, found: true });
+                toReturn.push({ ...individual._doc, name: course.name });
             } else if (fromTo) {
                 // toReturn[course.code] = fromTo;
-                toReturn.push({ ...fromTo, name: course.name, found: true });
+                toReturn.push({ ...fromTo._doc, name: course.name });
             } else {
                 // toReturn[course.code] = { notFound: true };
                 toReturn.push({ code: course.code, found: false, name: course.name });
             }
             // console.log(toReturn);
         }
-        
-             return res.json({ data: toReturn });
-        
-
-        
-       
-        // });
-        // return res.json({ error: true });
+        return res.json({ data: toReturn });
     })
 );
 
