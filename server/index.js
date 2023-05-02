@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import catchAsync from "./utils/catchAsync.js";
 import User from "./modules/user/user.model.js";
 import ua from "express-useragent";
+import fs from "fs";
 
 import connectDatabase from "./services/connectDB.js";
 connectDatabase();
@@ -72,8 +73,12 @@ app.use((err, req, res, next) => {
 app.use(express.static("static"));
 
 app.get("*", (req, res) => {
-    if (req.useragent?.isMobile) {
-        return res.redirect("https://coursehubiitg.page.link/udyB");
+    if (req.useragent?.isAndroid) {
+        return res.redirect(
+            "https://play.google.com/store/apps/details?id=com.codingclub.coursehub"
+        );
+    } else if (req.useragent?.isiPhone) {
+        return res.redirect("https://apps.apple.com/us/app/coursehub/id6447286863");
     }
     res.sendFile(path.resolve(__dirname, "static", "index.html"));
 });

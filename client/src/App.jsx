@@ -84,7 +84,7 @@ const App = () => {
                 Get CourseHub now!
             </p>
             <div>
-                <a href="">
+                <a href="https://play.google.com/store/apps/details?id=com.codingclub.coursehub">
                     <img
                         src="google-play-badge.png"
                         alt=""
@@ -95,7 +95,7 @@ const App = () => {
                     />
                 </a>
                 <br />
-                <a href="">
+                <a href="https://apps.apple.com/us/app/coursehub/id6447286863">
                     <img
                         src="app-store-badge.png"
                         alt=""
