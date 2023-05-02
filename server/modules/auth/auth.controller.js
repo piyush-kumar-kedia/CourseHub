@@ -89,7 +89,8 @@ export const fetchCourses = async (rollNumber) => {
                 code.length <= 6 &&
                 !code.includes("SA")
             ) {
-                var code = code.substring(0, 5);
+                var code = code.substring(0, 6);
+                // console.log(code);
                 let color = getRandomColor();
                 courses.push({
                     code,
