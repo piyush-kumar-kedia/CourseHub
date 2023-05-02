@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 const TimeTableSchema = new mongoose.Schema(
     {
-        code: { type: String },
-        room: { type: String },
-        date: { type: String },
-        time: { type: String },
+        code: { type: String, required: true },
+        room: { type: String, required: true },
+        date: { type: String, required: true },
+        time: { type: String, required: true },
         nStudents: { type: Number },
         from: { type: Number },
         to: { type: Number },
