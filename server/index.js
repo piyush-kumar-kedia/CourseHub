@@ -24,31 +24,31 @@ import timeTableRoutes from "./modules/timetable/timetable.routes.js";
 import miscellaneousRoutes from "./modules/miscellaneous/miscellaneous.routes.js";
 
 // socket
-import { Server } from "socket.io";
+// import { Server } from "socket.io";
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: [
-            "https://coursehubiitg.in",
-            "https://www.coursehubiitg.in",
-            "http://localhost:5173",
-        ],
-        methods: ["GET", "POST"],
-        credentials: true,
-    },
-});
-let userCount = 0;
-let totalUserCount = 0;
+// const server = http.createServer(app);
+// const io = new Server(server, {
+//     cors: {
+//         origin: [
+//             "https://coursehubiitg.in",
+//             "https://www.coursehubiitg.in",
+//             "http://localhost:5173",
+//         ],
+//         methods: ["GET", "POST"],
+//         credentials: true,
+//     },
+// });
+// let userCount = 0;
+// let totalUserCount = 0;
 
-io.on("connection", (socket) => {
-    userCount++;
-    totalUserCount++;
-    socket.on("disconnect", () => {
-        userCount--;
-    });
-});
+// io.on("connection", (socket) => {
+//     userCount++;
+//     totalUserCount++;
+//     socket.on("disconnect", () => {
+//         userCount--;
+//     });
+// });
 
 const PORT = config.port;
 // app.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -73,13 +73,13 @@ app.use("/api/contribution", contributionRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/miscellaneous", miscellaneousRoutes);
 app.use("/api/timetable", timeTableRoutes);
-app.get("/api/admin/stats", (req, res) => {
-    res.json({
-        message: "Hello admin!",
-        liveUserCount: userCount,
-        totalUserCount: totalUserCount,
-    });
-});
+// app.get("/api/admin/stats", (req, res) => {
+//     res.json({
+//         message: "Hello admin!",
+//         liveUserCount: userCount,
+//         totalUserCount: totalUserCount,
+//     });
+// });
 
 app.use(
     "/homepage",
@@ -116,6 +116,6 @@ app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "static", "index.html"));
 });
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
     logger.info(`Server on PORT ${PORT}`);
 });
