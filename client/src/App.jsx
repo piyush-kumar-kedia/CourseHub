@@ -95,7 +95,7 @@ const App = () => {
                     />
                 </a>
                 <br />
-                <a href="https://apps.apple.com/us/app/coursehub/id6447286863">
+                <a href="itms-apps://apps.apple.com/us/app/coursehub/id6447286863">
                     <img
                         src="app-store-badge.png"
                         alt=""
