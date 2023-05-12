@@ -22,33 +22,9 @@ import contributionRoutes from "./modules/contribution/contribution.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 import timeTableRoutes from "./modules/timetable/timetable.routes.js";
 import miscellaneousRoutes from "./modules/miscellaneous/miscellaneous.routes.js";
-
-// socket
-// import { Server } from "socket.io";
+import codingweekRoutes from "./modules/codingweek/codingweek.routes.js";
 
 const app = express();
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//     cors: {
-//         origin: [
-//             "https://coursehubiitg.in",
-//             "https://www.coursehubiitg.in",
-//             "http://localhost:5173",
-//         ],
-//         methods: ["GET", "POST"],
-//         credentials: true,
-//     },
-// });
-// let userCount = 0;
-// let totalUserCount = 0;
-
-// io.on("connection", (socket) => {
-//     userCount++;
-//     totalUserCount++;
-//     socket.on("disconnect", () => {
-//         userCount--;
-//     });
-// });
 
 const PORT = config.port;
 // app.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -73,6 +49,7 @@ app.use("/api/contribution", contributionRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/miscellaneous", miscellaneousRoutes);
 app.use("/api/timetable", timeTableRoutes);
+app.use("/api/codingweek", codingweekRoutes);
 // app.get("/api/admin/stats", (req, res) => {
 //     res.json({
 //         message: "Hello admin!",
