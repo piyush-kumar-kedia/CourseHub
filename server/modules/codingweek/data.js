@@ -56,4 +56,14 @@ export default [
         points: 9,
         avatar: "https://i.pravatar.cc/299",
     },
+    {
+        name: "Augusta Kathrine",
+        points: 48,
+        avatar: "https://i.pravatar.cc/299",
+    },
+    {
+        name: "Thorben Cassiopea",
+        points: 4,
+        avatar: "https://i.pravatar.cc/299",
+    },
 ];
