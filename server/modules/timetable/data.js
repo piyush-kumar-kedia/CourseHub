@@ -1,4 +1,4 @@
-[
+export default [
     {
         code: "BT101",
         room: "1004",
