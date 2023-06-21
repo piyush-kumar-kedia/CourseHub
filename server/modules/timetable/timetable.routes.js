@@ -1,11 +1,13 @@
 import { Router } from "express";
 import catchAsync from "../../utils/catchAsync.js";
 import isAuthenticated from "../../middleware/isAuthenticated.js";
+import isAdmin from "../../middleware/isAdmin.js";
 import TimeTable from "./timetable.model.js";
 import { fetchCourses } from "../auth/auth.controller.js";
 const router = Router();
 
 import data from "./data.js";
+import AppError from "../../utils/appError.js";
 // router.post(
 //     "/",
 //     // isAuthenticated,
@@ -23,6 +25,7 @@ import data from "./data.js";
 
 router.get(
     "/feed",
+    isAdmin,
     // isAuthenticated,
     catchAsync(async (req, res, next) => {
         data.map(async (roomInfo) => await TimeTable.create(roomInfo));
