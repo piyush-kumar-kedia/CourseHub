@@ -179,7 +179,7 @@ const Contributions = () => {
                     </div>
                     <div className="year">
                         <label htmlFor="course" className="label_year">
-                            ANNOYOMOUS:
+                            ANONYMOUS:
                         </label>
                         <span className="toggle-container">
                             <ToggleSwitch label={"toggle"} />
