@@ -31,7 +31,14 @@ const FeedbackBugSchema = new mongoose.Schema({
     },
 });
 
+const UserUpdateSchema = new mongoose.Schema({
+    rollNumber: {
+        type: Number,
+    }
+})
+
 const FunFacts = mongoose.model("FunFacts", FunFactsSchema);
 const FeedbackBug = mongoose.model("FeedbackBug", FeedbackBugSchema);
+const UserUpdate = mongoose.model("UserUpdate", UserUpdateSchema);
 
-export { FunFacts, FeedbackBug };
+export { FunFacts, FeedbackBug, UserUpdate };

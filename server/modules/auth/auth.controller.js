@@ -20,6 +20,7 @@ import aesjs from "aes-js";
 import EncryptText from "../../utils/encryptAES.js";
 import { getRandomColor } from "../../utils/generateRandomColor.js";
 import academicdata from "../../config/academic.js";
+import { UserUpdate } from "../miscellaneous/miscellaneous.model.js";
 
 //not used
 export const loginHandler = (req, res) => {
@@ -190,6 +191,16 @@ export const redirectHandler = async (req, res, next) => {
         existingUser = await user.save();
     }
 
+    let userUpdated = await UserUpdate.findOne({rollNumber: roll});
+    console.log(userUpdated);
+    if(existingUser && !userUpdated){
+        const courses = await fetchCourses(userFromToken.data.surname);
+        existingUser.courses = courses;
+        await existingUser.save();
+        const newUpdation = new UserUpdate({rollNumber: roll});
+        await newUpdation.save();
+    }
+
     const token = existingUser.generateJWT();
 
     res.cookie("token", token, {
@@ -262,6 +273,15 @@ export const mobileRedirectHandler = async (req, res, next) => {
 
         const user = new User(userData);
         existingUser = await user.save();
+    }
+    let userUpdated = await UserUpdate.findOne({rollNumber: roll});
+    console.log(userUpdated);
+    if(existingUser && !userUpdated){
+        const courses = await fetchCourses(userFromToken.data.surname);
+        existingUser.courses = courses;
+        await existingUser.save();
+        const newUpdation = new UserUpdate({rollNumber: roll});
+        await newUpdation.save();
     }
 
     const token = existingUser.generateJWT();

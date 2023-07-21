@@ -11,7 +11,7 @@ import catchAsync from "./utils/catchAsync.js";
 import User from "./modules/user/user.model.js";
 import ua from "express-useragent";
 import http from "http";
-
+import fs from 'fs'
 import connectDatabase from "./services/connectDB.js";
 connectDatabase();
 import onedriveRoutes from "./modules/onedrive/onedrive.routes.js";
@@ -50,13 +50,6 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/miscellaneous", miscellaneousRoutes);
 app.use("/api/timetable", timeTableRoutes);
 app.use("/api/codingweek", codingweekRoutes);
-// app.get("/api/admin/stats", (req, res) => {
-//     res.json({
-//         message: "Hello admin!",
-//         liveUserCount: userCount,
-//         totalUserCount: totalUserCount,
-//     });
-// });
 
 app.use(
     "/homepage",
