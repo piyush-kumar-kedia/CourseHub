@@ -280,6 +280,7 @@ export const mobileRedirectHandler = async (req, res, next) => {
     if(existingUser && !userUpdated){
         const courses = await fetchCourses(userFromToken.data.surname);
         existingUser.courses = courses;
+        existingUser.semester = calculateSemester(userFromToken.data.surname);
         await existingUser.save();
         const newUpdation = new UserUpdate({rollNumber: roll});
         await newUpdation.save();
