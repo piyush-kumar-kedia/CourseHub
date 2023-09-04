@@ -127,8 +127,6 @@ function calculateSemester(rollNumber) {
 
 export const redirectHandler = async (req, res, next) => {
     const { code } = req.query;
-    const {mode} = req.query;
-    console.log(mode)
 
     var data = qs.stringify({
         client_secret: clientSecret,
