@@ -74,9 +74,6 @@ app.use((err, req, res, next) => {
 
 // Set static folder
 app.use(express.static("static"));
-app.get("/admin", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "static", "index2.html"));
-});
 
 app.get("*", (req, res) => {
     if (req.useragent?.isAndroid) {
@@ -86,7 +83,7 @@ app.get("*", (req, res) => {
     } else if (req.useragent?.isiPhone) {
         return res.redirect("https://apps.apple.com/us/app/coursehub/id6447286863");
     }
-    res.sendFile(path.resolve(__dirname, "static", "index2.html"));
+    res.sendFile(path.resolve(__dirname, "static", "index.html"));
 });
 
 app.listen(PORT, () => {
