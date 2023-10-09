@@ -11,7 +11,7 @@ import catchAsync from "./utils/catchAsync.js";
 import User from "./modules/user/user.model.js";
 import ua from "express-useragent";
 import http from "http";
-import fs from 'fs'
+import fs from "fs";
 import connectDatabase from "./services/connectDB.js";
 connectDatabase();
 import onedriveRoutes from "./modules/onedrive/onedrive.routes.js";
@@ -37,7 +37,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(cookieParser());
-// app.use(cors());
+app.use(cors());
 app.use(ua.express());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -64,7 +64,7 @@ app.use(
 // Error handler
 app.use((err, req, res, next) => {
     logger.error(err.message);
-    // console.log(err);
+    console.log(err);
     const { status = 500, message = "Something went wrong!" } = err;
     return res.status(status).json({
         error: true,
@@ -74,6 +74,9 @@ app.use((err, req, res, next) => {
 
 // Set static folder
 app.use(express.static("static"));
+app.get("/admin", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "static", "index2.html"));
+});
 
 app.get("*", (req, res) => {
     if (req.useragent?.isAndroid) {
@@ -83,7 +86,7 @@ app.get("*", (req, res) => {
     } else if (req.useragent?.isiPhone) {
         return res.redirect("https://apps.apple.com/us/app/coursehub/id6447286863");
     }
-    res.sendFile(path.resolve(__dirname, "static", "index.html"));
+    res.sendFile(path.resolve(__dirname, "static", "index2.html"));
 });
 
 app.listen(PORT, () => {

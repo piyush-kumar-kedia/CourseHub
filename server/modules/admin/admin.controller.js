@@ -6,14 +6,23 @@ import {
     generateOTP,
 } from "../auth-admin/auth-admin.services.js";
 import CourseModel, { FileModel, FolderModel } from "../course/course.model.js";
+import Contribution from "../contribution/contribution.model.js";
 import { getAllCourseIds, visitCourseById } from "../onedrive/onedrive.routes.js";
 import SearchResults from "../search/search.model.js";
 import Admin, {
     adminValidationSchema,
+    approveContributionSchema,
     generateCodeValidaitionSchema,
     loginValidationSchema,
     makeCourseValidationSchema,
 } from "./admin.model.js";
+import {
+    createCourseStructure,
+    getFolderIdByName,
+    getFolderVisitLink,
+    moveAllFolderFiles,
+    moveFile,
+} from "./admin.utils.js";
 
 async function createAdmin(req, res, next) {
     const { body } = req;
@@ -65,9 +74,9 @@ async function login(req, res, next) {
         return next(new AppError(400, error.details));
     }
     const user = await Admin.findOne({ username: body.username });
-    if (!user) return next(new AppError(403, "Invalid OTP!"));
+    if (!user) return next(new AppError(403, "Invalid OTP! Alerting the admin."));
     const match = await verifyOTP(user.email, body.otp);
-    if (!match) return next(new AppError(403, "Invalid OTP!"));
+    if (!match) return next(new AppError(403, "Invalid OTP! Alerting the admin."));
     const token = await signAdminJWT(user._id.toString());
     return res.json({
         loginSuccessful: true,
@@ -86,7 +95,8 @@ async function getDBCourses(req, res, next) {
 }
 
 async function deleteCourseByCode(req, res, next) {
-    const { code } = req.params;
+    let { code } = req.params;
+    code = code.replaceAll(" ", "");
     const search = await SearchResults.findOne({ code: code.toLowerCase() });
     if (!search) return next(new AppError(400, "invalid course code"));
     await CourseModel.deleteOne({ code: code.toLowerCase() });
@@ -97,13 +107,14 @@ async function deleteCourseByCode(req, res, next) {
 }
 
 async function makeCourseById(req, res, next) {
-    const { body } = req;
+    let { body } = req;
     try {
         await makeCourseValidationSchema.validateAsync(body);
     } catch (error) {
         return next(new AppError(400, error.details));
     }
-    const { id, code } = body;
+    let { id, code } = body;
+    code = code.replaceAll(" ", "");
     const search = await SearchResults.findOne({ code: code.toLowerCase() });
     if (search) {
         await CourseModel.deleteOne({ code: code.toLowerCase() });
@@ -117,6 +128,108 @@ async function makeCourseById(req, res, next) {
     return res.json({ created: true });
 }
 
+async function uploadToFolder(req, res, next) {
+    let { body } = req;
+    try {
+        await approveContributionSchema.validateAsync(body);
+    } catch (error) {
+        return next(new AppError(400, error.details));
+    }
+    let { contributionId, toFolderId, courseCode } = body;
+    courseCode = courseCode.replaceAll(" ", "");
+    const _fromFolderId = await getFolderIdByName(contributionId);
+
+    const resp = await moveAllFolderFiles(_fromFolderId, toFolderId);
+    // mark contribution approved
+    const allCourses = await getAllCourseIds();
+
+    const courseIdObj = allCourses.find(
+        (course) => course.name.split("-")[0].trim().toLowerCase() === courseCode.toLowerCase()
+    );
+    const courseId = courseIdObj.id;
+    const search = await SearchResults.findOne({ code: courseCode.toLowerCase() });
+    if (search) {
+        await CourseModel.deleteOne({ code: courseCode.toLowerCase() });
+        await FolderModel.deleteMany({ course: courseCode.toLowerCase() });
+        await FileModel.deleteMany({
+            course: `${courseCode.toLowerCase()} - ${search.name.toLowerCase()}`,
+        });
+        await SearchResults.updateOne({ code: courseCode.toLowerCase() }, { isAvailable: false });
+    }
+    await visitCourseById(courseId);
+    await Contribution.updateOne({ contributionId: contributionId }, { approved: true });
+    return res.json({ approved: true });
+}
+
+async function getCourseFolder(req, res, next) {
+    let { code } = req.params;
+    code = code.replaceAll(" ", "");
+    const existingCourse = await CourseModel.findOne({ code: code.toLowerCase() })
+        .populate({
+            path: "children",
+            select: "-__v",
+            populate: {
+                path: "children",
+                select: "-__v",
+                populate: {
+                    strictPopulate: false,
+                    path: "children",
+                    select: "-__v",
+                    populate: {
+                        strictPopulate: false,
+                        path: "children",
+                        select: "-__v",
+                        populate: {
+                            strictPopulate: false,
+                            path: "children",
+                            select: "-__v",
+                            populate: {
+                                strictPopulate: false,
+                                path: "children",
+                                select: "-__v",
+                                populate: {
+                                    strictPopulate: false,
+                                    path: "children",
+                                    select: "-__v",
+                                    populate: {
+                                        strictPopulate: false,
+                                        path: "children",
+                                        select: "-__v",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        })
+        .select("-__v");
+    console.log(existingCourse);
+    if (!existingCourse) return next(new AppError(404, "Course not found"));
+    return res.json(existingCourse);
+}
+async function getFolderLink(req, res, next) {
+    const { folderName } = req.params;
+
+    const visitLink = await getFolderVisitLink(folderName);
+    return res.json({ link: visitLink });
+}
+async function getFolderId(req, res, next) {
+    const { folderName } = req.params;
+
+    const id = await getFolderIdByName(folderName);
+    return res.json({ id: id });
+}
+
+async function createNewCourseFolders(req, res, next) {
+    let courseCodeName = req.body.code;
+    if (!courseCodeName) return next(new AppError(500, "code-name required"));
+    const resp = await createCourseStructure(courseCodeName);
+    return res.json({
+        id: resp,
+    });
+}
+
 export default {
     createAdmin,
     getAdmin,
@@ -126,4 +239,9 @@ export default {
     getDBCourses,
     deleteCourseByCode,
     makeCourseById,
+    getCourseFolder,
+    uploadToFolder,
+    getFolderLink,
+    getFolderId,
+    createNewCourseFolders,
 };
