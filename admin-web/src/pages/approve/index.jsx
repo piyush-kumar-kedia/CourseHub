@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import useRequest from "../../hooks/useRequest";
 import FolderController from "./components/folder-controller";
 import axios from "axios";
+import serverBase from "../../serverBase";
 const ApprovePage = () => {
     const { id } = useParams();
     const [data, setData] = useState(null);
@@ -18,9 +19,7 @@ const ApprovePage = () => {
 
     const courseData = JSON.parse(sessionStorage.getItem("contributions"))[id];
     const { doRequest, errors } = useRequest({
-        url: `http://localhost:8080/api/course/${courseData.courseCode
-            .replaceAll(" ", "")
-            .toLowerCase()}`,
+        url: `${serverBase}/api/course/${courseData.courseCode.replaceAll(" ", "").toLowerCase()}`,
         method: "get",
     });
 
@@ -35,7 +34,7 @@ const ApprovePage = () => {
     async function finalApprove(contributionId, toFolderId) {
         try {
             const resp = await axios.post(
-                "http://localhost:8080/api/admin/contribution/approve",
+                `${serverBase}/api/admin/contribution/approve`,
                 {
                     contributionId,
                     toFolderId,
@@ -71,7 +70,7 @@ const ApprovePage = () => {
             if (!cons) return;
             setcreatingFolders(true);
             const resp = await axios.post(
-                "http://localhost:8080/api/admin/contribution/bootstrapnewcourse",
+                `${serverBase}/api/admin/contribution/bootstrapnewcourse`,
                 {
                     code: `${courseData.courseCode.toUpperCase()} - ${courseName}`,
                 },

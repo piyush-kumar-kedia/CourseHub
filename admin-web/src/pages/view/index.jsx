@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import serverBase from "../../serverBase";
 
 const ViewPage = () => {
     const { id } = useParams();
@@ -13,7 +14,7 @@ const ViewPage = () => {
         try {
             setLoading(true);
             const resp = await axios.get(
-                `http://localhost:8080/api/admin/contribution/visit/${folderName}`,
+                `${serverBase}/api/admin/contribution/visit/${folderName}`,
                 {
                     headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
                 }
@@ -29,7 +30,7 @@ const ViewPage = () => {
 
     async function deleteContribution(cid) {
         try {
-            const resp = await axios.delete(`http://localhost:8080/api/contribution/${cid}`, {
+            const resp = await axios.delete(`${serverBase}/api/contribution/${cid}`, {
                 headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
             });
             console.log(resp);
