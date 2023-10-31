@@ -5,7 +5,7 @@ export default {
     mongoURI: process.env.MONGO_URI,
     // clientURL: process.env.CLIENT_URL,
     clientURL: "https://www.coursehubiitg.in",
-    mobileURL: process.env.MOBILE_URL,
+    mobileURL: "coursehub",
     jwtSecret: process.env.JWT_SECRET,
     aesKey: process.env.AESKEY,
     adminJwtSecret: "32rytfhgv456ryt43ertfgy45rtfhh",
