@@ -28,6 +28,7 @@ router.get(
     isAdmin,
     // isAuthenticated,
     catchAsync(async (req, res, next) => {
+        await TimeTable.deleteMany({});
         data.map(async (roomInfo) => await TimeTable.create(roomInfo));
         console.log("done");
         res.json(data);
@@ -103,7 +104,7 @@ router.get(
             }
             // console.log(toReturn);
         }
-        return res.json({ data: toReturn, date: "18th Sept-24th Sept",exam:"Mid-Semester"});
+        return res.json({ data: toReturn, date: "19th Nov-25th Nov", exam: "End-Semester" });
     })
 );
 
