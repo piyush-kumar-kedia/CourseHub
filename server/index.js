@@ -23,6 +23,7 @@ import adminRoutes from "./modules/admin/admin.routes.js";
 import timeTableRoutes from "./modules/timetable/timetable.routes.js";
 import miscellaneousRoutes from "./modules/miscellaneous/miscellaneous.routes.js";
 import codingweekRoutes from "./modules/codingweek/codingweek.routes.js";
+import syllabusRoutes from "./modules/syllabus/syllabus.routes.js";
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/miscellaneous", miscellaneousRoutes);
 app.use("/api/timetable", timeTableRoutes);
 app.use("/api/codingweek", codingweekRoutes);
+app.use("/api/syllabus",syllabusRoutes);
 
 app.use(
     "/homepage",
