@@ -1,40 +1,11 @@
 import {Router} from "express";
 import catchAsync from "../../utils/catchAsync.js";
-import Attendence from "./attendence.model.js";
-import User from "../user/user.model.js";
-const router=Router();
-router.get('/',
-    async(req,res,next)=>{
-        const {token}=req.cookies;
-        const getUser=User.findByJWT(token);
-        if(!getUser) return next(new AppError(403, "User not found"));
-        try{
-            const attendence=await Attendence.find({user:getUser._id});
-            return res.json(attendence);
-        }catch(e){
-            res.json({message:e.message})
-        }
-})
+import attendenceController from "./attendence.controller.js";
+import isAuthenticated from "../../middleware/isAuthenticated.js";
 
-router.post('/',async(req,res,next)=>{
-    const {token}=req.cookies;
-    const getUser=User.findByJWT(token);
-    if(!getUser) return next(new AppError(403, "User not found"));
-    try{
-        const {courseCode,course,classAttended,totalClass,percentageCompulsory}=req.body;
-        const attendence=new Attendence({
-            user:getUser._id,
-            course,
-            courseCode,
-            classAttended,
-            totalClass,
-            percentageCompulsory,
-        })
-        await attendence.save();
-        res.json(attendence);
-    }catch(e){
-        res.json({message:e.message})
-    }
-})
+const router=Router();
+
+router.get('/',isAuthenticated,catchAsync(attendenceController.getAttendence));
+router.post('/',isAuthenticated,catchAsync(attendenceController.postAttendence));
 
 export default router;
