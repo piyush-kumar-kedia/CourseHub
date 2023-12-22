@@ -24,6 +24,8 @@ import timeTableRoutes from "./modules/timetable/timetable.routes.js";
 import miscellaneousRoutes from "./modules/miscellaneous/miscellaneous.routes.js";
 import codingweekRoutes from "./modules/codingweek/codingweek.routes.js";
 import syllabusRoutes from "./modules/syllabus/syllabus.routes.js";
+import attendenceRoutes from "./modules/attendence/attendence.routes.js";
+import scheduleRoutes from "./modules/schedule/schedule.routes.js";
 
 const app = express();
 
@@ -52,6 +54,8 @@ app.use("/api/miscellaneous", miscellaneousRoutes);
 app.use("/api/timetable", timeTableRoutes);
 app.use("/api/codingweek", codingweekRoutes);
 app.use("/api/syllabus",syllabusRoutes);
+app.use("/api/attendence",attendenceRoutes);
+app.use("/api/schedule",scheduleRoutes);
 
 app.use(
     "/homepage",
