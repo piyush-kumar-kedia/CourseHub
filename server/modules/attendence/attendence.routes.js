@@ -12,7 +12,7 @@ router.get('/',
             const attendence=await Attendence.find({user:getUser._id});
             return res.json(attendence);
         }catch(e){
-            
+            res.json({message:e.message})
         }
 })
 
@@ -31,8 +31,9 @@ router.post('/',async(req,res,next)=>{
             percentageCompulsory,
         })
         await attendence.save();
+        res.json(attendence);
     }catch(e){
-
+        res.json({message:e.message})
     }
 })
 

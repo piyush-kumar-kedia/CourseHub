@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const ScheduleSchema=mongoose.Schema({
     courseName:{type:String},
-    startTime:{type:String},
-    endTime:{type:String},
+    startTime:{type:Date},
+    endTime:{type:Date},
     classLocation:{type:String},
     branch:{type:String},
     semester:{type:String},
