@@ -1,11 +1,11 @@
 export default {
-    currentYear: "2023",
-    sessionIncluesMonth: "July",
+    currentYear: "2024",
+    sessionIncluesMonth: "Jan",
     semesterMap: {
-        23: 1,
-        22: 3,
-        21: 5,
-        20: 7,
-        19: 8,
+        23: 2,
+        22: 4,
+        21: 6,
+        20: 8,
+        19: 9,
     },
 };
