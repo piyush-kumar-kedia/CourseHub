@@ -10,7 +10,7 @@ async function isAdmin(req, res, next) {
     // const admin = await Admin.findById(decoded);
     // if (!admin) return next(new AppError(403, "Not Authorized!"));
     if (!check) return next(new AppError(403, "Not Authorized!"));
-    req.user = admin;
+    // req.user = admin;
     return next();
 }
 export default isAdmin;
