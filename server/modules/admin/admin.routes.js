@@ -29,6 +29,7 @@ router.get("/course/:code", isAdmin, catchAsync(adminController.getCourseFolder)
 router.post("/contribution/approve", isAdmin, catchAsync(adminController.uploadToFolder));
 router.get("/contribution/visit/:folderName", isAdmin, catchAsync(adminController.getFolderLink));
 router.get("/contribution/id/:folderName", isAdmin, catchAsync(adminController.getFolderId));
+router.post("/contribution/markapproved", isAdmin, catchAsync(adminController.markApproved));
 router.post(
     "/contribution/bootstrapnewcourse",
     isAdmin,

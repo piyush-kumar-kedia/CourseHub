@@ -230,6 +230,16 @@ async function createNewCourseFolders(req, res, next) {
     });
 }
 
+async function markApproved(req, res, next) {
+    let contri_id = req.body.id;
+    if (!contri_id) return next(new AppError(400, "Invalid request"));
+    const contribution = await Contribution.findOne({ contributionId: contri_id });
+    if (!contribution) return next(new AppError(400, "Invalid Id"));
+    contribution.approved = true;
+    await contribution.save();
+    return res.json("approved");
+}
+
 export default {
     createAdmin,
     getAdmin,
@@ -244,4 +254,5 @@ export default {
     getFolderLink,
     getFolderId,
     createNewCourseFolders,
+    markApproved,
 };
