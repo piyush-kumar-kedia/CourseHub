@@ -40,7 +40,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+// app.use(cors());
 app.use(ua.express());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -53,9 +53,9 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/miscellaneous", miscellaneousRoutes);
 app.use("/api/timetable", timeTableRoutes);
 app.use("/api/codingweek", codingweekRoutes);
-app.use("/api/syllabus",syllabusRoutes);
-app.use("/api/attendence",attendenceRoutes);
-app.use("/api/schedule",scheduleRoutes);
+app.use("/api/syllabus", syllabusRoutes);
+app.use("/api/attendence", attendenceRoutes);
+app.use("/api/schedule", scheduleRoutes);
 
 app.use(
     "/homepage",
