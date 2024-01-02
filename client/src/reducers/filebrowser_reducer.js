@@ -33,7 +33,7 @@ const FileBrowserReducer = (
             ) {
                 arr.push(action.payload.currentCourse);
             }
-            localStorage.setItem("AllCourses", JSON.stringify(arr));
+            sessionStorage.setItem("AllCourses", JSON.stringify(arr));
             return {
                 ...state,
                 allCourseData: [...arr],

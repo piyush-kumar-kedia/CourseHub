@@ -73,9 +73,9 @@ const Dashboard = () => {
     useEffect(() => {
         sessionStorage.removeItem("LocalCourses");
         dispatch(ClearLocalCourses());
-        if (localStorage.getItem("AllCourses") !== null) {
+        if (sessionStorage.getItem("AllCourses") !== null) {
             try {
-                dispatch(LoadCourses(JSON.parse(localStorage.getItem("AllCourses"))));
+                dispatch(LoadCourses(JSON.parse(sessionStorage.getItem("AllCourses"))));
             } catch (error) {
                 dispatch(LoadCourses([]));
                 console.log("load error");

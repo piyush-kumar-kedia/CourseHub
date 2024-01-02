@@ -42,9 +42,9 @@ const BrowseScreen = () => {
     const fb = useSelector((state) => state.fileBrowser);
 
     useEffect(() => {
-        if (localStorage.getItem("AllCourses") !== null) {
+        if (sessionStorage.getItem("AllCourses") !== null) {
             try {
-                dispatch(LoadCourses(JSON.parse(localStorage.getItem("AllCourses"))));
+                dispatch(LoadCourses(JSON.parse(sessionStorage.getItem("AllCourses"))));
             } catch (error) {
                 dispatch(LoadCourses([]));
                 // console.log("load error");
@@ -75,13 +75,13 @@ const BrowseScreen = () => {
     useEffect(() => {
         if (loading || !code) return;
         const run = async () => {
-            let localStorageCourses = null;
+            let sessionStorageCourses = null;
             let fetchedData = null;
 
             try {
-                localStorageCourses = JSON.parse(localStorage.getItem("AllCourses"));
+                sessionStorageCourses = JSON.parse(sessionStorage.getItem("AllCourses"));
             } catch (error) {
-                localStorageCourses = null;
+                sessionStorageCourses = null;
             }
 
             let currCourse = null;
@@ -90,15 +90,15 @@ const BrowseScreen = () => {
                     (course) => course.code?.toLowerCase() === code?.toLowerCase()
                 );
             } catch (error) {
-                localStorage.removeItem("AllCourses");
+                sessionStorage.removeItem("AllCourses");
                 location.reload();
             }
-            const present = localStorageCourses?.find(
+            const present = sessionStorageCourses?.find(
                 (course) => course.code?.toLowerCase() === code.toLowerCase()
             );
             let root = [];
             if (present || currCourse) {
-                // console.log("found in localstorage");
+                // console.log("found in sessionStorage");
                 fetchedData = present;
                 // console.log(fetchedData);
                 root = fetchedData;

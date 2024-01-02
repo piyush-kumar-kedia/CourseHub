@@ -31,25 +31,25 @@ const Collapsible = ({ course, color, state }) => {
 
     const getCurrentCourse = async (code) => {
         let currCourse = null;
-        let inLocalStorage = null;
+        let insessionStorage = null;
         try {
             currCourse = allCourseData.find(
                 (course) => course.code.toLowerCase() === code.toLowerCase()
             );
         } catch (error) {
-            localStorage.removeItem("AllCourses");
+            sessionStorage.removeItem("AllCourses");
             location.reload();
         }
         try {
-            const allLocal = JSON.parse(localStorage.getItem("AllCourses"));
-            inLocalStorage = allLocal?.find(
+            const allLocal = JSON.parse(sessionStorage.getItem("AllCourses"));
+            insessionStorage = allLocal?.find(
                 (course) => course.code.toLowerCase() === code.toLowerCase()
             );
         } catch (error) {
-            localStorage.removeItem("AllCourses");
+            sessionStorage.removeItem("AllCourses");
             location.reload();
         }
-        if (currCourse || inLocalStorage) {
+        if (currCourse || insessionStorage) {
             // console.log("Already present...");
         }
         if (!currCourse) {
