@@ -1,3 +1,4 @@
+import AppError from "../../utils/appError.js";
 import User, { RemoveCourse } from "./user.model.js";
 import { addToFavourites, removeFromFavourites, AddNewCourse } from "./user.model.js";
 import { updateUserData } from "./user.model.js";
@@ -49,4 +50,11 @@ export const removeFromFavouritesController = async (req, res, next) => {
     //validate
     const updatedUser = await removeFromFavourites(req.user._id, id);
     return res.status(200).json(updatedUser);
+};
+export const updateDeviceToken = async (req, res, next) => {
+    const user = req.user;
+    const { deviceToken } = req.body;
+    if (!deviceToken) return next(new AppError("Invalid device token"));
+    await User.findByIdAndUpdate(user._id, { deviceToken: deviceToken });
+    return res.json({ status: 200 });
 };
