@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import Joi, { required } from "joi";
+import Joi from "joi";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import config from "../../config/default.js";
@@ -24,7 +24,7 @@ const userSchema = Schema({
             code: { type: String },
         },
     ],
-    deviceToken: { type: String, required: false, default: "" },
+    deviceToken: { type: String, default: "" },
 });
 
 userSchema.methods.generateJWT = function () {
