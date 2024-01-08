@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import Joi from "joi";
+import Joi, { required } from "joi";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import config from "../../config/default.js";
@@ -24,13 +24,18 @@ const userSchema = Schema({
             code: { type: String },
         },
     ],
+    deviceToken: { type: String, required: false, default: "" },
 });
 
 userSchema.methods.generateJWT = function () {
     var user = this;
-    var token = jwt.sign({ user: user._id, serverVersion: config.serverVersion }, config.jwtSecret, {
-        expiresIn: "24d",
-    });
+    var token = jwt.sign(
+        { user: user._id, serverVersion: config.serverVersion },
+        config.jwtSecret,
+        {
+            expiresIn: "24d",
+        }
+    );
     return token;
 };
 
@@ -40,8 +45,8 @@ userSchema.statics.findByJWT = async function (token) {
         var decoded = jwt.verify(token, config.jwtSecret);
         const id = decoded.user;
         const SV = decoded.serverVersion;
-        if(!SV) return false;
-        if(SV !== config.serverVersion) return false;
+        if (!SV) return false;
+        if (SV !== config.serverVersion) return false;
         const fetchedUser = user.findOne({ _id: id });
         if (!fetchedUser) return false;
         return fetchedUser;
