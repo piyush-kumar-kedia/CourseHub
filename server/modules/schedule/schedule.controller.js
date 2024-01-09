@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import Schedule from "./schedule.model.js";
 
+
 class scheduleController{
     async getSchedule(req,res,next){
-        const user=req.User;
+        const userCourses=req.user.courses;
         const days=['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
         const date=new Date(req.params.date);
 
@@ -33,11 +34,28 @@ class scheduleController{
                   }
                 }
               }
-        ]}).select('classDetails course -_id');
+        ]}).select('classDetails -_id').populate({
+            path: 'course',
+            match: {
+                code: {
+                  $in: userCourses.map(course => course.code.toLowerCase()),
+                },
+            },
+            select: 'code -_id',
+          });
 
-       
+        const filteredSchedules = schedules.filter(schedule => schedule.course);
 
-        res.status(200).json(schedules);
+        const schedulesWithUserCourses = filteredSchedules.map(schedule => {
+            const userCourse = userCourses.find(course => course.code === schedule.course.code.toUpperCase());
+            const { course, ...scheduleWithoutCourse } = schedule.toObject();
+            return {
+              ...scheduleWithoutCourse ,
+              userCourse,
+            };
+          })
+
+        res.status(200).json(schedulesWithUserCourses);
 
         
     }
