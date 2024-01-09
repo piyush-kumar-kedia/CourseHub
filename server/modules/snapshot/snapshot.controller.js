@@ -2,7 +2,7 @@ import AppError from "../../utils/appError.js";
 import UserSnapshot from "./snapshot.model.js";
 
 export const createUserSnapshotHelper = async (user) => {
-    await UserSnapshot.deleteMany({ _id: user._id });
+    await UserSnapshot.deleteMany({ email: user.email });
     const newSnapshot = new UserSnapshot({
         name: user.name,
         email: user.email,
@@ -28,12 +28,15 @@ export const getUserDifference = async (req, res, next) => {
         getFavIdArr(user.favourites)
     );
     await createUserSnapshotHelper(user);
+    let data = {};
+
     return res.json({
         message: "Snapshot found!",
         coursesAdded,
         coursesDeleted,
         favouritesAdded,
         favouritesDeleted,
+        data,
     });
 };
 
