@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 const UserSnapshotSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    courses: { type: Array, default: [], required: true },
+    email: { type: String, required: true },
+    courses: { type: Array, default: [] },
     favourites: [
         {
             name: { type: String },

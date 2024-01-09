@@ -6,6 +6,6 @@ const router = Router();
 import isAuthenticated from "../../middleware/isAuthenticated.js";
 import { getUserDifference } from "./snapshot.controller.js";
 
-router.get("/userdiff", isAuthenticated, catchAsync(getUserDifference));
+router.get("/diff/user", isAuthenticated, catchAsync(getUserDifference));
 
 export default router;
