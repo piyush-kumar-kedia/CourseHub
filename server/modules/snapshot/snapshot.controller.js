@@ -1,4 +1,5 @@
 import AppError from "../../utils/appError.js";
+import CourseModel from "../course/course.model.js";
 import UserSnapshot from "./snapshot.model.js";
 
 export const createUserSnapshotHelper = async (user) => {
@@ -17,7 +18,12 @@ export const getUserDifference = async (req, res, next) => {
     const userSnapshot = await UserSnapshot.findOne({ email: user.email });
 
     if (!userSnapshot) {
-        return res.json({ message: "No snapshots found!", courseDiff: [], favouritesDiff: [] });
+        return res.json({
+            message: "No snapshots found!",
+            courseDiff: [],
+            favouritesDiff: [],
+            requiresUpdate: false,
+        });
     }
     let [coursesAdded, coursesDeleted] = getDifferenceHelper(
         getCourseCodeArr(userSnapshot.courses),
@@ -27,15 +33,43 @@ export const getUserDifference = async (req, res, next) => {
         getFavIdArr(userSnapshot.favourites),
         getFavIdArr(user.favourites)
     );
-    await createUserSnapshotHelper(user);
+
+    let clientDate = userSnapshot.createdAt;
+
+    let coursesArr = getCourseCodeArr(user.courses);
+
+    const updatedCourses = await CourseModel.find({
+        $and: [{ code: { $in: coursesArr } }, { updatedAt: { $gte: clientDate } }],
+    });
+
+    const addedCourses = await CourseModel.find({ code: { $in: coursesAdded } });
+
     let data = {};
+
+    const updatedCoursesArr = getCourseCodeArr(updatedCourses);
+
+    updatedCourses.map((course) => {
+        data[course.code] = course;
+    });
+    addedCourses.map((course) => {
+        data[course.code] = course;
+    });
+
+    const requiresUpdate =
+        coursesAdded.length ||
+        coursesDeleted.length ||
+        favouritesAdded.length ||
+        updatedCoursesArr.length ||
+        favouritesDeleted.length;
 
     return res.json({
         message: "Snapshot found!",
+        requiresUpdate: requiresUpdate > 0 ? true : false,
         coursesAdded,
         coursesDeleted,
         favouritesAdded,
         favouritesDeleted,
+        updatedCourses: updatedCoursesArr,
         data,
     });
 };
@@ -68,7 +102,7 @@ function getDifferenceHelper(clientArr, serverArr) {
 
 function getCourseCodeArr(courses) {
     let ret = [];
-    courses.map((c) => ret.push(c.code));
+    courses.map((c) => ret.push(c.code.toLowerCase()));
     return ret;
 }
 
@@ -77,3 +111,9 @@ function getFavIdArr(favs) {
     favs.map((c) => ret.push(c.id));
     return ret;
 }
+
+export const updateUserSnapshot = async (req, res, next) => {
+    const user = req.user;
+    await createUserSnapshotHelper(user);
+    res.json({ updatedUser: true });
+};
