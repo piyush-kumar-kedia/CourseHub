@@ -40,9 +40,87 @@ export const getUserDifference = async (req, res, next) => {
 
     const updatedCourses = await CourseModel.find({
         $and: [{ code: { $in: coursesArr } }, { updatedAt: { $gte: clientDate } }],
-    });
+    })
+        .populate({
+            path: "children",
+            select: "-__v",
+            populate: {
+                path: "children",
+                select: "-__v",
+                populate: {
+                    strictPopulate: false,
+                    path: "children",
+                    select: "-__v",
+                    populate: {
+                        strictPopulate: false,
+                        path: "children",
+                        select: "-__v",
+                        populate: {
+                            strictPopulate: false,
+                            path: "children",
+                            select: "-__v",
+                            populate: {
+                                strictPopulate: false,
+                                path: "children",
+                                select: "-__v",
+                                populate: {
+                                    strictPopulate: false,
+                                    path: "children",
+                                    select: "-__v",
+                                    populate: {
+                                        strictPopulate: false,
+                                        path: "children",
+                                        select: "-__v",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        })
+        .select("-__v");
 
-    const addedCourses = await CourseModel.find({ code: { $in: coursesAdded } });
+    const addedCourses = await CourseModel.find({ code: { $in: coursesAdded } })
+        .populate({
+            path: "children",
+            select: "-__v",
+            populate: {
+                path: "children",
+                select: "-__v",
+                populate: {
+                    strictPopulate: false,
+                    path: "children",
+                    select: "-__v",
+                    populate: {
+                        strictPopulate: false,
+                        path: "children",
+                        select: "-__v",
+                        populate: {
+                            strictPopulate: false,
+                            path: "children",
+                            select: "-__v",
+                            populate: {
+                                strictPopulate: false,
+                                path: "children",
+                                select: "-__v",
+                                populate: {
+                                    strictPopulate: false,
+                                    path: "children",
+                                    select: "-__v",
+                                    populate: {
+                                        strictPopulate: false,
+                                        path: "children",
+                                        select: "-__v",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        })
+        .select("-__v");
 
     let data = {};
 
