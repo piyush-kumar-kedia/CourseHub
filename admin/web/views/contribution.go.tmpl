@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"
+            integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+            integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <title>{{if .PageTitle}}{{.PageTitle}}{{else}}CourseHub Admin{{ end }}</title>
+    </head>
+    <body>
+        <div class="ui container" style="margin-top: 12px">
+            <div class="ui menu">
+                <div class="header item">CourseHub Admin</div>
+                <a class="item" href="http://www.coursehubiitg.in">Site </a>
+            </div>
+            <a href="/">Back</a>
+            <h1>Contribution</h1>
+            <div class="ui negative message" id="approve-error-msg">
+                <div class="header">Failed to approve.</div>
+                <p>Please try again</p>
+            </div>
+            <table class="ui celled table">
+                <tbody>
+                    <tr>
+                        <td data-label="Age">ContributionId</td>
+                        <td data-label="Name">{{.Data.Contribution.ContributionId}}</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Name">Approved</td>
+                        <td data-label="Age">
+                            {{if .Data.Contribution.Approved}} {{.Data.Contribution.Approved}}
+                            {{else}}
+                            <button
+                                class="ui button secondary"
+                                id="approve-btn"
+                                c_id="{{.Data.Contribution.ContributionId}}"
+                            >
+                                Mark As Approved
+                            </button>
+                            {{ end }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-label="Name">Year</td>
+                        <td data-label="Age">{{.Data.Contribution.Year}}</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Name">Course</td>
+                        <td data-label="Age">{{.Data.Contribution.CourseCode}}</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Name">Description</td>
+                        <td data-label="Age">{{.Data.Contribution.Description}}</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Name">Folder</td>
+                        <td data-label="Age">{{.Data.Contribution.Folder}}</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Name">Uploaded By</td>
+                        <td data-label="Age">{{.Data.Contribution.UploadedBy}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h4>Files</h4>
+            <a href="/upload/{{.Data.Contribution.ContributionId}}">
+                <button class="ui button primary">Upload Files</button>
+            </a>
+            <table class="ui celled table">
+                <tbody>
+                    {{range $key, $value := .Data.Files}}
+                    <tr>
+                        <td data-label="Age">{{ $value.Name }}</td>
+
+                        <td data-label="Name">
+                            <a href="{{ $value.WebUrl }}" target="_blank">
+                                <button class="ui button secondary">Verify</button>
+                            </a>
+                        </td>
+                    </tr>
+                    {{
+                        end
+                    }}
+                </tbody>
+            </table>
+        </div>
+        <script>
+            const url = new URL(window.location.href);
+            let approved = url.searchParams.get("approve");
+            let approveErr = document.getElementById("approve-error-msg");
+            approveErr.style.display = "none";
+
+            if (approved == "false") {
+                approveErr.style.display = "block";
+            }
+
+            let approveBtn = document.getElementById("approve-btn");
+            let contributionId = approveBtn.getAttribute("c_id");
+            approveBtn.addEventListener("click", handleApprove);
+
+            function handleApprove() {
+                approveBtn.disabled = true;
+                approveBtn.innerHTML = "Processing...";
+                let d = {
+                    id: contributionId,
+                };
+
+                console.log(d);
+                fetch("/approve", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(d),
+                })
+                    .then((resp) => {
+                        if (resp.status !== 200) {
+                            window.location = url.pathname + "?approve=false";
+                        } else {
+                            window.location = url.pathname + "?approve=true";
+                        }
+                    })
+                    .catch((e) => {
+                        window.location = url.pathname + "?approve=false";
+                    });
+            }
+        </script>
+    </body>
+</html>
