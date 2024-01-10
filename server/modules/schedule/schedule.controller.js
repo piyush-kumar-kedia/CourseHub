@@ -13,7 +13,6 @@ class scheduleController{
         const startOfDay = new Date(date.toISOString().slice(0,10));
         const endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 2, 0, 0, 0, 0);
         const endOfDay=new Date(endTime.toISOString().slice(0,10));
-        
 
         const schedules=await Schedule.find({$or:[
             {$and:[
@@ -34,7 +33,7 @@ class scheduleController{
                   }
                 }
               }
-        ]}).select('classDetails -_id').populate({
+        ]}).select('classDetails classAdded -_id').populate({
             path: 'course',
             match: {
                 code: {
@@ -49,9 +48,14 @@ class scheduleController{
         const schedulesWithUserCourses = filteredSchedules.map(schedule => {
             const userCourse = userCourses.find(course => course.code === schedule.course.code.toUpperCase());
             const { course, ...scheduleWithoutCourse } = schedule.toObject();
+            const filteredClassAdded = schedule.classAdded.filter(classInfo => {
+                const classDate = new Date(classInfo.startDateTime);
+                return classDate >= startOfDay && classDate < endOfDay;
+              });
             return {
               ...scheduleWithoutCourse ,
               userCourse,
+              classAdded: filteredClassAdded,
             };
           })
 
