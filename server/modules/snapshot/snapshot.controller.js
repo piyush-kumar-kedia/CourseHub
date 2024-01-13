@@ -175,6 +175,7 @@ function getDifferenceHelper(clientArr, serverArr) {
     let deleted = [];
     serverSet.forEach((code) => added.push(code));
     clientSet.forEach((code) => deleted.push(code));
+    await updateUserSnapshot(req,res,next);
     return [added, deleted];
 }
 
