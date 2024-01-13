@@ -58,3 +58,16 @@ export const updateDeviceToken = async (req, res, next) => {
     await User.findByIdAndUpdate(user._id, { deviceToken: deviceToken });
     return res.json({ status: 200 });
 };
+
+export const getFavouritesController = async (req, res, next) => {
+
+    const user = req.user;
+    const foundUser = await User.findById(user._id);
+
+    if (!foundUser) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.status(200).json({ favourites: foundUser.favourites });
+
+};

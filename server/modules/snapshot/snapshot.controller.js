@@ -34,6 +34,9 @@ export const getUserDifference = async (req, res, next) => {
         getFavIdArr(user.favourites)
     );
 
+    let isFavouriteUpdated = favouritesAdded.length > 0 || favouritesDeleted.length > 0;
+
+
     let clientDate = userSnapshot.createdAt;
 
     let coursesArr = getCourseCodeArr(user.courses);
@@ -147,9 +150,8 @@ export const getUserDifference = async (req, res, next) => {
         requiresUpdate: requiresUpdate > 0 ? true : false,
         coursesAdded,
         coursesDeleted,
-        favouritesAdded,
-        favouritesDeleted,
         updatedCourses: updatedCoursesArr,
+        isFavouriteUpdated,
         data,
     });
 

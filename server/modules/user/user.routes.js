@@ -8,6 +8,8 @@ import {
     addNewCourse,
     deleteCourse,
     updateDeviceToken,
+    getFavouritesController,
+
 } from "./user.controller.js";
 import catchAsync from "../../utils/catchAsync.js";
 const router = Router();
@@ -22,6 +24,7 @@ router.get("/", isAuthenticated, catchAsync(getUser));
 router.post("/", validate(validateUser), catchAsync(createUser));
 router.put("/update", isAuthenticated, catchAsync(updateUserController));
 
+router.get("/favourites", isAuthenticated, catchAsync(getFavouritesController));
 router.post("/favourites", isAuthenticated, catchAsync(addToFavouriteController));
 
 router.delete("/favourites/:id", isAuthenticated, catchAsync(removeFromFavouritesController));
