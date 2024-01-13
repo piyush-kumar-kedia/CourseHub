@@ -140,6 +140,7 @@ export const getUserDifference = async (req, res, next) => {
         updatedCoursesArr.length ||
         favouritesDeleted.length;
 
+    await updateUserSnapshot(req, res, next);
     return res.json({
         message: "Snapshot found!",
         requiresUpdate: requiresUpdate > 0 ? true : false,
@@ -150,6 +151,7 @@ export const getUserDifference = async (req, res, next) => {
         updatedCourses: updatedCoursesArr,
         data,
     });
+
 };
 
 function getDifferenceHelper(clientArr, serverArr) {
@@ -175,7 +177,6 @@ function getDifferenceHelper(clientArr, serverArr) {
     let deleted = [];
     serverSet.forEach((code) => added.push(code));
     clientSet.forEach((code) => deleted.push(code));
-    await updateUserSnapshot(req,res,next);
     return [added, deleted];
 }
 
