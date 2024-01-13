@@ -16,5 +16,14 @@ const UserSnapshotSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+const OriginalCourseSnapshotSchema = new mongoose.Schema({
+    email: { type: String, required: true },
+    courses: { type: Array, default: [] },
+});
+
 const UserSnapshot = mongoose.model("user-snapshot", UserSnapshotSchema);
+export const OriginalCoursesSnapshot = mongoose.model(
+    "originalcourse-snapshot",
+    OriginalCourseSnapshotSchema
+);
 export default UserSnapshot;

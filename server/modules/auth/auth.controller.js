@@ -21,7 +21,10 @@ import EncryptText from "../../utils/encryptAES.js";
 import { getRandomColor } from "../../utils/generateRandomColor.js";
 import academicdata from "../../config/academic.js";
 import { UserUpdate } from "../miscellaneous/miscellaneous.model.js";
-import { createUserSnapshotHelper } from "../snapshot/snapshot.controller.js";
+import {
+    createCourseSnapshotOnce,
+    createUserSnapshotHelper,
+} from "../snapshot/snapshot.controller.js";
 
 //not used
 export const loginHandler = (req, res) => {
@@ -204,6 +207,7 @@ export const redirectHandler = async (req, res, next) => {
     }
 
     const token = existingUser.generateJWT();
+    await createCourseSnapshotOnce(existingUser);
 
     res.cookie("token", token, {
         maxAge: 2073600000,
@@ -290,6 +294,7 @@ export const mobileRedirectHandler = async (req, res, next) => {
 
     const token = existingUser.generateJWT();
     await createUserSnapshotHelper(existingUser);
+    await createCourseSnapshotOnce(existingUser);
     //     const encryptedToken = EncryptText(token);
 
     return res.redirect(`${appConfig.mobileURL}://success?token=${token}`);
