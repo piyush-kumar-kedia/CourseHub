@@ -195,5 +195,5 @@ function getFavIdArr(favs) {
 export const updateUserSnapshot = async (req, res, next) => {
     const user = req.user;
     await createUserSnapshotHelper(user);
-    res.json({ updatedUser: true });
+
 };
