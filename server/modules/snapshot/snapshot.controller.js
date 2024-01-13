@@ -140,7 +140,8 @@ export const getUserDifference = async (req, res, next) => {
         updatedCoursesArr.length ||
         favouritesDeleted.length;
 
-    await updateUserSnapshot(req, res, next);
+    await createUserSnapshotHelper(user);
+
     return res.json({
         message: "Snapshot found!",
         requiresUpdate: requiresUpdate > 0 ? true : false,
@@ -192,8 +193,3 @@ function getFavIdArr(favs) {
     return ret;
 }
 
-export const updateUserSnapshot = async (req, res, next) => {
-    const user = req.user;
-    await createUserSnapshotHelper(user);
-
-};
