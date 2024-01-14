@@ -19,10 +19,11 @@ export const getUserDifference = async (req, res, next) => {
 
     if (!userSnapshot) {
         return res.json({
-            message: "No snapshots found!",
-            courseDiff: [],
-            favouritesDiff: [],
-            requiresUpdate: false,
+            coursesAdded: [],
+            coursesDeleted: [],
+            updatedCourses: [],
+            isFavouriteUpdated: false,
+
         });
     }
     let [coursesAdded, coursesDeleted] = getDifferenceHelper(
@@ -33,125 +34,25 @@ export const getUserDifference = async (req, res, next) => {
         getFavIdArr(userSnapshot.favourites),
         getFavIdArr(user.favourites)
     );
-
     let isFavouriteUpdated = favouritesAdded.length > 0 || favouritesDeleted.length > 0;
 
     let clientDate = userSnapshot.createdAt;
-
     let coursesArr = getCourseCodeArr(user.courses);
-
-    const updatedCourses = await CourseModel.find({
+    const updatedCoursesArr = await CourseModel.find({
         $and: [{ code: { $in: coursesArr } }, { updatedAt: { $gte: clientDate } }],
-    })
-        .populate({
-            path: "children",
-            select: "-__v",
-            populate: {
-                path: "children",
-                select: "-__v",
-                populate: {
-                    strictPopulate: false,
-                    path: "children",
-                    select: "-__v",
-                    populate: {
-                        strictPopulate: false,
-                        path: "children",
-                        select: "-__v",
-                        populate: {
-                            strictPopulate: false,
-                            path: "children",
-                            select: "-__v",
-                            populate: {
-                                strictPopulate: false,
-                                path: "children",
-                                select: "-__v",
-                                populate: {
-                                    strictPopulate: false,
-                                    path: "children",
-                                    select: "-__v",
-                                    populate: {
-                                        strictPopulate: false,
-                                        path: "children",
-                                        select: "-__v",
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        })
-        .select("-__v");
-
-    const addedCourses = await CourseModel.find({ code: { $in: coursesAdded } })
-        .populate({
-            path: "children",
-            select: "-__v",
-            populate: {
-                path: "children",
-                select: "-__v",
-                populate: {
-                    strictPopulate: false,
-                    path: "children",
-                    select: "-__v",
-                    populate: {
-                        strictPopulate: false,
-                        path: "children",
-                        select: "-__v",
-                        populate: {
-                            strictPopulate: false,
-                            path: "children",
-                            select: "-__v",
-                            populate: {
-                                strictPopulate: false,
-                                path: "children",
-                                select: "-__v",
-                                populate: {
-                                    strictPopulate: false,
-                                    path: "children",
-                                    select: "-__v",
-                                    populate: {
-                                        strictPopulate: false,
-                                        path: "children",
-                                        select: "-__v",
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        })
-        .select("-__v");
-
-    let data = {};
-
-    const updatedCoursesArr = getCourseCodeArr(updatedCourses);
-
-    updatedCourses.map((course) => {
-        data[course.code] = course;
-    });
-    addedCourses.map((course) => {
-        data[course.code] = course;
     });
 
-    const requiresUpdate =
-        coursesAdded.length ||
-        coursesDeleted.length ||
-        favouritesAdded.length ||
-        updatedCoursesArr.length ||
-        favouritesDeleted.length;
+    const updatedCourses = getCourseCodeArr(updatedCoursesArr);
 
+
+    // updating snapshot after every mobile fetch
     await createUserSnapshotHelper(user);
 
     return res.json({
-        message: "Snapshot found!",
-        requiresUpdate: requiresUpdate > 0 ? true : false,
         coursesAdded,
         coursesDeleted,
-        updatedCourses: updatedCoursesArr,
+        updatedCourses,
         isFavouriteUpdated,
-        data,
     });
 };
 
