@@ -26,7 +26,7 @@ export const getUserDifference = async (req, res, next) => {
 
         });
     }
-    let [coursesAdded, coursesDeleted] = getDifferenceHelper(
+    let [addedCourses, coursesDeleted] = getDifferenceHelper(
         getCourseCodeArr(userSnapshot.courses),
         getCourseCodeArr(user.courses)
     );
@@ -34,6 +34,9 @@ export const getUserDifference = async (req, res, next) => {
         getFavIdArr(userSnapshot.favourites),
         getFavIdArr(user.favourites)
     );
+
+    let coursesAdded = await CourseModel.find({ code: { $in: addedCourses } });
+
     let isFavouriteUpdated = favouritesAdded.length > 0 || favouritesDeleted.length > 0;
 
     let clientDate = userSnapshot.createdAt;
@@ -53,6 +56,7 @@ export const getUserDifference = async (req, res, next) => {
         coursesDeleted,
         updatedCourses,
         isFavouriteUpdated,
+
     });
 };
 
