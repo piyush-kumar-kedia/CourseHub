@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 var coursehubApiRoot = "https://www.coursehubiitg.in/api"
@@ -56,8 +57,9 @@ func GetAllCourseHubContributions() (*[]AllContributionResponse, error) {
 }
 
 type NameCode struct {
-	Code string
-	Name string
+	Code        string
+	Name        string
+	IsAvailable bool
 }
 
 type FullCourseNameResponse struct {
@@ -65,38 +67,45 @@ type FullCourseNameResponse struct {
 }
 
 func GetFullCourseName(code string) (*string, error) {
-	c_url := fmt.Sprintf(coursehubApiRoot + "/search")
-	client := &http.Client{}
+	// c_url := fmt.Sprintf(coursehubApiRoot + "/search")
+	// client := &http.Client{}
 
-	body := fmt.Sprintf(`{
-		"words":["%s"]
-	}`, code)
+	// body := fmt.Sprintf(`{
+	// 	"words":["%s"]
+	// }`, code)
 
-	b := bytes.NewReader([]byte(body))
-	req, err := http.NewRequest("POST", c_url, b)
-	req.Header.Set("Content-Type", "application/json")
-	if err != nil {
-		return nil, err
-	}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	content, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	res := &FullCourseNameResponse{}
-	err = json.Unmarshal(content, &res)
-	if err != nil {
-		return nil, err
-	}
-	log.Println(res)
-	if len(res.Results) == 0 {
+	// b := bytes.NewReader([]byte(body))
+	// req, err := http.NewRequest("POST", c_url, b)
+	// req.Header.Set("Content-Type", "application/json")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// resp, err := client.Do(req)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// content, err := io.ReadAll(resp.Body)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// res := &FullCourseNameResponse{}
+
+	// err = json.Unmarshal(content, &res)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// log.Println(res)
+	// if len(res.Results) == 0 {
+	// 	return nil, errors.New("not found")
+	// }
+
+	// return &res.Results[0].Name, nil
+	name, ok := app.CourseCodeFullnameMap[strings.ToLower(code)]
+	if !ok {
 		return nil, errors.New("not found")
 	}
-
-	return &res.Results[0].Name, nil
+	courseName := strings.TrimSpace(strings.Split(name, "-")[1])
+	return &courseName, nil
 }
 
 func MarkContributionAsApproved(id string) error {

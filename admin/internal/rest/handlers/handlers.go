@@ -130,6 +130,7 @@ func UploadPage(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+	log.Println(fmt.Sprintf("CourseHub/%s - %s", contribution.CourseCode, *namecode))
 	years, err := graph.VisitFolder(fmt.Sprintf("CourseHub/%s - %s", contribution.CourseCode, *namecode))
 	if err != nil {
 		return err
