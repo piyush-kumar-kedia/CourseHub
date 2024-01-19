@@ -24,3 +24,8 @@ type POSTCreateFolder struct {
 type POSTMarkApproved struct {
 	Id string `json:"id"`
 }
+
+type POSTCreateCourse struct {
+	Code string `json:"code"`
+	Name string `json:"name"`
+}

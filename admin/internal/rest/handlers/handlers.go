@@ -3,9 +3,11 @@ package handlers
 import (
 	"coursehubadmin/api"
 	"coursehubadmin/config"
+	"coursehubadmin/internal/rest/utils"
 	"coursehubadmin/pkg/coursehub"
 	"coursehubadmin/pkg/graph"
 	"coursehubadmin/web"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -108,6 +110,19 @@ func UploadPage(c echo.Context) error {
 	}
 	namecode, err := coursehub.GetFullCourseName(contribution.CourseCode)
 	if err != nil {
+		if err.Error() == "not found" {
+			d := make(map[string]string)
+			d["code"] = contribution.CourseCode
+
+			templateData := &web.WebTemplateData{
+				Status:    404,
+				Message:   "Course not found",
+				PageTitle: "Create Course",
+				Data:      d,
+			}
+			return c.Render(404, "create-course.go.tmpl", templateData)
+		}
+		log.Println("")
 		return err
 	}
 
@@ -286,4 +301,33 @@ func MarkApproved(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.String(200, "approved")
+}
+
+func CreateCourse(c echo.Context) error {
+	var body api.POSTCreateCourse
+	err := c.Bind(&body)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+	// create folder in onedrive
+	course := fmt.Sprintf("%s - %s", strings.TrimSpace(body.Code), strings.TrimSpace(body.Name))
+	log.Println(course)
+	err = graph.CreateFolder(fmt.Sprintf("CourseHub/%s", course))
+	if err != nil {
+		return c.String(400, "could not create course")
+	}
+	// update search results
+	err = coursehub.CreateNewSearchResult(strings.TrimSpace(body.Code), strings.TrimSpace(body.Name))
+	if err != nil {
+		return c.String(400, "could not create course")
+	}
+	// refresh maps
+	id, name, err := utils.CreateMaps()
+	if err != nil {
+		return errors.New("could not load onedrive courses")
+	}
+	app.CourseCodeIdMap = id
+	app.CourseCodeFullnameMap = name
+
+	return c.String(200, "Created!")
 }

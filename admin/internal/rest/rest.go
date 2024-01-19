@@ -36,18 +36,26 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 	c.Render(500, "error.go.tmpl", nil)
 }
 
+func HandleCreateMaps(a *config.App) error {
+	id, name, err := utils.CreateMaps()
+	if err != nil {
+		return errors.New("could not load onedrive courses")
+	}
+	a.CourseCodeIdMap = id
+	a.CourseCodeFullnameMap = name
+	return nil
+}
+
 func StartApp(a *config.App) {
 	e := echo.New()
 	e.Renderer = t
 	e.HTTPErrorHandler = customHTTPErrorHandler
 
 	// Create maps
-	id, name, err := utils.CreateMaps()
+	err := HandleCreateMaps(a)
 	if err != nil {
-		log.Fatal(errors.New("could not load onedrive courses"))
+		log.Fatal(err)
 	}
-	a.CourseCodeIdMap = id
-	a.CourseCodeFullnameMap = name
 
 	handlers.InitHandlers(a)
 	coursehub.InitCoursehub(a)

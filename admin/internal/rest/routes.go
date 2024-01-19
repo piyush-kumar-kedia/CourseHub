@@ -13,4 +13,5 @@ func initRoutes(e *echo.Echo) {
 	e.POST("/upload", handlers.MoveFile)
 	e.POST("/folder", handlers.CreateNewFolder)
 	e.POST("/approve", handlers.MarkApproved)
+	e.POST("/course", handlers.CreateCourse)
 }

@@ -122,3 +122,24 @@ func MarkContributionAsApproved(id string) error {
 	}
 	return nil
 }
+
+func CreateNewSearchResult(code string, name string) error {
+	c_url := coursehubApiRoot + "/search/feed"
+	client := &http.Client{}
+	body := fmt.Sprintf(`{
+		"code":"%s",
+		"name":"%s"
+	}`, code, name)
+	b := bytes.NewReader([]byte(body))
+	req, err := http.NewRequest("POST", c_url, b)
+	req.Header.Set("Content-Type", "application/json")
+	if err != nil {
+		return err
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	resp.Body.Close()
+	return nil
+}
