@@ -18,5 +18,6 @@ router.post(
     catchAsync(ContributionController.MobileFileUploadHandler)
 );
 // router.get("/:id", catchAsync(ContributionController.CreateNewContribution));
+router.post("/updated", catchAsync(ContributionController.GetContributionsUpdatedSince));
 
 export default router;

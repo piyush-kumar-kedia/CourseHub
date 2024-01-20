@@ -176,6 +176,19 @@ async function MobileFileUploadHandler(req, res, next) {
     });
 }
 
+// date format : YYYY-MM-DD
+async function GetContributionsUpdatedSince(req, res, next) {
+    const { date } = req.body;
+    if (!date) return next(new AppError(400, "Invalid date"));
+    const d = new Date(date);
+    const contributions = await Contribution.find({ updatedAt: { $gte: d } });
+    let codeSet = new Set();
+    contributions.map((c) => codeSet.add(c.courseCode.toUpperCase()));
+    let codes = [];
+    codeSet.forEach((c) => codes.push(c));
+    return res.json({ codes, contributions });
+}
+
 export default {
     GetAllContributions,
     CreateNewContribution,
@@ -183,4 +196,5 @@ export default {
     GetMyContributions,
     MobileFileUploadHandler,
     DeleteContribution,
+    GetContributionsUpdatedSince,
 };
