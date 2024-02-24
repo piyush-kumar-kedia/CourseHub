@@ -104,7 +104,7 @@ router.get(
             }
             // console.log(toReturn);
         }
-        return res.json({ data: toReturn, date: "19th Nov-25th Nov", exam: "End-Semester" });
+        return res.json({ data: toReturn, date: "24th Feb-02nd Mar", exam: "Mid-Semester" });
     })
 );
 
