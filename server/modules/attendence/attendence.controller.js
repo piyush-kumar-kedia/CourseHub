@@ -5,7 +5,7 @@ class attendenceController {
         const getUser = req.user;
         if (!getUser) res.sendStatus(400);
         const attendence = await Attendence.find({ user: getUser._id })
-            .select("-_id -user  -__v")
+            .select("-user  -__v")
             .populate({
                 path: "schedule",
                 populate: {
