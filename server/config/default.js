@@ -8,6 +8,6 @@ export default {
     mobileURL: "coursehub",
     jwtSecret: process.env.JWT_SECRET,
     aesKey: process.env.AESKEY,
-    adminJwtSecret: "32rytfhgv456ryt43ertfgy45rtfhh",
-    serverVersion: 1.8,
+    adminJwtSecret: "32rytfhgv456ryt43ertfgy45rtfhha",
+    serverVersion: 1.9,
 };
