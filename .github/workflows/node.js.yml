@@ -12,10 +12,18 @@ jobs:
 
         steps:
         - uses: actions/checkout@v3
-        - name: Use Node.js 14
+
+        # Add system update step
+        - name: Update system packages
+          run: |
+            sudo apt update
+            sudo apt upgrade -y
+
+        - name: Use Node.js 16
           uses: actions/setup-node@v3
           with:
-                node-version: 14
+                node-version: 16
+
         - run: |
             cd server
             npm i
@@ -30,4 +38,3 @@ jobs:
             pm2 start 0
             pm2 save
             sudo service nginx restart
-
