@@ -131,18 +131,17 @@ function calculateSemester(rollNumber) {
 
 export const redirectHandler = async (req, res, next) => {
     const { code } = req.query;
-
     var data = qs.stringify({
         client_secret: clientSecret,
         client_id: clientid,
-        //redirect_uri: redirect_uri,
-        redirect_uri: "https://www.coursehubiitg.in/api/auth/login/redirect",
+        redirect_uri: redirect_uri,
+        // redirect_uri: "https://www.coursehubiitg.in/api/auth/login/redirect",
         scope: "user.read",
         grant_type: "authorization_code",
         code: code,
     });
 
-    console.log(data);
+    // console.log(data);
 
     var config = {
         method: "post",
@@ -156,10 +155,9 @@ export const redirectHandler = async (req, res, next) => {
     const response = await axios.post(config.url, config.data, {
         headers: config.headers,
     });
-
     if (!response.data) throw new AppError(500, "Something went wrong");
 
-    console.log(response.data);
+    // console.log(response.data);
 
     const AccessToken = response.data.access_token;
     const RefreshToken = response.data.refresh_token;
@@ -171,7 +169,7 @@ export const redirectHandler = async (req, res, next) => {
     const roll = userFromToken.data.surname;
     if (!roll) throw new AppError(401, "Sign in using Institute Account");
 
-    let existingUser = await findUserWithEmail(userFromToken.data.mail); //find with email
+    let existingUser = await findUserWithEmail(userFromToken.data.mail);
 
     if (!existingUser) {
         const courses = await fetchCourses(userFromToken.data.surname);
@@ -195,19 +193,19 @@ export const redirectHandler = async (req, res, next) => {
         existingUser = await user.save();
     }
 
-    let userUpdated = await UserUpdate.findOne({ rollNumber: roll });
-    console.log(userUpdated);
-    if (existingUser && !userUpdated) {
-        const courses = await fetchCourses(userFromToken.data.surname);
-        existingUser.courses = courses;
-        existingUser.semester = calculateSemester(userFromToken.data.surname);
-        await existingUser.save();
-        const newUpdation = new UserUpdate({ rollNumber: roll });
-        await newUpdation.save();
-    }
+    // let userUpdated = await UserUpdate.findOne({ rollNumber: roll });
+    // // console.log(userUpdated);
+    // if (existingUser && !userUpdated) {
+    //     const courses = await fetchCourses(userFromToken.data.surname);
+    //     existingUser.courses = courses;
+    //     existingUser.semester = calculateSemester(userFromToken.data.surname);
+    //     await existingUser.save();
+    //     const newUpdation = new UserUpdate({ rollNumber: roll });
+    //     await newUpdation.save();
+    // }
 
     const token = existingUser.generateJWT();
-    await createCourseSnapshotOnce(existingUser);
+    // await createCourseSnapshotOnce(existingUser);
 
     res.cookie("token", token, {
         maxAge: 2073600000,
@@ -282,7 +280,7 @@ export const mobileRedirectHandler = async (req, res, next) => {
         existingUser = await user.save();
     }
     let userUpdated = await UserUpdate.findOne({ rollNumber: roll });
-    console.log(userUpdated);
+    // console.log(userUpdated);
     if (existingUser && !userUpdated) {
         const courses = await fetchCourses(userFromToken.data.surname);
         existingUser.courses = courses;

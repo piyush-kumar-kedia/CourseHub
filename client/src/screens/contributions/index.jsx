@@ -107,7 +107,7 @@ const Contributions = () => {
                             placeholder="Course Code"
                             name="course"
                             className="input_course"
-                            value={courseCode}
+                            value={courseCode? courseCode : ""}
                             onChange={(e) => setCourseCode(e.target.value)}
                         ></input>
                     </div>
@@ -141,13 +141,13 @@ const Contributions = () => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
-                                stroke-width="1.5"
+                                strokeWidth="1.5"
                                 stroke="currentColor"
-                                class="w-6 h-6"
+                                className="w-6 h-6"
                             >
                                 <path
                                     strokeLinecap="round"
-                                    stroke-linejoin="round"
+                                    strokeLinejoin="round"
                                     d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                                 />
                             </svg>
@@ -173,7 +173,7 @@ const Contributions = () => {
                             name="description"
                             className="input_description"
                             placeholder="Give a brief description"
-                            value={description}
+                            value={description? description : ""}
                             onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
                     </div>
