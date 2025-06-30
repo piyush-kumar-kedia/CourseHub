@@ -187,19 +187,19 @@ export const redirectHandler = async (req, res, next) => {
         existingUser = await user.save();
     }
 
-    // let userUpdated = await UserUpdate.findOne({ rollNumber: roll });
-    // // console.log(userUpdated);
-    // if (existingUser && !userUpdated) {
-    //     const courses = await fetchCourses(userFromToken.data.surname);
-    //     existingUser.courses = courses;
-    //     existingUser.semester = calculateSemester(userFromToken.data.surname);
-    //     await existingUser.save();
-    //     const newUpdation = new UserUpdate({ rollNumber: roll });
-    //     await newUpdation.save();
-    // }
+    let userUpdated = await UserUpdate.findOne({ rollNumber: roll });
+    console.log(userUpdated);
+    if (existingUser && !userUpdated) {
+        const courses = await fetchCourses(userFromToken.data.surname);
+        existingUser.courses = courses;
+        existingUser.semester = calculateSemester(userFromToken.data.surname);
+        await existingUser.save();
+        const newUpdation = new UserUpdate({ rollNumber: roll });
+        await newUpdation.save();
+    }
 
     const token = existingUser.generateJWT();
-    // await createCourseSnapshotOnce(existingUser);
+    await createCourseSnapshotOnce(existingUser);
 
     res.cookie("token", token, {
         maxAge: 2073600000,
