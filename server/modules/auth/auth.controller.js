@@ -56,15 +56,14 @@ export const guestLoginHanlder = async (req, res, next) => {
 export const fetchCourses = async (rollNumber) => {
     var config = {
         method: "post",
-        url: "https://academic.iitg.ac.in/sso/gen/student1.jsp?cid=All&sess=Jan-May&yr=2025",
+        url: "https://academic.iitg.ac.in/sso/gen/student1.jsp",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-            Host: "academic.iitg.ac.in",
-            "Content-Length": "13",
         },
         data: qs.stringify({
-            rno: `${rollNumber}`,
+            'cid':'All',
+            'sess': academic.session,
+            'yr': academic.currentYear,
         }),
     };
 
@@ -81,16 +80,11 @@ export const fetchCourses = async (rollNumber) => {
     $('tr').each((i,elem) => {
         const details=$(elem).find('td')
         const studentRollNo= details.eq(2).text();
-        const year= details.eq(8).text();
-        const session= details.eq(9).text();
         const code=details.eq(3).text(); //course code
         const name=courselist[code]; //course name
         
-        if (
-        code &&
+        if (code &&
         studentRollNo==rollNumber &&
-        year === academic.currentYear &&
-        session===academic.session &&
         !code.includes('SA')){
             courses.push({
                 name,
