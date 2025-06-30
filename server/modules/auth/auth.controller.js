@@ -122,9 +122,8 @@ const getDepartment = async (access_token) => {
 function calculateSemester(rollNumber) {
     const year = parseInt(rollNumber.slice(0, 2));
     const currdate = new Date();
-    const curryear = currdate.getFullYear();
+    const curryear = currdate.getFullYear()%100;
     const diff = curryear - year;
-    console.log(curryear);
     const properdate = (currdate.getMonth() + 1)*100 + currdate.getDate();
     if( properdate < 723 && properdate > 103 ) return 2*diff;
     else return 2*diff + 1;
