@@ -1,4 +1,7 @@
+const currdate = new Date();
+const currentYear = currdate.getFullYear().toString();
+const currentMonth = currdate.getMonth();
 export default {
-    currentYear: "2023",
-    sessionIncluesMonth: "Jan",
+    currentYear,
+    sessionIncluesMonth: currentMonth,
 };
