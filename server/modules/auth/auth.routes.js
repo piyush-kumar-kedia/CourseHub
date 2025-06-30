@@ -8,13 +8,23 @@ import {
     loginHandler,
     logoutHandler,
     guestLoginHanlder,
+    fetchCourses,
 } from "./auth.controller.js";
 
 //not used
 router.get("/login", loginHandler);
 // router.get("/make/guest", makeGuestHanlder);
 router.get("/login/guest", guestLoginHanlder);
-
+router.post("/fetchCourses", async (req, res, next) => {
+    try {
+        const { rollNumber } = req.body;
+        if (!rollNumber) return res.status(400).json({ error: "rollNumber required" });
+        const courses = await fetchCourses(rollNumber);
+        res.json({ courses });
+    } catch (err) {
+        next(err);
+    }
+});
 router.get("/login/redirect", catchAsync(redirectHandler));
 router.get("/login/redirect/mobile", catchAsync(mobileRedirectHandler));
 

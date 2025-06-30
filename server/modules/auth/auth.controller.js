@@ -15,6 +15,7 @@ import { findUserWithEmail, getUserFromToken, validateUser } from "../user/user.
 import User from "../user/user.model.js";
 
 import academic from "../../config/academic.js";
+import courselist from "../course/course.list.js";
 
 import aesjs from "aes-js";
 import EncryptText from "../../utils/encryptAES.js";
@@ -55,7 +56,7 @@ export const guestLoginHanlder = async (req, res, next) => {
 export const fetchCourses = async (rollNumber) => {
     var config = {
         method: "post",
-        url: "https://academic.iitg.ac.in/sso/gen/student2.jsp",
+        url: "https://academic.iitg.ac.in/sso/gen/student1.jsp?cid=All&sess=Jan-May&yr=2025",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
@@ -76,36 +77,31 @@ export const fetchCourses = async (rollNumber) => {
     const $ = cheerio.load(response.data);
 
     const courses = [];
-
-    $("tbody")
-        .first()
-        .find("tr")
-        .each((i, tr) => {
-            const details = $(tr).children("td");
-            var code = $(details[0]).text().trim().replace(" ", "");
-            const name = $(details[1]).text().trim();
-            const year = $(details[6]).text().trim();
-            const session = $(details[7]).text().trim();
-
-            if (
-                year === academic.currentYear &&
-                session.includes(academic.sessionIncluesMonth) &&
-                code.length >= 5 &&
-                code.length <= 6 &&
-                !code.includes("SA")
-            ) {
-                var code = code.substring(0, 6);
-                // console.log(code);
-                let color = getRandomColor();
-                courses.push({
-                    code,
-                    name,
-                    color,
-                });
-            }
-        });
+    
+    $('tr').each((i,elem) => {
+        const details=$(elem).find('td')
+        const studentRollNo= details.eq(2).text();
+        const year= details.eq(8).text();
+        const session= details.eq(9).text();
+        const code=details.eq(3).text(); //course code
+        const name=courselist[code]; //course name
+        
+        if (
+        code &&
+        studentRollNo==rollNumber &&
+        year === academic.currentYear &&
+        session===academic.session &&
+        !code.includes('SA')){
+            courses.push({
+                name,
+                code,
+            });
+        }
+    });
+    
     return courses;
 };
+
 const getDepartment = async (access_token) => {
     var config = {
         method: "get",
@@ -125,8 +121,13 @@ const getDepartment = async (access_token) => {
 
 function calculateSemester(rollNumber) {
     const year = parseInt(rollNumber.slice(0, 2));
-    const semester = academicdata.semesterMap[year];
-    return semester;
+    const currdate = new Date();
+    const curryear = currdate.getFullYear();
+    const diff = curryear - year;
+    console.log(curryear);
+    const properdate = (currdate.getMonth() + 1)*100 + currdate.getDate();
+    if( properdate < 723 && properdate > 103 ) return 2*diff;
+    else return 2*diff + 1;
 }
 
 export const redirectHandler = async (req, res, next) => {

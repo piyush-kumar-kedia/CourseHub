@@ -1,6 +1,16 @@
+const currdate = new Date();
+const currdatenumber=currdate.getDate();
+const currentYear = currdate.getFullYear().toString();
+const currentMonth = currdate.getMonth();
+
+var session;
+session='Jan-May';
+// if(currentMonth<=5||(currentMonth==6&&currdatenumber<=23)) session='Jan-May';
+// else session='Jul-Nov';
+
 export default {
-    currentYear: "2024",
-    sessionIncluesMonth: "Jan",
+    currentYear,
+    session,
     semesterMap: {
         23: 2,
         22: 4,
