@@ -30,7 +30,7 @@ import {
 //not used
 export const loginHandler = (req, res) => {
     res.redirect(
-        `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=offline_access%20user.read&state=12345`
+        `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/authorize?client_id=${clientid}&response_type=code&redirect_uri=${redirect_uri}&scope=user.read%20offline_access&state=12345`
     );
 };
 export const guestLoginHanlder = async (req, res, next) => {
@@ -125,7 +125,7 @@ function calculateSemester(rollNumber) {
 
 export const redirectHandler = async (req, res, next) => {
     const { code } = req.query;
-    var data = qs.stringify({
+    const data = qs.stringify({
         client_secret: clientSecret,
         client_id: clientid,
         redirect_uri: redirect_uri,
@@ -137,7 +137,7 @@ export const redirectHandler = async (req, res, next) => {
 
     // console.log(data);
 
-    var config = {
+    const config = {
         method: "post",
         url: `https://login.microsoftonline.com/850aa78d-94e1-4bc6-9cf3-8c11b530701c/oauth2/v2.0/token`,
         headers: {

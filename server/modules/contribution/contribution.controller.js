@@ -46,7 +46,7 @@ async function GetAllContributions(req, res, next) {
 
 async function HandleFileUpload(req, res, next) {
     const contributionId = req.headers["contribution-id"];
-    console.log(req.headers.username);
+    // console.log(req.headers.username);
     const form = formidable({ multiples: true });
 
     form.parse(req, async (err, fields, files) => {
