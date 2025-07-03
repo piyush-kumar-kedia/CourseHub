@@ -26,6 +26,13 @@ SearchSchema.statics.getSearchResults = async function (wordArr) {
                     code: true,
                     isAvailable: true,
                     wordArray: { $split: ["$name", " "] },
+                    code: {
+                        $replaceAll: {
+                            input: "$code",
+                            find: " ",
+                            replacement: "",
+                        },
+                    },
                 },
             },
             {

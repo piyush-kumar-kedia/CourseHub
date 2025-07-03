@@ -29,7 +29,15 @@ const AddCourseModal = ({ handleAddCourse }) => {
         try {
             setLoading(true);
             setErr(null);
-            const { data } = await GetSearchResult(code.split(" "));
+            let searchArr;
+            if(/\d/.test(code)){    //if code contains number then pass it as one element array
+                let codeWithoutSpace = code.replace(/\s+/g, "");
+                searchArr= [codeWithoutSpace]
+            }
+            else{                  //if code does not contain number then split it and pass array of words
+                searchArr= code.split(" ")
+            }
+            const { data } = await GetSearchResult(searchArr);
             if (data?.found === true) {
                 setResults(data.results);
                 setLoading(false);
