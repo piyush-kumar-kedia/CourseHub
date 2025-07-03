@@ -14,6 +14,8 @@ const userSchema = Schema({
     semester: { type: Number, reqiured: true },
     degree: { type: String, required: true },
     courses: { type: Array, default: [], required: true },
+    isBR: { type: Boolean}, 
+    previousCourses:{type: Array, default: []},
     // contri
     department: { type: String, required: true }, //dup
     favourites: [
