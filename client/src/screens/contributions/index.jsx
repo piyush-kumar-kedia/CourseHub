@@ -48,11 +48,10 @@ const Contributions = () => {
             toast.error("Invalid course code length!");
             return;
         }
-        // console.log(courseCode, folder, description, year);
-        await pond.processFiles();
+        await pond.current.processFiles();
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
-        pond.removeFiles();
+        pond.current.removeFiles();
         const toggle = document.getElementById("toggle");
         // console.log(toggle);
         let isAnoynmous = toggle.checked;
@@ -191,7 +190,7 @@ const Contributions = () => {
                         allowMultiple={true}
                         maxFiles={40}
                         server={{
-                            url: "https://www.coursehubiitg.in/api/contribution/upload",
+                            url: "http://localhost:8080/api/contribution/upload",
                             process: {
                                 headers: {
                                     "contribution-id": contributionId,
@@ -201,7 +200,7 @@ const Contributions = () => {
                         }}
                         instantUpload={false}
                         ref={(ref) => {
-                            pond = ref;
+                            pond.current = ref;
                         }}
                     />
                 </div>

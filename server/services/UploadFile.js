@@ -5,7 +5,8 @@ import axios from "axios";
 async function GetFolderId(contributionId) {
     const access_token = await getAccessToken();
     // /me/drive/items/{parent-item-id}/children
-    const url = `https://graph.microsoft.com/v1.0/me/drive/items/01OXYV377R7YXVWNCI5VDYWVFUYAMRFGOG/children`;
+    const parent_item_id = "014BDXJYPR2LB6XDZPOVFLXKHUJB3GCLD7";
+    const url = `https://graph.microsoft.com/v1.0/me/drive/items/${parent_item_id}/children`;
     const config = {
         headers: {
             Authorization: `Bearer ${access_token}`,
@@ -24,8 +25,9 @@ async function GetFolderId(contributionId) {
 
 async function CreateFolder(contributionId) {
     const access_token = await getAccessToken();
+    const parent_item_id = "014BDXJYPR2LB6XDZPOVFLXKHUJB3GCLD7";
     // /me/drive/items/{parent-item-id}/children
-    const url = `https://graph.microsoft.com/v1.0/me/drive/items/01OXYV377R7YXVWNCI5VDYWVFUYAMRFGOG/children`;
+    const url = `https://graph.microsoft.com/v1.0/me/drive/items/${parent_item_id}/children`;
     const config = {
         headers: {
             Authorization: `Bearer ${access_token}`,
