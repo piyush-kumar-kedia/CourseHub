@@ -11,9 +11,6 @@ import path from "path";
 
 const router = express.Router();
 
-const drive_id = "b!pxmuhRkkIESn1NJOh3iVay2m314xO8NGtXVieZjVnTQBFLWQU0FfSqSeomGkWOvO";
-const coursehub_id = "01OXYV37Y64PLOWXJRRBGKGSMVOFLO3OPZ";
-
 import { MakeImagekitFolder, UploadImage } from "../../services/UploadImage.js";
 import SearchResults from "../search/search.model.js";
 // router.post("/upload", async (req, res) => {
@@ -346,18 +343,18 @@ async function visitFile(file, currCourse) {
 }
 
 async function getFilePreviewLink(file_id) {
-    var access_token = await getAccessToken();
-    var headers = {
+    const access_token = await getAccessToken();
+    const headers = {
         Authorization: `Bearer ${access_token}`,
         Host: "graph.microsoft.com",
         "Content-Type": "application/json",
     };
-    var params = {
+    const params = {
         viewer: "onedrive",
         allowEdit: true,
     };
-    var url = `https://graph.microsoft.com/v1.0/me/drive/items/${file_id}/preview`;
-    var data = await postRequest(url, headers, params);
+    const url = `https://graph.microsoft.com/v1.0/me/drive/items/${file_id}/preview`;
+    const data = await postRequest(url, headers, params);
     return data.getUrl;
 }
 
@@ -368,14 +365,13 @@ export async function getAccessToken() {
     } else {
         data = await generateAccessToken();
     }
-    //console.log(data);
     return data.access_token;
 }
 
 async function refreshAccessToken() {
-    var data = qs.stringify({
-        tenant: settings.tenantId,
+    const data = qs.stringify({
         client_id: settings.clientId,
+        client_secret: settings.clientSecret,
         refresh_token: `${fs.readFileSync("./onedrive-refresh-token.token", "utf-8")}`,
         grant_type: "refresh_token",
     });
