@@ -264,6 +264,9 @@ export const redirectHandler = async (req, res, next) => {
     if (existingUser && !userUpdated) {
         const courses = await fetchCourses(userFromToken.data.surname);
         existingUser.courses = courses;
+        if (br) {
+            existingUser.previousCourses = await fetchCoursesForBr(userFromToken.data.surname);
+        }
         existingUser.semester = calculateSemester(userFromToken.data.surname);
         await existingUser.save();
         const newUpdation = new UserUpdate({ rollNumber: roll });
