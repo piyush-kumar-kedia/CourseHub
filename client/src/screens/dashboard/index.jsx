@@ -113,6 +113,8 @@ const Dashboard = () => {
         dispatch(ResetFileBrowserState());
     }, []);
 
+    const [showPrevious, setShowPrevious] = useState(false);
+
     return (
         <div className="App">
             <div>
@@ -182,6 +184,47 @@ const Dashboard = () => {
                         />
                     </div>
                     <Space amount={50} />
+
+                    {user.user.isBR && user.user.previousCourses?.length > 0 && (
+                        <>
+                            <div
+                                onClick={() => setShowPrevious(!showPrevious)}
+                                style={{ cursor: "pointer", display: "inline-block" }}
+                            >
+                                <SubHeading
+                                    text={showPrevious ? "▼ HIDE PREVIOUS COURSES" : "▶ SHOW PREVIOUS COURSES"}
+                                    color={"light"}
+                                    type={"bold"}
+                                />
+                            </div>
+
+                            {showPrevious && (
+                                <>
+                                    <Space amount={20} />
+                                    <div className="coursecard-container">
+                                        {user.user.previousCourses.map((course, index) => (
+                                            <CourseCard
+                                                key={course.name}
+                                                code={course?.code?.toUpperCase()}
+                                                name={course.name}
+                                                color={getColors(index)}
+                                                setClicked={() => handleClick(course.code)}
+                                            />
+                                        ))}
+
+                                        <CourseCard
+                                            type={"ADD"}
+                                            setClicked={() => {
+                                                addCourseModalShowHandler();
+                                            }}
+                                        />
+                                    </div>
+                                </>
+                            )}
+                        </>
+                    )}
+                    <Space amount={50} />
+
                 </Container>
                 <ContributionBanner contributionHandler={contributionHandler} />
                 <Space amount={50} />
