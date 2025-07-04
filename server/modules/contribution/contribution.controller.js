@@ -25,17 +25,18 @@ async function ContributionCreation(contributionId, data) {
     return updatedContribution;
 }
 
-async function HandleFileToDB(contributionId, fileName) {
+async function HandleFileToDB(contributionId, fileId) {
     const existingContribution = await Contribution.findOne({ contributionId });
 
     if (!existingContribution) {
-        const newContribution = await Contribution.create({ contributionId, fileName });
+        const newContribution = await Contribution.create({ contributionId, files: [fileId] });
         console.log("new contri");
         return newContribution;
     }
-    existingContribution.fileName.push(fileName);
+    existingContribution.files.push(fileId);
     await existingContribution.save();
     console.log("updated contri");
+    console.log(`Added file ${fileId} to contribution ${contributionId}`);
     return existingContribution;
 }
 
@@ -45,20 +46,15 @@ async function GetAllContributions(req, res, next) {
 }
 
 async function HandleFileUpload(req, res, next) {
+    console.log("Handling File Upload");
     const contributionId = req.headers["contribution-id"];
     // console.log(req.headers.username);
-    const form = formidable({ multiples: true });
-
-    form.parse(req, async (err, fields, files) => {
-        if (err) {
-            next(err);
-            return;
-        }
+    const file = req.file;   
 
         // Files names
-        let initialPath = files.filepond.filepath;
-        let newFilename = files.filepond.newFilename;
-        let originalFilename = files.filepond.originalFilename;
+        let initialPath = file.path;
+        let newFilename = file.filename;
+        let originalFilename = file.originalname;
 
         let wordArr = originalFilename.split(".");
         let fileExtension = wordArr[wordArr.length - 1];
@@ -72,25 +68,24 @@ async function HandleFileUpload(req, res, next) {
 
         const finalPath = initialPath.slice(0, initialPath.indexOf(newFilename));
 
-        fs.rename(finalPath + newFilename, finalPath + finalFileName, async () => {
-            await HandleFileToDB(contributionId, finalFileName);
-            await UploadFile(contributionId, finalPath, finalFileName);
-        });
-
+        await fs.promises.rename(finalPath + newFilename, finalPath + finalFileName)
+        const fileId = await UploadFile(contributionId, finalPath, finalFileName);
+        if (fileId) {
+            await HandleFileToDB(contributionId, fileId);
+        }
         return res.json({ fields, files });
-    });
 }
 
 async function CreateNewContribution(req, res, next) {
     const payloadSchema = {
         contributionId: Joi.string().required(),
-        year: Joi.string().required(),
+        //year: Joi.string().required(),
         uploadedBy: Joi.string().required(),
         courseCode: Joi.string().required(),
-        folder: Joi.string().required(),
+        ParentFolder: Joi.string().required(),
         approved: Joi.bool(),
         description: Joi.string().required(),
-        // isAnonymous: Joi.boolean().required(),
+        isAnonymous: Joi.boolean().required(),
     };
     const data = req.body;
 
@@ -121,13 +116,13 @@ async function DeleteContribution(req, res, next) {
 async function MobileFileUploadHandler(req, res, next) {
     const payloadSchema = {
         contributionId: Joi.string().required(),
-        year: Joi.string().required(),
+        //year: Joi.string().required(),
         uploadedBy: Joi.string().required(),
         courseCode: Joi.string().required(),
-        folder: Joi.string().required(),
+        parentFolder: Joi.string().required(),
         approved: Joi.bool(),
         description: Joi.string().required(),
-        // isAnonymous: Joi.boolean().required(),
+        isAnonymous: Joi.boolean().required(),
     };
     const data = req.body;
 
@@ -138,7 +133,7 @@ async function MobileFileUploadHandler(req, res, next) {
 
     const contributionId = data.contributionId;
     const files = req.files;
-    let fileNames = [];
+    let fileName = [];
     files.map((file) => {
         // Files names
 

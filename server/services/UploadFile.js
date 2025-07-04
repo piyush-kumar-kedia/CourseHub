@@ -1,6 +1,7 @@
 import fs from "fs";
 import { getAccessToken } from "../modules/onedrive/onedrive.routes.js";
 import axios from "axios";
+import { FileModel } from "../modules/course/course.model.js";
 
 async function GetFolderId(contributionId) {
     const access_token = await getAccessToken();
@@ -84,13 +85,24 @@ async function UploadFile(contributionId, filePath, fileName) {
     };
     try {
         const { data } = await axios.put(url, file, config);
-        // console.log(data);
+        console.log(data);
         console.log("Uploaded File");
-        return data;
+        const fileData = new FileModel({
+        fileId: data.id,
+        type: data.file?.mimeType,
+        size: data.size,
+        name: fileName,
+        downloadUrl: data["@microsoft.graph.downloadUrl"],
+        webUrl: data.webUrl});
+        await fileData.save();
+        console.log("File saved");
+        return fileData._id;
     } catch (error) {
         console.log(error);
         console.log("Error uploading!");
+        return null;
     }
+    
 }
 
 export default UploadFile;

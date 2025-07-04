@@ -10,11 +10,11 @@ router.get("/", isAuthenticated, ContributionController.GetMyContributions);
 router.get("/all", ContributionController.GetAllContributions);
 router.delete("/:contributionId", ContributionController.DeleteContribution);
 router.post("/", catchAsync(ContributionController.CreateNewContribution));
-router.post("/upload", catchAsync(ContributionController.HandleFileUpload));
+router.post("/upload",upload.single('file') ,catchAsync(ContributionController.HandleFileUpload));
 router.post(
     "/upload/mobile",
     isAuthenticated,
-    upload.array("files"),
+    upload.single("file"),
     catchAsync(ContributionController.MobileFileUploadHandler)
 );
 // router.get("/:id", catchAsync(ContributionController.CreateNewContribution));
