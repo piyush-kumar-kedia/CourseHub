@@ -27,6 +27,7 @@ import syllabusRoutes from "./modules/syllabus/syllabus.routes.js";
 import attendenceRoutes from "./modules/attendence/attendence.routes.js";
 import scheduleRoutes from "./modules/schedule/schedule.routes.js";
 import snapshotRoutes from "./modules/snapshot/snapshot.routes.js";
+import brRoutes from "./modules/br/br.routes.js";
 
 const app = express();
 
@@ -58,6 +59,7 @@ app.use("/api/syllabus", syllabusRoutes);
 app.use("/api/attendence", attendenceRoutes);
 app.use("/api/schedule", scheduleRoutes);
 app.use("/api/snapshot", snapshotRoutes);
+app.use("/api/br",brRoutes)
 
 app.use(
     "/homepage",

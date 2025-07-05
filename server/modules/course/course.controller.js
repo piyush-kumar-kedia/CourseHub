@@ -2,12 +2,13 @@ import AppError from "../../utils/appError.js";
 import CourseModel, { FolderModel, FileModel } from "./course.model.js";
 import logger from "../../utils/logger.js";
 import SearchResults from "../search/search.model.js";
+import { response } from "express";
 export const getCourse = async (req, res, next) => {
     const { code } = req.params;
     logger.info(`GET /course/${code}`);
 
     if (!code) throw new AppError(400, "Missing Course Id");
-    const course = await CourseModel.findOne({ code: code.toLowerCase() })
+    const course = await CourseModel.findOne({ code: code })
         .populate({
             path: "children",
             select: "-__v",
@@ -48,7 +49,6 @@ export const getCourse = async (req, res, next) => {
         })
         .select("-__v");
 
-    // if (!course) throw new AppError(404, "Coming Soon!");
     if (!course) return res.json({ found: false });
     return res.json({ found: true, ...course["_doc"] });
 };

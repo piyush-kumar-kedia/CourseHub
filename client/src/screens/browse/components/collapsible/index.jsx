@@ -55,7 +55,7 @@ const Collapsible = ({ course, color, state }) => {
         if (!currCourse) {
             try {
                 let loadingCourseToastId = toast.loading("Loading course data...");
-                currCourse = await getCourse(code.toLowerCase());
+                currCourse = await getCourse(code.replaceAll(" ", ""));
                 // console.log("req");
                 const { data } = currCourse;
                 if (!data.found) {

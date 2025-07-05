@@ -2,8 +2,33 @@ import AppError from "../../utils/appError.js";
 import User, { RemoveCourse } from "./user.model.js";
 import { addToFavourites, removeFromFavourites, AddNewCourse } from "./user.model.js";
 import { updateUserData } from "./user.model.js";
+import BR from "../br/br.model.js";
+
 export const getUser = async (req, res, next) => {
-    return res.json(req.user);
+    const user = req.user;
+
+    // Check if this user is a BR
+    const isBR = await BR.findOne({ email: user.email });
+
+    const responseUser = {
+        name: user.name,
+        email: user.email,
+        rollNumber: user.rollNumber,
+        semester: user.semester,
+        degree: user.degree,
+        //branch: user.branch,
+        courses: user.courses,
+        department: user.department,
+        favourites: user.favourites,
+        deviceToken: user.deviceToken,
+        isBR: !!isBR,
+    };
+
+    if (isBR) {
+        responseUser.previousCourses = user.previousCourses;
+    }
+
+    return res.status(200).json(responseUser);
 };
 
 //not used
