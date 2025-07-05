@@ -27,6 +27,7 @@ import {
     createUserSnapshotHelper,
 } from "../snapshot/snapshot.controller.js";
 
+import BR from "../br/br.model.js";
 //not used
 export const loginHandler = (req, res) => {
     res.redirect(
@@ -93,6 +94,73 @@ export const fetchCourses = async (rollNumber) => {
         }
     });
     
+    return courses;
+};
+
+export const fetchCoursesForBr = async (rollNumber) => {
+    var evenConfig = {
+        method: "post",
+        url: "https://academic.iitg.ac.in/sso/gen/student1.jsp",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: qs.stringify({
+            cid: "All",
+            sess: "Jan-May",
+            yr: academic.currentYear,
+        }),
+    };
+    var oddConfig = {
+        method: "post",
+        url: "https://academic.iitg.ac.in/sso/gen/student1.jsp",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: qs.stringify({
+            cid: "All",
+            sess: "July-Nov",
+            yr: academic.currentYear - 1,
+        }),
+    };
+
+    const [even, odd] = await Promise.all([
+        axios.post(evenConfig.url, evenConfig.data, { headers: evenConfig.headers }),
+        axios.post(oddConfig.url, oddConfig.data, { headers: oddConfig.headers }),
+    ]);
+    if (!even.data || !odd.data) throw new AppError(500, "Something went wrong");
+
+    const $even = cheerio.load(even.data);
+    const $odd = cheerio.load(odd.data);
+
+    const courses = [];
+
+    $even("tr").each((i, elem) => {
+        const details = $even(elem).find("td");
+        const studentRollNo = details.eq(2).text();
+        const code = details.eq(3).text(); //course code
+        const name = courselist[code]; //course name
+
+        if (code && studentRollNo == rollNumber && !code.includes("SA")) {
+            courses.push({
+                name,
+                code,
+            });
+        }
+    });
+    $odd("tr").each((i, elem) => {
+        const details = $odd(elem).find("td");
+        const studentRollNo = details.eq(2).text();
+        const code = details.eq(3).text(); //course code
+        const name = courselist[code]; //course name
+
+        if (code && studentRollNo == rollNumber && !code.includes("SA")) {
+            courses.push({
+                name,
+                code,
+            });
+        }
+    });
+
     return courses;
 };
 
@@ -165,9 +233,11 @@ export const redirectHandler = async (req, res, next) => {
 
     let existingUser = await findUserWithEmail(userFromToken.data.mail);
 
+    let br = await BR.findOne({email: userFromToken.data.mail});
     if (!existingUser) {
         const courses = await fetchCourses(userFromToken.data.surname);
         const department = await getDepartment(AccessToken);
+        const previousCourses = await fetchCoursesForBr(userFromToken.data.surname);
 
         const userData = {
             name: userFromToken.data.displayName,
@@ -178,6 +248,8 @@ export const redirectHandler = async (req, res, next) => {
             semester: calculateSemester(userFromToken.data.surname), //calculate sem
             courses: courses,
             department: department,
+            isBR: br ? true : false,
+            previousCourses: br ? previousCourses : []
         };
 
         const { error } = validateUser(userData);
