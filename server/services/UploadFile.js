@@ -88,8 +88,8 @@ async function UploadFile(contributionId, filePath, fileName) {
     };
     try {
         const { data } = await axios.put(url, file, config);
-
         const createurllink = `https://graph.microsoft.com/v1.0/me/drive/items/${data.id}/createLink`;
+        const thumbnaillink = `https://graph.microsoft.com/v1.0/me/drive/items/${data.id}/thumbnails`;
         const urldata = await axios.post(createurllink, {
             type: "view",
             scope: "organization"
@@ -101,11 +101,20 @@ async function UploadFile(contributionId, filePath, fileName) {
                 }
             }
         )
+        const thumbnaildata = await axios.get(thumbnaillink,
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                }
+            }
+        )
+        const thumbnailurl = thumbnaildata.data.value?.[0]?.medium?.url;
         const webUrl = urldata?.data?.link?.webUrl;
         const fileData = new FileModel({
             isVerified: (existingContribution.approved) ? true : false, // The file is directly verified if the contribution is default approved
             fileId: data.id,                                          // which is what happens when BR makes a contribution
             size: data.size,
+            thumbnail: thumbnailurl,
             name: fileName,
             downloadUrl: `${webUrl}?download=1`,
             webUrl: webUrl,
