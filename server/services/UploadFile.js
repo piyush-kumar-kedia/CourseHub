@@ -86,13 +86,12 @@ async function UploadFile(contributionId, filePath, fileName) {
     try {
         const { data } = await axios.put(url, file, config);
         console.log(data);
-        console.log("Uploaded File");
         const fileData = new FileModel({
         fileId: data.id,
         type: data.file?.mimeType,
         size: data.size,
         name: fileName,
-        downloadUrl: data["@microsoft.graph.downloadUrl"],
+        downloadUrl: data["@content.downloadUrl"],
         webUrl: data.webUrl});
         await fileData.save();
         console.log("File saved");

@@ -73,7 +73,7 @@ async function HandleFileUpload(req, res, next) {
         if (fileId) {
             await HandleFileToDB(contributionId, fileId);
         }
-        return res.json({ fields, files });
+        return res.json({ file });
 }
 
 async function CreateNewContribution(req, res, next) {
@@ -82,7 +82,7 @@ async function CreateNewContribution(req, res, next) {
         //year: Joi.string().required(),
         uploadedBy: Joi.string().required(),
         courseCode: Joi.string().required(),
-        ParentFolder: Joi.string().required(),
+        parentFolder: Joi.string().required(),
         approved: Joi.bool(),
         description: Joi.string().required(),
         isAnonymous: Joi.boolean().required(),
