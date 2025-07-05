@@ -8,7 +8,7 @@ export const getCourse = async (req, res, next) => {
     logger.info(`GET /course/${code}`);
 
     if (!code) throw new AppError(400, "Missing Course Id");
-    const course = await CourseModel.findOne({ code: code.toLowerCase() })
+    const course = await CourseModel.findOne({ code: code })
         .populate({
             path: "children",
             select: "-__v",
@@ -49,7 +49,6 @@ export const getCourse = async (req, res, next) => {
         })
         .select("-__v");
 
-    // if (!course) throw new AppError(404, "Coming Soon!");
     if (!course) return res.json({ found: false });
     return res.json({ found: true, ...course["_doc"] });
 };
@@ -104,19 +103,3 @@ export const isCourseUpdated = async (req, res, next) => {
         subscribedCourses: req.user.courses,
     });
 };
-
-export const getUserCourses = async (req, res) => {
-    try {
-        const courses = req.query.courses;
-        const userCourses = await Promise.all(
-            courses.map(async (element) => {
-                const course = await CourseModel.findOne({ code: element.code.replaceAll(" ", "") });
-                return course;
-            })
-        );
-        res.json(userCourses);
-    }
-    catch (err) {
-        console.log("Error", err.message);
-    }
-}

@@ -23,7 +23,6 @@ import { useParams } from "react-router-dom";
 import { getCourse } from "../../api/Course";
 import { toast } from "react-toastify";
 import Share from "../share";
-import { getUserCourses } from "../../api/Course";
 
 const BrowseScreen = () => {
     const user = useSelector((state) => state.user);
@@ -44,23 +43,14 @@ const BrowseScreen = () => {
     const fb = useSelector((state) => state.fileBrowser);
 
     useEffect(() => {
-        async function run() {
-            if (sessionStorage.getItem("AllCourses") !== null) {
-                try {
-                    dispatch(LoadCourses(JSON.parse(sessionStorage.getItem("AllCourses"))));
-                } catch (error) {
-                    dispatch(LoadCourses([]));
-                    // console.log("load error");
-                }
-            }
-            else {
-                const allcourses = await getUserCourses(user.user.courses);
-                const allcoursesjson = JSON.stringify(allcourses);
-                sessionStorage.setItem("AllCourses", allcoursesjson);
-                console.log(JSON.parse(sessionStorage.getItem("AllCourses")));
+        if (sessionStorage.getItem("AllCourses") !== null) {
+            try {
+                dispatch(LoadCourses(JSON.parse(sessionStorage.getItem("AllCourses"))));
+            } catch (error) {
+                dispatch(LoadCourses([]));
+                // console.log("load error");
             }
         }
-        run();
     }, []);
 
     useEffect(() => {
