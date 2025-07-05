@@ -85,7 +85,6 @@ async function UploadFile(contributionId, filePath, fileName) {
     };
     try {
         const { data } = await axios.put(url, file, config);
-        console.log(data);
         const fileData = new FileModel({
         fileId: data.id,
         type: data.file?.mimeType,

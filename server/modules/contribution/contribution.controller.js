@@ -5,12 +5,12 @@ import validatePayload from "../../utils/validate.js";
 import formidable from "formidable";
 import UploadFile from "../../services/UploadFile.js";
 import fs from "fs";
+import { FolderModel } from "../course/course.model.js";
 import { CLIENT_RENEG_LIMIT } from "tls";
 import { logger } from "@azure/identity";
 
 async function ContributionCreation(contributionId, data) {
     const existingContribution = await Contribution.findOne({ contributionId });
-    console.log(existingContribution);
     if (!existingContribution) {
         const newContribution = await Contribution.create({ ...data, contributionId });
         // console.log("new contri");
@@ -27,6 +27,8 @@ async function ContributionCreation(contributionId, data) {
 
 async function HandleFileToDB(contributionId, fileId) {
     const existingContribution = await Contribution.findOne({ contributionId });
+    const parentFolder = await FolderModel.findOne({ _id: existingContribution.parentFolder });
+    console.log(parentFolder);
 
     if (!existingContribution) {
         const newContribution = await Contribution.create({ contributionId, files: [fileId] });
@@ -34,7 +36,9 @@ async function HandleFileToDB(contributionId, fileId) {
         return newContribution;
     }
     existingContribution.files.push(fileId);
+    parentFolder.children.push(fileId);
     await existingContribution.save();
+    await parentFolder.save();
     console.log("updated contri");
     console.log(`Added file ${fileId} to contribution ${contributionId}`);
     return existingContribution;
@@ -49,31 +53,31 @@ async function HandleFileUpload(req, res, next) {
     console.log("Handling File Upload");
     const contributionId = req.headers["contribution-id"];
     // console.log(req.headers.username);
-    const file = req.file;   
+    const file = req.file;
 
-        // Files names
-        let initialPath = file.path;
-        let newFilename = file.filename;
-        let originalFilename = file.originalname;
+    // Files names
+    let initialPath = file.path;
+    let newFilename = file.filename;
+    let originalFilename = file.originalname;
 
-        let wordArr = originalFilename.split(".");
-        let fileExtension = wordArr[wordArr.length - 1];
-        let finalFileName = "";
+    let wordArr = originalFilename.split(".");
+    let fileExtension = wordArr[wordArr.length - 1];
+    let finalFileName = "";
 
-        for (let i = 0; i < wordArr.length - 1; i++) {
-            finalFileName += wordArr[i];
-        }
-        finalFileName += "~" + req.headers.username;
-        finalFileName += "." + fileExtension;
+    for (let i = 0; i < wordArr.length - 1; i++) {
+        finalFileName += wordArr[i];
+    }
+    finalFileName += "~" + req.headers.username;
+    finalFileName += "." + fileExtension;
 
-        const finalPath = initialPath.slice(0, initialPath.indexOf(newFilename));
+    const finalPath = initialPath.slice(0, initialPath.indexOf(newFilename));
 
-        await fs.promises.rename(finalPath + newFilename, finalPath + finalFileName)
-        const fileId = await UploadFile(contributionId, finalPath, finalFileName);
-        if (fileId) {
-            await HandleFileToDB(contributionId, fileId);
-        }
-        return res.json({ file });
+    await fs.promises.rename(finalPath + newFilename, finalPath + finalFileName)
+    const fileId = await UploadFile(contributionId, finalPath, finalFileName);
+    if (fileId) {
+        await HandleFileToDB(contributionId, fileId);
+    }
+    return res.json({ file });
 }
 
 async function CreateNewContribution(req, res, next) {
