@@ -1,6 +1,9 @@
 import fs from "fs";
 import { getAccessToken } from "../modules/onedrive/onedrive.routes.js";
 import axios from "axios";
+import { FileModel } from "../modules/course/course.model.js";
+import Contribution from "../modules/contribution/contribution.model.js";
+import { type } from "os";
 
 async function GetFolderId(contributionId) {
     const access_token = await getAccessToken();
@@ -62,7 +65,7 @@ async function createUploadSession(folderId, fileName) {
 
     try {
         const { data } = await axios.post(url, {}, config);
-        return data?.uploadUrl;
+        return { url: data?.uploadUrl, access_token };
     } catch (error) {
         return false;
     }
@@ -71,11 +74,12 @@ async function createUploadSession(folderId, fileName) {
 async function UploadFile(contributionId, filePath, fileName) {
     const folderId = await CreateFolder(contributionId);
     if (!folderId) return false;
-    const url = await createUploadSession(folderId, fileName);
+    const { url, access_token } = await createUploadSession(folderId, fileName);
     if (!url) {
         console.log("Error uploading!");
         return;
     }
+    const existingContribution = await Contribution.findOne({ contributionId });
     const file = fs.readFileSync(`${filePath}${fileName}`);
     const config = {
         headers: {
@@ -84,13 +88,38 @@ async function UploadFile(contributionId, filePath, fileName) {
     };
     try {
         const { data } = await axios.put(url, file, config);
-        // console.log(data);
-        console.log("Uploaded File");
-        return data;
+
+        const createurllink = `https://graph.microsoft.com/v1.0/me/drive/items/${data.id}/createLink`;
+        const urldata = await axios.post(createurllink, {
+            type: "view",
+            scope: "organization"
+        },
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                    "Content-Type": "application/json",
+                }
+            }
+        )
+        const webUrl = urldata?.data?.link?.webUrl;
+        const fileData = new FileModel({
+            isVerified: (existingContribution.approved) ? true : false, // The file is directly verified if the contribution is default approved
+            fileId: data.id,                                          // which is what happens when BR makes a contribution
+            size: data.size,
+            name: fileName,
+            downloadUrl: `${webUrl}?download=1`,
+            webUrl: webUrl,
+            // type: data.file?.mimeType,
+        });
+        await fileData.save();
+        console.log("File saved");
+        return fileData._id;
     } catch (error) {
         console.log(error);
         console.log("Error uploading!");
+        return null;
     }
+
 }
 
 export default UploadFile;

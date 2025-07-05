@@ -2,6 +2,7 @@ import AppError from "../../utils/appError.js";
 import CourseModel, { FolderModel, FileModel } from "./course.model.js";
 import logger from "../../utils/logger.js";
 import SearchResults from "../search/search.model.js";
+import { response } from "express";
 export const getCourse = async (req, res, next) => {
     const { code } = req.params;
     logger.info(`GET /course/${code}`);
@@ -103,3 +104,19 @@ export const isCourseUpdated = async (req, res, next) => {
         subscribedCourses: req.user.courses,
     });
 };
+
+export const getUserCourses = async (req, res) => {
+    try {
+        const courses = req.query.courses;
+        const userCourses = await Promise.all(
+            courses.map(async (element) => {
+                const course = await CourseModel.findOne({ code: element.code.replaceAll(" ", "") });
+                return course;
+            })
+        );
+        res.json(userCourses);
+    }
+    catch (err) {
+        console.log("Error", err.message);
+    }
+}
