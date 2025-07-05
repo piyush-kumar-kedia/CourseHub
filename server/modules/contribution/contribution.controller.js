@@ -28,7 +28,6 @@ async function ContributionCreation(contributionId, data) {
 async function HandleFileToDB(contributionId, fileId) {
     const existingContribution = await Contribution.findOne({ contributionId });
     const parentFolder = await FolderModel.findOne({ _id: existingContribution.parentFolder });
-    console.log(parentFolder);
 
     if (!existingContribution) {
         const newContribution = await Contribution.create({ contributionId, files: [fileId] });
