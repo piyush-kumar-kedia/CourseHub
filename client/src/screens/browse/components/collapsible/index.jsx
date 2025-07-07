@@ -90,10 +90,9 @@ const Collapsible = ({ course, color, state }) => {
             const t = await getCurrentCourse(course.code);
             if (t) {
                 if (initial) {
-                    //console.log(t,t.children);
-                    const yearChildren = Array.isArray(t.children?.[currentYear]?.children)
-                    ? t.children[currentYear].children : [];
-                    dispatch(ChangeCurrentYearData(currentYear, yearChildren));
+                    const prevChildren = Array.isArray(t.children?.[t.children.length - 1]?.children)
+                    ? t.children[t.children.length - 1].children : [];
+                    dispatch(ChangeCurrentYearData(t.children.length - 1, prevChildren));
                     setInitial(false);
                 } else {
                     try {
