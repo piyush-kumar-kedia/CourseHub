@@ -11,6 +11,7 @@ import clientRoot from "../../../../api/client";
 import capitalise from "../../../../utils/capitalise.js";
 import Share from "../../../share";
 const FileDisplay = ({ file, path, code }) => {
+    console.log(file);
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
     let name = file.name;
@@ -35,7 +36,7 @@ const FileDisplay = ({ file, path, code }) => {
 
     const dispatch = useDispatch();
 
-    const urls = useSelector((state) => state.URLS);
+    const preview_url = file.webUrl;
 
     const handleShare = () => {
         const sectionShare = document.getElementById("share");
@@ -47,27 +48,28 @@ const FileDisplay = ({ file, path, code }) => {
             toast.error("Please login to download.");
             return;
         }
-        const openedWindow = window.open("", "_blank");
-        openedWindow.document.write("Please close this window after download starts.");
-        const existingUrl = urls.downloadUrls.find((data) => data.id === file.id);
-        if (existingUrl) {
-            openedWindow.location.href = existingUrl.url;
-            return;
-        }
-        const response = donwloadFile(file.id);
-        toast.promise(response, {
-            pending: "Generating download link...",
-            success: "Downloading file....",
-            error: "Something went wrong!",
-        });
-        response
-            .then((data) => {
-                dispatch(AddDownloadUrl(file.id, data.url));
-                openedWindow.location.href = data.url;
-            })
-            .catch(() => {
-                openedWindow.close();
-            });
+        window.open(file.downloadUrl);
+    //     const openedWindow = window.open("", "_blank");
+    //     openedWindow.document.write("Please close this window after download starts.");
+    //     const existingUrl = urls.downloadUrls.find((data) => data.id === file.id);
+    //     if (existingUrl) {
+    //         openedWindow.location.href = existingUrl.url;
+    //         return;
+    //     }
+    //     const response = donwloadFile(file.id);
+    //     toast.promise(response, {
+    //         pending: "Generating download link...",
+    //         success: "Downloading file....",
+    //         error: "Something went wrong!",
+    //     });
+    //     response
+    //         .then((data) => {
+    //             dispatch(AddDownloadUrl(file.id, data.url));
+    //             openedWindow.location.href = data.url;
+    //         })
+    //         .catch(() => {
+    //             openedWindow.close();
+    //         });
     };
 
     const handlePreview = async () => {
@@ -75,27 +77,7 @@ const FileDisplay = ({ file, path, code }) => {
             toast.error("Please login to preview file.");
             return;
         }
-        const openedWindow = window.open("", "_blank");
-        openedWindow.document.write("Loading preview...");
-        const existingUrl = urls.previewUrls.find((data) => data.id === file.id);
-        if (existingUrl) {
-            openedWindow.location.href = existingUrl.url;
-            return;
-        }
-        const response = previewFile(file.id);
-
-        toast.promise(response, {
-            pending: "Loading preview...",
-            error: "Something went wrong!",
-        });
-        response
-            .then((data) => {
-                dispatch(AddPreviewUrl(file.id, data.url));
-                openedWindow.location.href = data.url;
-            })
-            .catch(() => {
-                openedWindow.close();
-            });
+        window.open(preview_url, "_blank");
     };
 
     const handleAddToFavourites = async () => {

@@ -1,5 +1,6 @@
 export const formatFileSize = (file_size) => {
     try {
+        file_size = file_size/(1024 * 1024);
         return parseFloat(file_size) > 1
             ? parseFloat(file_size).toFixed(0) + "MB"
             : (parseFloat(file_size) * 1000).toFixed(0) + "KB";
