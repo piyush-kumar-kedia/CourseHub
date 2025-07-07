@@ -22,6 +22,7 @@ const Collapsible = ({ course, color, state }) => {
     const currCourseCode = useSelector((state) => state.fileBrowser.currentCourseCode);
     const currentYear = useSelector((state) => state.fileBrowser.currentYear);
     const currentCourse = useSelector((state) => state.fileBrowser.currentCourse);
+    const allCourseData = useSelector((state) => state.fileBrowser.allCourseData);
     const dispatch = useDispatch();
 
     const onClick = () => {
@@ -52,10 +53,11 @@ const Collapsible = ({ course, color, state }) => {
         if (currCourse || insessionStorage) {
             // console.log("Already present...");
         }
+        // console.log(currCourse);
         if (!currCourse) {
             try {
                 let loadingCourseToastId = toast.loading("Loading course data...");
-                currCourse = await getCourse(code.toLowerCase());
+                currCourse = await getCourse(code.replaceAll(" ", ""));
                 // console.log("req");
                 const { data } = currCourse;
                 if (!data.found) {
@@ -88,13 +90,9 @@ const Collapsible = ({ course, color, state }) => {
             const t = await getCurrentCourse(course.code);
             if (t) {
                 if (initial) {
-                    dispatch(
-                        ChangeCurrentYearData(
-                            t.children.length - 1,
-                            t.children?.[t.children.length - 1].children
-                        )
-                    );
-                    dispatch(ChangeFolder(t.children?.[t.children.length - 1]));
+                    const prevChildren = Array.isArray(t.children?.[t.children.length - 1]?.children)
+                    ? t.children[t.children.length - 1].children : [];
+                    dispatch(ChangeCurrentYearData(t.children.length - 1, prevChildren));
                     setInitial(false);
                 } else {
                     try {
@@ -123,14 +121,14 @@ const Collapsible = ({ course, color, state }) => {
         run();
     };
 
-    const allCourseData = useSelector((state) => state.fileBrowser.allCourseData);
-
+    let courseCode=course.code.replaceAll(" ", "")
     useEffect(() => {
         // console.log(currCourseCode);
         // console.log(course);
-        if (currCourseCode?.toLowerCase() !== course.code?.toLowerCase()) setOpen(false);
-        if (currCourseCode?.toLowerCase() === course.code?.toLowerCase()) {
-            // console.log("called");
+        //console.log(currCourseCode?.toLowerCase(),courseCode?.toLowerCase());
+        if (currCourseCode?.toLowerCase() !== courseCode?.toLowerCase()){setOpen(false);}
+        if (currCourseCode?.toLowerCase() === courseCode?.toLowerCase()) {
+            //console.log("called");
             triggerGetCourse();
             setOpen(true);
         }
@@ -138,7 +136,7 @@ const Collapsible = ({ course, color, state }) => {
     }, [currCourseCode]);
 
     useEffect(() => {
-        if (currCourseCode?.toLowerCase() === course.code?.toLowerCase()) {
+        if (currCourseCode?.toLowerCase() === courseCode?.toLowerCase()) {
             setInitial(false);
         }
     }, [currentYear]);
@@ -147,7 +145,8 @@ const Collapsible = ({ course, color, state }) => {
 
     useEffect(() => {
         if (initial) return;
-        if (code && folderId && code?.toLowerCase() === course.code?.toLowerCase()) {
+        //console.log(code,courseCode?.toLowerCase());
+        if (code && folderId && code?.toLowerCase() === courseCode?.toLowerCase()) {
             // console.log(course);
             try {
                 let searchedFolder = searchFolderById(currentCourse, folderId);

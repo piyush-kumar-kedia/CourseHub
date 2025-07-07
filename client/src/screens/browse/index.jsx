@@ -23,6 +23,7 @@ import { useParams } from "react-router-dom";
 import { getCourse } from "../../api/Course";
 import { toast } from "react-toastify";
 import Share from "../share";
+
 const BrowseScreen = () => {
     const user = useSelector((state) => state.user);
     const folderData = useSelector((state) => state.fileBrowser.currentFolder);
@@ -136,10 +137,10 @@ const BrowseScreen = () => {
                     {user.localCourses?.length > 0
                         ? ""
                         : user.user?.courses?.map((course, idx) => {
-                              return (
-                                  <Collapsible color={getColors(idx)} key={idx} course={course} />
-                              );
-                          })}
+                            return (
+                                <Collapsible color={getColors(idx)} key={idx} course={course} />
+                            );
+                        })}
                     {user.localCourses?.map((course, idx) => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
@@ -157,24 +158,24 @@ const BrowseScreen = () => {
                         {!folderData
                             ? "Select a course"
                             : folderData?.childType === "File"
-                            ? folderData?.children?.map((file) => (
-                                  <FileDisplay
-                                      file={file}
-                                      key={file._id}
-                                      path={folderData?.path ? folderData.path : "root"}
-                                      code={currCourseCode}
-                                  />
-                              ))
-                            : folderData?.children.map((folder) => (
-                                  <BrowseFolder
-                                      type="folder"
-                                      key={folder._id}
-                                      path={folder.path}
-                                      name={folder.name}
-                                      subject={folder.course}
-                                      folderData={folder}
-                                  />
-                              ))}
+                                ? folderData?.children?.map((file) => (
+                                    <FileDisplay
+                                        file={file}
+                                        key={file._id}
+                                        path={folderData?.path ? folderData.path : "root"}
+                                        code={currCourseCode}
+                                    />
+                                ))
+                                : folderData?.children.map((folder) => (
+                                    <BrowseFolder
+                                        type="folder"
+                                        key={folder._id}
+                                        path={folder.path}
+                                        name={folder.name}
+                                        subject={folder.course}
+                                        folderData={folder}
+                                    />
+                                ))}
                     </div>
                 </div>
                 <div className="right">

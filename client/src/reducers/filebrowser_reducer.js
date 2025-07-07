@@ -1,4 +1,3 @@
-import data from "../data";
 const FileBrowserReducer = (
     state = {
         currentCourse: null,
@@ -6,7 +5,7 @@ const FileBrowserReducer = (
         currentFolder: null,
         currentYear: null,
         currentYearFolderStructure: [],
-        allCourseData: [...data],
+        allCourseData: [],
     },
     action
 ) => {
