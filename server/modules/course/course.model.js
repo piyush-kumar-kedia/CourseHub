@@ -26,7 +26,7 @@ const CourseSchema = Schema(
     {
         name: { type: String, required: true },
         code: { type: String, required: true },
-        children: [{ type: Schema.Types.ObjectId, ref: "Folder" }],
+        children: { type: [{ type: Schema.Types.ObjectId, ref: "Folder" }], default: [] },
         books: [{ type: String }],
     },
     { timestamps: true }
