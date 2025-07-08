@@ -88,7 +88,6 @@ async function CreateNewContribution(req, res, next) {
         parentFolder: Joi.string().required(),
         approved: Joi.bool(),
         description: Joi.string().required(),
-        isAnonymous: Joi.boolean().required(),
     };
     const data = req.body;
 

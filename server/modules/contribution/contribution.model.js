@@ -14,7 +14,7 @@ const ContributionSchema = Schema(
         approved: { type: Boolean, default: false },
         //year: { type: String },
         description: { type: String },
-        isAnonymous: { type: Boolean, default: false },
+        // isAnonymous: { type: Boolean, default: false },
         // url: { type: String },
     },
     { timestamps: true }
