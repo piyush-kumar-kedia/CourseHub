@@ -11,7 +11,6 @@ import clientRoot from "../../../../api/client";
 import capitalise from "../../../../utils/capitalise.js";
 import Share from "../../../share";
 const FileDisplay = ({ file, path, code }) => {
-    console.log(file);
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
     let name = file.name;

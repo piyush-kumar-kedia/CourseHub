@@ -11,6 +11,7 @@ export const getUser = async (req, res, next) => {
     const isBR = await BR.findOne({ email: user.email });
 
     const responseUser = {
+        _id: user._id,
         name: user.name,
         email: user.email,
         rollNumber: user.rollNumber,
