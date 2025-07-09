@@ -76,6 +76,7 @@ async function HandleFileUpload(req, res, next) {
     if (fileId) {
         await HandleFileToDB(contributionId, fileId);
     }
+    await fs.promises.unlink(finalPath+finalFileName);
     return res.json({ file });
 }
 

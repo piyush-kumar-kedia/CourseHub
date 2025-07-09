@@ -24,14 +24,15 @@ const FileBrowserReducer = (
             // console.log("Updated");
             let arr = state.allCourseData;
             if (
-                !arr.find(
+                arr.find(
                     (course) =>
                         course.code?.toLowerCase() ===
                         action.payload.currentCourse.code.toLowerCase()
                 )
             ) {
-                arr.push(action.payload.currentCourse);
+                arr = arr.filter((course) => course.code?.toLowerCase() !== action.payload.currentCourse.code.toLowerCase())
             }
+            arr.push(action.payload.currentCourse);
             sessionStorage.setItem("AllCourses", JSON.stringify(arr));
             return {
                 ...state,

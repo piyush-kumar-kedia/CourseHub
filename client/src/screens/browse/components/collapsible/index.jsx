@@ -35,7 +35,7 @@ const Collapsible = ({ course, color, state }) => {
         let insessionStorage = null;
         try {
             currCourse = allCourseData.find(
-                (course) => course.code.toLowerCase() === code.toLowerCase()
+                (course) => course.code.toLowerCase() === code.toLowerCase().replaceAll(" ", "")
             );
         } catch (error) {
             sessionStorage.removeItem("AllCourses");

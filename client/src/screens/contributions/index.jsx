@@ -4,20 +4,23 @@ import axios from "axios";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { useEffect, useRef, useState } from "react";
-import Footer from "../../components/footer";
-import Cookies from "js-cookie";
-import ToggleSwitch from "./components/ToggleSwitch";
 import "./styles.scss";
 import { v4 as uuidv4 } from "uuid";
 import { CreateNewContribution } from "../../api/Contribution";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import googleFormLink from "../../api/googleFormLink";
+import { useDispatch } from "react-redux";
+
+import { getCourse } from "../../api/Course";
+import { UpdateCourses } from "../../actions/filebrowser_actions";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
     const userName = useSelector((state) => state.user.user.name);
     const currentFolder = useSelector((state) => state.fileBrowser.currentFolder);
+    const code = currentFolder?.course;
     const [contributionId, setContributionId] = useState("");
+    const dispatch = useDispatch();
     useEffect(() => {
         setContributionId(uuidv4());
     }, []);
@@ -71,7 +74,25 @@ const Contributions = () => {
             toast.error("Failed to upload! Please try again.");
             console.log(error);
         }
+
+        //refresh the course in session storage to include the new file.
+        try {
+            let loadingCourseToastId = toast.loading("Loading course data...");
+            const currCourse = await getCourse(code);
+            const { data } = currCourse;
+            if (!data.found) {
+                toast.dismiss(loadingCourseToastId);
+                toast.error("Course data not found!");
+                return;
+            }
+            toast.dismiss(loadingCourseToastId);
+            dispatch(UpdateCourses(data));
+        } catch (error) {
+            return null;
+        }
+        location.reload();
     }
+
     return (
         <SectionC>
             <Wrapper>
