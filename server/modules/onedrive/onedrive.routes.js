@@ -118,6 +118,24 @@ router.get(
         res.send(data);
     })
 );
+router.post(
+    "/thumbnail",
+    catchAsync(async (req, res, next) => {
+        const fileId = req.body.fileId;
+        const thumbnaillink = `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/thumbnails`;
+        const access_token = await getAccessToken();
+        const thumbnaildata = await axios.get(thumbnaillink,
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                }
+            }
+        )
+        const thumbnailurl = thumbnaildata.data.value?.[0]?.medium?.url;
+        await FileModel.updateOne({fileId}, { $set: {thumbnail: thumbnailurl}});
+        return res.status(200).json(thumbnailurl);
+    })
+)
 
 router.get(
     "/:id",
