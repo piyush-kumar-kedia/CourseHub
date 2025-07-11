@@ -11,3 +11,10 @@ export const previewFile = async (fileId) => {
     const { data } = await axios.get(`${serverRoot}/api/file/preview/${fileId}`);
     return data;
 };
+
+export const getThumbnail = async (fileId) => {
+    const resp = await axios.post(`${serverRoot}/api/file/thumbnail`, {
+        fileId: fileId,
+    });
+    console.log("Thumbnail Refreshed");
+}
