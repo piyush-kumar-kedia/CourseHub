@@ -4,6 +4,7 @@ import axios from "axios";
 import { FileModel } from "../modules/course/course.model.js";
 import Contribution from "../modules/contribution/contribution.model.js";
 import { type } from "os";
+import User from "../modules/user/user.model.js";
 
 async function GetFolderId(contributionId) {
     const access_token = await getAccessToken();
@@ -90,29 +91,29 @@ async function UploadFile(contributionId, filePath, fileName) {
         const { data } = await axios.put(url, file, config);
         const createurllink = `https://graph.microsoft.com/v1.0/me/drive/items/${data.id}/createLink`;
         const thumbnaillink = `https://graph.microsoft.com/v1.0/me/drive/items/${data.id}/thumbnails`;
-        const urldata = await axios.post(createurllink, {
-            type: "view",
-            scope: "organization"
-        },
+        const urldata = await axios.post(
+            createurllink,
+            {
+                type: "view",
+                scope: "organization",
+            },
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                     "Content-Type": "application/json",
-                }
+                },
             }
-        )
-        const thumbnaildata = await axios.get(thumbnaillink,
-            {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                }
-            }
-        )
+        );
+        const thumbnaildata = await axios.get(thumbnaillink, {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
         const thumbnailurl = thumbnaildata.data.value?.[0]?.medium?.url;
         const webUrl = urldata?.data?.link?.webUrl;
         const fileData = new FileModel({
-            isVerified: (existingContribution.approved) ? true : false, // The file is directly verified if the contribution is default approved
-            fileId: data.id,                                          // which is what happens when BR makes a contribution
+            isVerified: existingContribution.approved ? true : false, // The file is directly verified if the contribution is default approved
+            fileId: data.id, // which is what happens when BR makes a contribution
             size: data.size,
             thumbnail: thumbnailurl,
             name: fileName,
@@ -128,7 +129,6 @@ async function UploadFile(contributionId, filePath, fileName) {
         console.log("Error uploading!");
         return null;
     }
-
 }
 
 export default UploadFile;

@@ -23,7 +23,6 @@ export const getUserDifference = async (req, res, next) => {
             coursesDeleted: [],
             updatedCourses: [],
             isFavouriteUpdated: false,
-
         });
     }
     let [addedCourses, coursesDeleted] = getDifferenceHelper(
@@ -47,7 +46,6 @@ export const getUserDifference = async (req, res, next) => {
 
     const updatedCourses = getCourseCodeArr(updatedCoursesArr);
 
-
     // updating snapshot after every mobile fetch
     await createUserSnapshotHelper(user);
 
@@ -56,7 +54,6 @@ export const getUserDifference = async (req, res, next) => {
         coursesDeleted,
         updatedCourses,
         isFavouriteUpdated,
-
     });
 };
 

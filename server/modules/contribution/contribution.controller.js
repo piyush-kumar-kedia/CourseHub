@@ -71,12 +71,12 @@ async function HandleFileUpload(req, res, next) {
 
     const finalPath = initialPath.slice(0, initialPath.indexOf(newFilename));
 
-    await fs.promises.rename(finalPath + newFilename, finalPath + finalFileName)
+    await fs.promises.rename(finalPath + newFilename, finalPath + finalFileName);
     const fileId = await UploadFile(contributionId, finalPath, finalFileName);
     if (fileId) {
         await HandleFileToDB(contributionId, fileId);
     }
-    await fs.promises.unlink(finalPath+finalFileName);
+    await fs.promises.unlink(finalPath + finalFileName);
     return res.json({ file });
 }
 
