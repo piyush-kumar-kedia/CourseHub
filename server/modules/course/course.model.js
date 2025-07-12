@@ -17,7 +17,7 @@ const FileSchema = Schema({
     thumbnail: { type: String },
     webUrl: { type: String, required: true },
     downloadUrl: { type: String, required: true }, //remove
-    isVerified: {type: Boolean, default: false, required: true},
+    isVerified: { type: Boolean, default: false, required: true },
 });
 
 export const FileModel = model("File", FileSchema);

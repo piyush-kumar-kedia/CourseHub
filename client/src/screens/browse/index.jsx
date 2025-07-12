@@ -23,6 +23,7 @@ import { useParams } from "react-router-dom";
 import { getCourse } from "../../api/Course";
 import { toast } from "react-toastify";
 import Share from "../share";
+import FileController from "./components/collapsible/components/file-controller";
 
 const BrowseScreen = () => {
     const user = useSelector((state) => state.user);
@@ -41,7 +42,9 @@ const BrowseScreen = () => {
     const [loading, setLoading] = useState(true);
     const { code, folderId } = useParams();
     const fb = useSelector((state) => state.fileBrowser);
-
+    useEffect(() => {
+    sessionStorage.removeItem("AllCourses");
+    }, []);
     useEffect(() => {
         if (sessionStorage.getItem("AllCourses") !== null) {
             try {
@@ -120,13 +123,30 @@ const BrowseScreen = () => {
             dispatch(ChangeCurrentCourse(null, code));
         };
         run();
+
         // console.log("code search");
-    }, [loading]);
+    }, [loading, code]);
+    // console.log("folderData?.children: ", folderData?.children);
 
     // useEffect(() => {
     // console.log(fb);
     // console.log(user);
     // }, [fb, user]);
+    
+    // const fetchCourseDataAgain = async (courseCode) => {
+    // try {
+    //     const courseCode = currCourseCode ;
+    //     const fetchedData = await getCourse(courseCode.toLowerCase());
+    //     if (fetchedData.data.found) {
+    //     dispatch(UpdateCourses(fetchedData.data));
+    //     dispatch(AddNewCourseLocal(fetchedData.data));
+    //     } else {
+    //     toast.error("Course not found!");
+    //     }
+    // } catch (error) {
+    //     console.error("Error refetching course data:", error);
+    // }
+    // };
     return (
         <Container color={"light"} type={"fluid"}>
             <div className="navbar-browse-screen">
@@ -155,27 +175,45 @@ const BrowseScreen = () => {
                         courseCode={folderData?.course}
                     />
                     <div className="files">
-                        {!folderData
-                            ? "Select a course"
-                            : folderData?.childType === "File"
-                                ? folderData?.children?.map((file) => (
-                                    <FileDisplay
-                                        file={file}
-                                        key={file._id}
-                                        path={folderData?.path ? folderData.path : "root"}
-                                        code={currCourseCode}
-                                    />
-                                ))
-                                : folderData?.children.map((folder) => (
-                                    <BrowseFolder
-                                        type="folder"
-                                        key={folder._id}
-                                        path={folder.path}
-                                        name={folder.name}
-                                        subject={folder.course}
-                                        folderData={folder}
-                                    />
-                                ))}
+                        {!folderData ? (
+                            "Select a course"
+                            ) : folderData?.childType === "File" ? (
+                            <FileController files={folderData?.children} 
+                            // fetchCourseDataAgain={fetchCourseDataAgain} courseCode={currCourseCode}
+                             />
+                            ) : (
+                            folderData?.children.map((folder) => (
+                                <BrowseFolder
+                                type="folder"
+                                key={folder._id}
+                                path={folder.path}
+                                name={folder.name}
+                                subject={folder.course}
+                                folderData={folder}
+                                />
+                            ))
+                            )}
+
+
+                            {/* // : folderData?.childType === "File"
+                            //     ? folderData?.children?.map((file) => (
+                            //         <FileDisplay
+                            //             file={file}
+                            //             key={file._id}
+                            //             path={folderData?.path ? folderData.path : "root"}
+                            //             code={currCourseCode}
+                            //         />
+                            //     ))
+                            //     : folderData?.children.map((folder) => (
+                            //         <BrowseFolder
+                            //             type="folder"
+                            //             key={folder._id}
+                            //             path={folder.path}
+                            //             name={folder.name}
+                            //             subject={folder.course}
+                            //             folderData={folder}
+                            //         />
+                            //     ))} */}
                     </div>
                 </div>
                 <div className="right">

@@ -47,3 +47,12 @@ export const ResetFileBrowserState = () => {
         type: "RESET_FILE_BROWSER_STATE",
     };
 };
+export const UpdateFileVerificationStatus = (fileId, status) => ({
+    type: "UPDATE_FILE_VERIFICATION_STATUS",
+    payload: { fileId, status },
+});
+
+export const RemoveFileFromFolder = (fileId) => ({
+    type: "REMOVE_FILE_FROM_FOLDER",
+    payload: fileId,
+});
