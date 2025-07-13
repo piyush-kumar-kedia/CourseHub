@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get("/all", isAuthenticated, getAllFiles);
 router.put("/verify/:id", isAuthenticated, isBR, verifyFile);
-router.delete("/unverify/:id", isAuthenticated, isBR, unverifyFile);
+// router.delete("/unverify/:id", isAuthenticated, isBR, unverifyFile);
+router.delete("/unverify/:id", unverifyFile);
 
 export default router;

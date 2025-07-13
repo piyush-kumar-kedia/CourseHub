@@ -279,8 +279,8 @@ export const redirectHandler = async (req, res, next) => {
         httpOnly: true,
     });
 
-    // return res.redirect(appConfig.clientURL);
-    return res.redirect(`${appConfig.clientURL}/login/success?token=${token}`); //to redirect with token
+    return res.redirect(appConfig.clientURL);
+    // return res.redirect(`${appConfig.clientURL}/login/success?token=${token}`); //to redirect with token
 };
 
 export const mobileRedirectHandler = async (req, res, next) => {

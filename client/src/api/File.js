@@ -33,8 +33,10 @@ export const fetchAllFiles = async () => {
 };
 
 // Verify a file (BR only)
-export const verifyFile = async (fileId) => {
-    const { data } = await API.put(`/files/verify/${fileId}`);
+export const verifyFile = async (fileId, folderId) => {
+    const { data } = await API.put(`/files/verify/${fileId}`, {
+        folderId
+    });
     return data;
 };
 

@@ -116,7 +116,7 @@ const handleUnverify = async () => {
 
   try {
     console.log("Deleting file:", file._id);
-    await unverifyFile(file._id);
+    await unverifyFile(file._id, currFolderId);
     toast.success("File deleted!");
     // window.location.reload();
     dispatch(RemoveFileFromFolder(file._id, true));

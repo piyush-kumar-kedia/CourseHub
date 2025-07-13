@@ -1,4 +1,4 @@
-import { FileModel } from "../course/course.model.js";
+import { FileModel, FolderModel } from "../course/course.model.js";
 
 // Verify file
 export const verifyFile = async (req, res) => {
@@ -18,8 +18,11 @@ export const verifyFile = async (req, res) => {
 // Unverify file (delete it)
 export const unverifyFile = async (req, res) => {
     try {
+        const folderId = req.body.folderId;
+        await FolderModel.findByIdAndUpdate(folderId, {$pull: {children: req.params.id}});
         const file = await FileModel.findById(req.params.id);
         if (!file) return res.status(404).json({ message: "File not found" });
+
 
         await file.deleteOne();
         res.status(200).json({ message: "File deleted (unverified) successfully" });
