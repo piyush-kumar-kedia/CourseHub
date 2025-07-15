@@ -4,84 +4,66 @@ import axios from "axios";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { useEffect, useRef, useState } from "react";
-import Footer from "../../components/footer";
-import Cookies from "js-cookie";
-import ToggleSwitch from "./components/ToggleSwitch";
 import "./styles.scss";
 import { v4 as uuidv4 } from "uuid";
 import { CreateNewContribution } from "../../api/Contribution";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import googleFormLink from "../../api/googleFormLink";
+import { useDispatch } from "react-redux";
+
+import { getCourse } from "../../api/Course";
+import { UpdateCourses } from "../../actions/filebrowser_actions";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
     const userName = useSelector((state) => state.user.user.name);
+    const currentFolder = useSelector((state) => state.fileBrowser.currentFolder);
+    const code = currentFolder?.course;
     const [contributionId, setContributionId] = useState("");
+    const dispatch = useDispatch();
     useEffect(() => {
         setContributionId(uuidv4());
     }, []);
 
-    const [courseCode, setCourseCode] = useState(null);
-    const [folder, setFolder] = useState("Lecture Slides");
     const [description, setDescription] = useState(null);
-    const [year, setYear] = useState("2022");
     const [submitEnabled, setSubmitEnabled] = useState(false);
 
     useEffect(() => {
-        if (!courseCode || !folder || !year || !description || courseCode?.length < 3) {
+        if (!description) {
             setSubmitEnabled(false);
             return;
         }
         setSubmitEnabled(true);
-    }, [courseCode, folder, description, year]);
+    }, [description]);
 
     // const [contributionId, setContributionId] = useState("");
 
     let pond = useRef();
 
     async function handleSubmit() {
-        if (!courseCode || !folder || !year || !description) {
+        if (!description) {
             toast.error("Please fill the complete form.");
             return;
         }
-        if (courseCode?.length < 3) {
-            toast.error("Invalid course code length!");
-            return;
-        }
-        await pond.current.processFiles();
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
-        pond.current.removeFiles();
-        const toggle = document.getElementById("toggle");
         // console.log(toggle);
-        let isAnoynmous = toggle.checked;
         // console.log(isAnoynmous);
 
         try {
             setSubmitEnabled(false);
-            if (isAnoynmous) {
-                let resp = await CreateNewContribution({
-                    courseCode,
-                    folder,
-                    description,
-                    year,
-                    approved: false,
-                    contributionId,
-                    uploadedBy: `63ef67f7ab9bcbea9195147c`,
-                });
-                // console.log(resp);
-            } else {
-                let resp = await CreateNewContribution({
-                    courseCode,
-                    folder,
-                    description,
-                    year,
-                    approved: false,
-                    contributionId,
-                    uploadedBy,
-                });
-                // console.log(resp);
-            }
+            // console.log(resp);
+            let resp = await CreateNewContribution({
+                parentFolder: currentFolder._id,
+                courseCode: currentFolder.course,
+                description,
+                approved: false,
+                contributionId,
+                uploadedBy,
+            });
+            // console.log(resp);
+            await pond.current.processFiles();
+            pond.current.removeFiles();
             contributionSection.classList.remove("show");
             toast.success("Files uploaded successfully!");
             setContributionId(uuidv4());
@@ -92,78 +74,30 @@ const Contributions = () => {
             toast.error("Failed to upload! Please try again.");
             console.log(error);
         }
+
+        //refresh the course in session storage to include the new file.
+        try {
+            let loadingCourseToastId = toast.loading("Loading course data...");
+            const currCourse = await getCourse(code);
+            const { data } = currCourse;
+            if (!data.found) {
+                toast.dismiss(loadingCourseToastId);
+                toast.error("Course data not found!");
+                return;
+            }
+            toast.dismiss(loadingCourseToastId);
+            dispatch(UpdateCourses(data));
+        } catch (error) {
+            return null;
+        }
+        location.reload();
     }
+
     return (
         <SectionC>
             <Wrapper>
                 <div className="head">Contribute to CourseHub</div>
                 <form>
-                    <div className="course">
-                        <label htmlFor="course" className="label_course">
-                            COURSE CODE :
-                        </label>
-                        <input
-                            placeholder="Course Code"
-                            name="course"
-                            className="input_course"
-                            value={courseCode? courseCode : ""}
-                            onChange={(e) => setCourseCode(e.target.value)}
-                        ></input>
-                    </div>
-                    <div className="section">
-                        <label htmlFor="section" className="label_section">
-                            SECTION :
-                        </label>
-                        <select
-                            name="section"
-                            className="select_section"
-                            onChange={(e) => setFolder(e.target.value)}
-                        >
-                            <option value="Books">Books</option>
-                            <option value="Lecture Slides">Lecture Slides</option>
-                            <option value="Tutorials">Tutorials</option>
-                            <option value="Exams">Exams</option>
-                            <option value="Notes">Notes</option>
-                            <option value="Assignments">Assignments</option>
-                        </select>
-                    </div>
-                    <div className="year">
-                        <label htmlFor="year" className="label_year">
-                            YEAR :
-                        </label>
-                        <select
-                            name="year"
-                            className="select_year"
-                            onChange={(e) => setYear(e.target.value)}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                className="w-6 h-6"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                                />
-                            </svg>
-                            <option value="2022">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2022">2021</option>
-                            <option value="2022">2020</option>
-                            <option value="2019">2019</option>
-                            <option value="2018">2018</option>
-                            <option value="2017">2017</option>
-                            <option value="2022">2016</option>
-                            <option value="2022">2015</option>
-                            <option value="2022">2014</option>
-                            <option value="2022">2013</option>
-                            <option value="2022">2012</option>
-                        </select>
-                    </div>
                     <div className="description">
                         <label htmlFor="description" className="label_description">
                             DESCRIPTION :
@@ -172,21 +106,14 @@ const Contributions = () => {
                             name="description"
                             className="input_description"
                             placeholder="Give a brief description"
-                            value={description? description : ""}
+                            value={description ? description : ""}
                             onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
-                    </div>
-                    <div className="year">
-                        <label htmlFor="course" className="label_year">
-                            ANONYMOUS:
-                        </label>
-                        <span className="toggle-container">
-                            <ToggleSwitch label={"toggle"} />
-                        </span>
                     </div>
                 </form>
                 <div className="file_pond">
                     <FilePond
+                        name="file"
                         allowMultiple={true}
                         maxFiles={40}
                         server={{

@@ -62,9 +62,9 @@ export const fetchCourses = async (rollNumber) => {
             "Content-Type": "application/x-www-form-urlencoded",
         },
         data: qs.stringify({
-            'cid':'All',
-            'sess': academic.session,
-            'yr': academic.currentYear,
+            cid: "All",
+            sess: academic.session,
+            yr: academic.currentYear,
         }),
     };
 
@@ -77,23 +77,21 @@ export const fetchCourses = async (rollNumber) => {
     const $ = cheerio.load(response.data);
 
     const courses = [];
-    
-    $('tr').each((i,elem) => {
-        const details=$(elem).find('td')
-        const studentRollNo= details.eq(2).text();
-        const code=details.eq(3).text(); //course code
-        const name=courselist[code]; //course name
-        
-        if (code &&
-        studentRollNo==rollNumber &&
-        !code.includes('SA')){
+
+    $("tr").each((i, elem) => {
+        const details = $(elem).find("td");
+        const studentRollNo = details.eq(2).text();
+        const code = details.eq(3).text(); //course code
+        const name = courselist[code]; //course name
+
+        if (code && studentRollNo == rollNumber && !code.includes("SA")) {
             courses.push({
                 name,
                 code,
             });
         }
     });
-    
+
     return courses;
 };
 
@@ -184,11 +182,11 @@ const getDepartment = async (access_token) => {
 function calculateSemester(rollNumber) {
     const year = parseInt(rollNumber.slice(0, 2));
     const currdate = new Date();
-    const curryear = currdate.getFullYear()%100;
+    const curryear = currdate.getFullYear() % 100;
     const diff = curryear - year;
-    const properdate = (currdate.getMonth() + 1)*100 + currdate.getDate();
-    if( properdate < 723 && properdate > 103 ) return 2*diff;
-    else return 2*diff + 1;
+    const properdate = (currdate.getMonth() + 1) * 100 + currdate.getDate();
+    if (properdate < 723 && properdate > 103) return 2 * diff;
+    else return 2 * diff + 1;
 }
 
 export const redirectHandler = async (req, res, next) => {
@@ -233,7 +231,7 @@ export const redirectHandler = async (req, res, next) => {
 
     let existingUser = await findUserWithEmail(userFromToken.data.mail);
 
-    let br = await BR.findOne({email: userFromToken.data.mail});
+    let br = await BR.findOne({ email: userFromToken.data.mail });
     if (!existingUser) {
         const courses = await fetchCourses(userFromToken.data.surname);
         const department = await getDepartment(AccessToken);
@@ -249,7 +247,7 @@ export const redirectHandler = async (req, res, next) => {
             courses: courses,
             department: department,
             isBR: br ? true : false,
-            previousCourses: br ? previousCourses : []
+            previousCourses: br ? previousCourses : [],
         };
 
         const { error } = validateUser(userData);
@@ -285,6 +283,7 @@ export const redirectHandler = async (req, res, next) => {
     });
 
     return res.redirect(appConfig.clientURL);
+    // return res.redirect(`${appConfig.clientURL}/login/success?token=${token}`); //to redirect with token
 };
 
 export const mobileRedirectHandler = async (req, res, next) => {

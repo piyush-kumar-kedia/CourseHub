@@ -4,7 +4,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import clientRoot from "../../../../api/client";
 import Share from "../../../share";
 import { useState } from "react";
-const FolderInfo = ({ path, name, canDownload, contributionHandler, folderId, courseCode }) => {
+const FolderInfo = ({ isBR, path, name, canDownload, contributionHandler, folderId, courseCode }) => {
     const handleShare = () => {
         const sectionShare = document.getElementById("share");
         sectionShare.classList.add("show");
@@ -34,19 +34,23 @@ const FolderInfo = ({ path, name, canDownload, contributionHandler, folderId, co
                         </div>
                     </div>
                 </div>
-                <div className="btn-container">
-                    {/* <button
-                        className="btn download"
-                        style={{ display: canDownload ? "inline-block" : "none" }}
-                    >
-                        <span className="icon download-icon"></span>
-                        <span className="text">Download All Files</span>
-                    </button> */}
-                    <button className="btn plus" onClick={contributionHandler}>
-                        <span className="icon plus-icon"></span>
-                        <span className="text">Contribute</span>
-                    </button>
-                </div>
+                {
+                    canDownload?
+                    <div className="btn-container">
+                        {/* <button
+                            className="btn download"
+                            style={{ display: canDownload ? "inline-block" : "none" }}
+                        >
+                            <span className="icon download-icon"></span>
+                            <span className="text">Download All Files</span>
+                        </button> */}
+                        <button className="btn plus" onClick={contributionHandler}>
+                            <span className="icon plus-icon"></span>
+                            <span className="text">{isBR? "Add File": "Contribute"}</span>
+                        </button>
+                    </div>
+                    : <></>
+                }
             </div>
             <Share link={`${clientRoot}/browse/${courseCode}/${folderId}`} />
         </>

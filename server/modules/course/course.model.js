@@ -14,10 +14,10 @@ const FileSchema = Schema({
     //type: { type: String, required: true },
     fileId: { type: String, required: true },
     size: { type: String, required: true },
-    //thumbnail: { type: String },
+    thumbnail: { type: String },
     webUrl: { type: String, required: true },
-    downloadUrl: { type: String, required: true },
-    isVerified: {type: Boolean, default: false, required: true},
+    downloadUrl: { type: String, required: true }, //remove
+    isVerified: { type: Boolean, default: false, required: true },
 });
 
 export const FileModel = model("File", FileSchema);

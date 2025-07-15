@@ -4,13 +4,17 @@ import { AddToFavourites } from "../../../../api/User";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { UpdateFavourites } from "../../../../actions/user_actions";
-import { donwloadFile, previewFile } from "../../../../api/File";
-import { AddPreviewUrl, AddDownloadUrl } from "../../../../actions/url_actions";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import { getCourse } from "../../../../api/Course.js";
+import { UpdateCourses } from "../../../../actions/filebrowser_actions.js";
+import { downloadFile, previewFile, getThumbnail } from "../../../../api/File";
 import clientRoot from "../../../../api/client";
 import capitalise from "../../../../utils/capitalise.js";
 import Share from "../../../share";
+import { verifyFile, unverifyFile } from "../../../../api/File";
+import { RemoveFileFromFolder, UpdateFileVerificationStatus } from "../../../../actions/filebrowser_actions.js";
+
 const FileDisplay = ({ file, path, code }) => {
+    const user = useSelector((state) => state.user?.user);
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
     let name = file.name;
@@ -32,11 +36,14 @@ const FileDisplay = ({ file, path, code }) => {
     const isLoggedIn = useSelector((state) => state.user?.loggedIn);
     const currCourseCode = useSelector((state) => state.fileBrowser?.currentCourseCode);
     const currFolderId = useSelector((state) => state.fileBrowser?.currentFolder?._id);
+    const currentUser = useSelector((state) => state.user.user);
 
+if (!file.isVerified && !currentUser?.isBR) {
+    return null;
+}
     const dispatch = useDispatch();
 
-    const urls = useSelector((state) => state.URLS);
-
+    const preview_url = file.webUrl;
     const handleShare = () => {
         const sectionShare = document.getElementById("share");
         sectionShare.classList.add("show");
@@ -47,27 +54,28 @@ const FileDisplay = ({ file, path, code }) => {
             toast.error("Please login to download.");
             return;
         }
-        const openedWindow = window.open("", "_blank");
-        openedWindow.document.write("Please close this window after download starts.");
-        const existingUrl = urls.downloadUrls.find((data) => data.id === file.id);
-        if (existingUrl) {
-            openedWindow.location.href = existingUrl.url;
-            return;
-        }
-        const response = donwloadFile(file.id);
-        toast.promise(response, {
-            pending: "Generating download link...",
-            success: "Downloading file....",
-            error: "Something went wrong!",
-        });
-        response
-            .then((data) => {
-                dispatch(AddDownloadUrl(file.id, data.url));
-                openedWindow.location.href = data.url;
-            })
-            .catch(() => {
-                openedWindow.close();
-            });
+        window.open(file.downloadUrl);
+        //     const openedWindow = window.open("", "_blank");
+        //     openedWindow.document.write("Please close this window after download starts.");
+        //     const existingUrl = urls.downloadUrls.find((data) => data.id === file.id);
+        //     if (existingUrl) {
+        //         openedWindow.location.href = existingUrl.url;
+        //         return;
+        //     }
+        //     const response = donwloadFile(file.id);
+        //     toast.promise(response, {
+        //         pending: "Generating download link...",
+        //         success: "Downloading file....",
+        //         error: "Something went wrong!",
+        //     });
+        //     response
+        //         .then((data) => {
+        //             dispatch(AddDownloadUrl(file.id, data.url));
+        //             openedWindow.location.href = data.url;
+        //         })
+        //         .catch(() => {
+        //             openedWindow.close();
+        //         });
     };
 
     const handlePreview = async () => {
@@ -75,38 +83,69 @@ const FileDisplay = ({ file, path, code }) => {
             toast.error("Please login to preview file.");
             return;
         }
-        const openedWindow = window.open("", "_blank");
-        openedWindow.document.write("Loading preview...");
-        const existingUrl = urls.previewUrls.find((data) => data.id === file.id);
-        if (existingUrl) {
-            openedWindow.location.href = existingUrl.url;
-            return;
-        }
-        const response = previewFile(file.id);
-
-        toast.promise(response, {
-            pending: "Loading preview...",
-            error: "Something went wrong!",
-        });
-        response
-            .then((data) => {
-                dispatch(AddPreviewUrl(file.id, data.url));
-                openedWindow.location.href = data.url;
-            })
-            .catch(() => {
-                openedWindow.close();
-            });
+        window.open(preview_url, "_blank");
     };
 
     const handleAddToFavourites = async () => {
         const resp = await AddToFavourites(file.id, file.name, path, code);
         if (resp?.data?.favourites) {
             dispatch(UpdateFavourites(resp?.data?.favourites));
-        }
+        }    
     };
+const handleVerify = async () => {
+  const confirmAction = window.confirm("Are you sure you want to verify this file?");
+  if (!confirmAction) return;
+
+  try {
+    console.log("Verifying file:", file._id);
+    await verifyFile(file._id);
+    toast.success("File verified!");
+    // window.location.reload();
+    dispatch(UpdateFileVerificationStatus(file._id, true));
+    // Instead of reload:
+    // fetchCourseDataAgain(currCourseCode); // (write this action to refetch the course and update redux)
+  } catch (err) {
+    console.error("Error verifying:", err);
+    toast.error("Failed to verify file.");
+  }
+};
+
+const handleUnverify = async () => {
+  const confirmAction = window.confirm("Are you sure you want to permanently delete this file?");
+  if (!confirmAction) return;
+
+  try {
+    console.log("Deleting file:", file._id);
+    await unverifyFile(file._id, file.fileId, currFolderId);
+    toast.success("File deleted!");
+    // window.location.reload();
+    dispatch(RemoveFileFromFolder(file._id, true));
+    // fetchCourseDataAgain(currCourseCode);
+  } catch (err) {
+    console.error("Error deleting:", err);
+    toast.error("Failed to delete file.");
+  }
+};
+
 
     return (
-        <div className="file-display">
+        <div className={`file-display ${user?.isBR ? (file.isVerified ? "verified" : "unverified") : ""}`}>
+            <img
+                src={file.thumbnail}
+                style={{ display: "none" }}
+                onError={() => {
+                    async function thumbnailrefresh() {
+                        await getThumbnail(file.fileId);
+                        let loadingCourseToastId = toast.loading("Loading course data...");
+                        const currCourse = await getCourse(code);
+                        const { data } = currCourse;
+                        toast.dismiss(loadingCourseToastId);
+                        dispatch(UpdateCourses(data));
+                        location.reload();
+                    }
+                    thumbnailrefresh();
+                }}
+            />
             <div
                 className="img-preview"
                 style={{
@@ -116,6 +155,12 @@ const FileDisplay = ({ file, path, code }) => {
                 }}
             >
                 <div className="top">
+                    {user?.isBR && (
+                        <>
+                         <span className="verify" onClick={handleVerify} title="Verify"></span>
+                        <span className="unverify" onClick={handleUnverify} title="Delete"></span>
+                        </>
+                    )}
                     <span className="share" onClick={handleShare}></span>
 
                     <span className="download" onClick={handleDownload}></span>
