@@ -30,7 +30,11 @@ const FileBrowserReducer = (
                         action.payload.currentCourse.code.toLowerCase()
                 )
             ) {
-                arr = arr.filter((course) => course.code?.toLowerCase() !== action.payload.currentCourse.code.toLowerCase())
+                arr = arr.filter(
+                    (course) =>
+                        course.code?.toLowerCase() !==
+                        action.payload.currentCourse.code.toLowerCase()
+                );
             }
             arr.push(action.payload.currentCourse);
             sessionStorage.setItem("AllCourses", JSON.stringify(arr));
@@ -54,6 +58,29 @@ const FileBrowserReducer = (
                 currentFolder: null,
                 currentYear: null,
             };
+        case "UPDATE_FILE_VERIFICATION_STATUS":
+            return {
+                ...state,
+                currentFolder: {
+                    ...state.currentFolder,
+                    children: state.currentFolder.children.map((file) =>
+                        file._id === action.payload.fileId
+                            ? { ...file, isVerified: action.payload.status }
+                            : file
+                    ),
+                },
+            };
+        case "REMOVE_FILE_FROM_FOLDER":
+            return {
+                ...state,
+                currentFolder: {
+                    ...state.currentFolder,
+                    children: state.currentFolder.children.filter(
+                        (file) => file._id !== action.payload
+                    ),
+                },
+            };
+
         default:
             return state;
     }

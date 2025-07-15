@@ -4,7 +4,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import clientRoot from "../../../../api/client";
 import Share from "../../../share";
 import { useState } from "react";
-const FolderInfo = ({ path, name, canDownload, contributionHandler, folderId, courseCode }) => {
+const FolderInfo = ({ isBR, path, name, canDownload, contributionHandler, folderId, courseCode }) => {
     const handleShare = () => {
         const sectionShare = document.getElementById("share");
         sectionShare.classList.add("show");
@@ -46,7 +46,7 @@ const FolderInfo = ({ path, name, canDownload, contributionHandler, folderId, co
                         </button> */}
                         <button className="btn plus" onClick={contributionHandler}>
                             <span className="icon plus-icon"></span>
-                            <span className="text">Contribute</span>
+                            <span className="text">{isBR? "Add File": "Contribute"}</span>
                         </button>
                     </div>
                     : <></>
