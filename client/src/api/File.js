@@ -33,17 +33,20 @@ export const fetchAllFiles = async () => {
 };
 
 // Verify a file (BR only)
-export const verifyFile = async (fileId, folderId) => {
-    const { data } = await API.put(`/files/verify/${fileId}`, {
-        folderId
-    });
+export const verifyFile = async (fileId) => {
+    const { data } = await API.put(`/files/verify/${fileId}`);
     return data;
 };
 
 // Unverify (delete) a file (BR only)
-export const unverifyFile = async (fileId) => {
-    const { data } = await API.delete(`/files/unverify/${fileId}`);
-    return data;
+export const unverifyFile = async (fileId, oneDriveId, folderId) => {
+    await API.delete(`/files/unverify/${fileId}`,
+    {
+        data: {
+            oneDriveId,
+            folderId,
+        }
+    });
 };
 
 export const getThumbnail = async (fileId) => {
