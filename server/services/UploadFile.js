@@ -131,4 +131,61 @@ async function UploadFile(contributionId, filePath, fileName) {
     }
 }
 
+async function DeleteFile(fileId) {
+    const access_token = await getAccessToken();
+
+    try {
+        //obtain parent folder onedrive id
+        const { data } = await axios.get(`https://graph.microsoft.com/v1.0/me/drive/items/${fileId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                }
+            }
+        )
+        const folderId = data?.parentReference?.id;
+
+        //delete entire folder if it is the only file or delete only the file
+        const empty = await isFolderEmpty(folderId, access_token)
+        if (empty) {
+            await axios.delete(`https://graph.microsoft.com/v1.0/me/drive/items/${folderId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    }
+                }
+            )
+        }
+        else {
+            await axios.delete(`https://graph.microsoft.com/v1.0/me/drive/items/${fileId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`,
+                    }
+                }
+            )
+        }
+
+    }
+    catch (err) {
+        console.log(err.response);
+    }
+}
+
+async function isFolderEmpty(folderId, access_token) {
+    const { data } = await axios.get(`https://graph.microsoft.com/v1.0/me/drive/items/${folderId}/children`,
+        {
+            headers: {
+                Authorization: `Bearer ${access_token}`
+            }
+        }
+    )
+
+    if (data.value.length === 1)
+        return true;
+    else
+        return false;
+}
+
+export { DeleteFile };
 export default UploadFile;

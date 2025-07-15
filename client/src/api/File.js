@@ -39,9 +39,14 @@ export const verifyFile = async (fileId) => {
 };
 
 // Unverify (delete) a file (BR only)
-export const unverifyFile = async (fileId) => {
-    const { data } = await API.delete(`/files/unverify/${fileId}`);
-    return data;
+export const unverifyFile = async (fileId, oneDriveId, folderId) => {
+    await API.delete(`/files/unverify/${fileId}`,
+    {
+        data: {
+            oneDriveId,
+            folderId,
+        }
+    });
 };
 
 export const getThumbnail = async (fileId) => {

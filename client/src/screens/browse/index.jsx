@@ -167,6 +167,7 @@ const BrowseScreen = () => {
                 </div>
                 <div className="middle">
                     <FolderInfo
+                        isBR={user.user.isBR}
                         path={folderData?.path ? folderData.path : "Select a folder..."}
                         name={folderData?.name ? folderData.name : "Select a folder"}
                         canDownload={folderData?.childType === "File"}
