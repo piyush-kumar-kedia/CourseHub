@@ -127,6 +127,12 @@ const BrowseScreen = () => {
     // console.log(fb);
     // console.log(user);
     // }, [fb, user]);
+    const headerText=folderData?.path ? 
+        folderData.path 
+        : folderData?.childType==="Folder"? "Select a folder..."
+            : folderData?.childType==="File"? "Select a file..."
+                :currYear? "Select an year...":"Select a course..."
+    
     return (
         <Container color={"light"} type={"fluid"}>
             <div className="navbar-browse-screen">
@@ -147,8 +153,8 @@ const BrowseScreen = () => {
                 </div>
                 <div className="middle">
                     <FolderInfo
-                        path={folderData?.path ? folderData.path : "Select a folder..."}
-                        name={folderData?.name ? folderData.name : "Select a folder"}
+                        path={headerText}
+                        name={folderData?.name ? folderData.name : headerText}
                         canDownload={folderData?.childType === "File"}
                         contributionHandler={contributionHandler}
                         folderId={folderData?._id}
@@ -156,7 +162,7 @@ const BrowseScreen = () => {
                     />
                     <div className="files">
                         {!folderData
-                            ? "Select a course"
+                            ? headerText
                             : folderData?.childType === "File"
                                 ? folderData?.children?.map((file) => (
                                     <FileDisplay
