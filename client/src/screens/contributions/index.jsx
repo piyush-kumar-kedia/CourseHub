@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from "uuid";
 import { CreateNewContribution } from "../../api/Contribution";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import googleFormLink from "../../api/googleFormLink";
 import { useDispatch } from "react-redux";
 
 import { getCourse } from "../../api/Course";
@@ -17,6 +16,7 @@ import { UpdateCourses } from "../../actions/filebrowser_actions";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
     const userName = useSelector((state) => state.user.user.name);
+    const isBR = useSelector((state) => state.user.user.isBR);
     const currentFolder = useSelector((state) => state.fileBrowser.currentFolder);
     const code = currentFolder?.course;
     const [contributionId, setContributionId] = useState("");
@@ -96,7 +96,10 @@ const Contributions = () => {
     return (
         <SectionC>
             <Wrapper>
-                <div className="head">Contribute to CourseHub</div>
+                <div className="head">{isBR ? "📁 Add Files" : "📁 Contribute to CourseHub"}</div>
+                <div className="disclaimer">
+                    Selected Files will get uploaded to the current folder
+                </div>
                 <form>
                     <div className="description">
                         <label htmlFor="description" className="label_description">
@@ -131,12 +134,20 @@ const Contributions = () => {
                         }}
                     />
                 </div>
-                <div className="uploaded">
-                    {/* <span>UPLOADED:</span> folder/file */}
-                    Or submit link on{" "}
-                    <a href={googleFormLink} target="_blank">
-                        Google forms.
-                    </a>
+                <div id="disclaimer-container">
+                    <div id="uploaded-container">
+                        <div>🚫</div>
+                        <div>Do not close this popup until all files are successfully uploaded!</div>
+                    </div>
+                    {
+                        !isBR ?
+                            <div id="uploaded-container">
+                                <div>⚠️</div>
+                                <div>Please contact your Branch Representative to verify the files you have uploaded so that it may be visible to everyone</div>
+                            </div>
+                        :
+                            <></>
+                    }
                 </div>
                 <div className={`button ${submitEnabled}`} onClick={handleSubmit}>
                     SUBMIT
