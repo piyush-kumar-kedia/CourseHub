@@ -1,4 +1,5 @@
-import { FileModel } from "../course/course.model.js";
+import { FileModel, FolderModel } from "../course/course.model.js";
+import { DeleteFile } from "../../services/UploadFile.js";
 
 // Verify file
 export const verifyFile = async (req, res) => {
@@ -18,10 +19,15 @@ export const verifyFile = async (req, res) => {
 // Unverify file (delete it)
 export const unverifyFile = async (req, res) => {
     try {
-        const file = await FileModel.findById(req.params.id);
+        //Delete file object from DB
+        const folderId = req.body.folderId;
+        await FolderModel.findByIdAndUpdate(folderId, {$pull: {children: req.params.id}});
+        const file = await FileModel.findByIdAndDelete(req.params.id);
         if (!file) return res.status(404).json({ message: "File not found" });
 
-        await file.deleteOne();
+        //Delete file object from Onedrive
+        await DeleteFile(req.body.oneDriveId);
+
         res.status(200).json({ message: "File deleted (unverified) successfully" });
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });

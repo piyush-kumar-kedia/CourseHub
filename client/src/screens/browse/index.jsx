@@ -147,6 +147,12 @@ const BrowseScreen = () => {
     //     console.error("Error refetching course data:", error);
     // }
     // };
+    const headerText=folderData?.path ? 
+        folderData.path 
+        : folderData?.childType==="Folder"? "Select a folder..."
+            : folderData?.childType==="File"? "Select a file..."
+                :currYear? "Select an year...":"Select a course..."
+    
     return (
         <Container color={"light"} type={"fluid"}>
             <div className="navbar-browse-screen">
@@ -167,17 +173,18 @@ const BrowseScreen = () => {
                 </div>
                 <div className="middle">
                     <FolderInfo
-                        path={folderData?.path ? folderData.path : "Select a folder..."}
-                        name={folderData?.name ? folderData.name : "Select a folder"}
+                        isBR={user.user.isBR}
+                        path={headerText}
+                        name={folderData?.name ? folderData.name : headerText}
                         canDownload={folderData?.childType === "File"}
                         contributionHandler={contributionHandler}
                         folderId={folderData?._id}
                         courseCode={folderData?.course}
                     />
                     <div className="files">
-                        {!folderData ? (
-                            "Select a course"
-                            ) : folderData?.childType === "File" ? (
+                        {!folderData ?
+                            headerText
+                            : folderData?.childType === "File" ? (
                             <FileController files={folderData?.children} 
                             // fetchCourseDataAgain={fetchCourseDataAgain} courseCode={currCourseCode}
                              />

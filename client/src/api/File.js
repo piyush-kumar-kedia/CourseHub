@@ -39,7 +39,19 @@ export const verifyFile = async (fileId) => {
 };
 
 // Unverify (delete) a file (BR only)
-export const unverifyFile = async (fileId) => {
-    const { data } = await API.delete(`/files/unverify/${fileId}`);
-    return data;
+export const unverifyFile = async (fileId, oneDriveId, folderId) => {
+    await API.delete(`/files/unverify/${fileId}`,
+    {
+        data: {
+            oneDriveId,
+            folderId,
+        }
+    });
 };
+
+export const getThumbnail = async (fileId) => {
+    const resp = await axios.post(`${serverRoot}/api/file/thumbnail`, {
+        fileId: fileId,
+    });
+    console.log("Thumbnail Refreshed");
+}
