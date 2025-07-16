@@ -1,4 +1,5 @@
 import "./styles.scss";
+import React, { useState } from "react";
 import { formatFileName, formatFileSize, formatFileType } from "../../../../utils/formatFile";
 import { AddToFavourites } from "../../../../api/User";
 import { toast } from "react-toastify";
@@ -12,11 +13,16 @@ import capitalise from "../../../../utils/capitalise.js";
 import Share from "../../../share";
 import { verifyFile, unverifyFile } from "../../../../api/File";
 import { RemoveFileFromFolder, UpdateFileVerificationStatus } from "../../../../actions/filebrowser_actions.js";
+import ConfirmDialog from "./components/ConfirmDialog.jsx";
 
 const FileDisplay = ({ file, path, code }) => {
     const user = useSelector((state) => state.user?.user);
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
+    const [showDialog, setShowDialog] = useState(false);
+    const [dialogType, setDialogType] = useState("verify");
+    const [onConfirmAction, setOnConfirmAction] = useState(() => () => {});
+
     let name = file.name;
     let _dispName = formatFileName(name);
     let contributor = file.name;
@@ -92,9 +98,11 @@ if (!file.isVerified && !currentUser?.isBR) {
             dispatch(UpdateFavourites(resp?.data?.favourites));
         }    
     };
-const handleVerify = async () => {
-  const confirmAction = window.confirm("Are you sure you want to verify this file?");
-  if (!confirmAction) return;
+const handleVerify =  () => {
+//   const confirmAction = window.confirm("Are you sure you want to verify this file?");
+//   if (!confirmAction) return;
+    setDialogType("verify");
+    setOnConfirmAction(()=> async()=>{
 
   try {
     console.log("Verifying file:", file._id);
@@ -107,13 +115,18 @@ const handleVerify = async () => {
   } catch (err) {
     console.error("Error verifying:", err);
     toast.error("Failed to verify file.");
+  } finally{
+    setShowDialog(false);
   }
+});
+  setShowDialog(true);
 };
 
-const handleUnverify = async () => {
-  const confirmAction = window.confirm("Are you sure you want to permanently delete this file?");
-  if (!confirmAction) return;
-
+const handleUnverify =  () => {
+//   const confirmAction = window.confirm("Are you sure you want to permanently delete this file?");
+//   if (!confirmAction) return;
+    setDialogType("delete");
+    setOnConfirmAction(()=>async()=>{
   try {
     console.log("Deleting file:", file._id);
     await unverifyFile(file._id, file.fileId, currFolderId);
@@ -124,7 +137,11 @@ const handleUnverify = async () => {
   } catch (err) {
     console.error("Error deleting:", err);
     toast.error("Failed to delete file.");
-  }
+  } finally {
+      setShowDialog(false);
+    }
+});
+ setShowDialog(true);
 };
 
 
@@ -188,6 +205,13 @@ const handleUnverify = async () => {
                 </div>
             </div>
             <Share link={`${clientRoot}/browse/${currCourseCode.toLowerCase()}/${currFolderId}`} />
+            <ConfirmDialog
+            isOpen={showDialog}
+            type={dialogType}
+            onConfirm={onConfirmAction}
+            onCancel={() => setShowDialog(false)}
+            />
+
         </div>
     );
 };
