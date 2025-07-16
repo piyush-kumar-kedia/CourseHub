@@ -81,6 +81,12 @@ const FileBrowserReducer = (
                 },
             };
 
+        case "REFRESH_CURRENT_FOLDER":
+            return {
+                ...state,
+                refreshKey: action.payload,
+            };
+
         default:
             return state;
     }

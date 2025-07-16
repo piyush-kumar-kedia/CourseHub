@@ -1,11 +1,26 @@
 import "./styles.scss";
 import { useDispatch } from "react-redux";
 import { ChangeFolder } from "../../../../actions/filebrowser_actions";
+import { deleteFolder } from "../../../../api/Folder";
+import { toast } from "react-toastify";
+import { RefreshCurrentFolder } from "../../../../actions/filebrowser_actions"; 
 const BrowseFolder = ({ type = "file", color, path, name, subject, folderData }) => {
     const dispatch = useDispatch();
     const onClick = (folderData) => {
         // return;
         dispatch(ChangeFolder(folderData));
+    };
+    const handleDelete = async (e) => {
+        e.stopPropagation();
+        if (!window.confirm(`Delete folder "${name}"?`)) return;
+        try {
+            await deleteFolder({ folderId: folderData._id, parentFolderId: folderData.parent });
+            toast.success("Folder deleted successfully!");
+            dispatch(RefreshCurrentFolder());
+            
+        } catch (err) {
+            toast.error("Failed to delete folder.");
+        }
     };
     return (
         <div className="browse-folder" onClick={() => onClick(folderData)}>
@@ -90,6 +105,12 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData })
                 <div className="top">
                     <p className="path">{""}</p>
                     <p className="name">{name ? name : "Name"}</p>
+                    <span
+                        className="delete"
+                        onClick={handleDelete}
+                        title="Delete folder"
+                        >
+                    </span>
                 </div>
                 <div className="bottom">
                     <p className="subject">{subject ? subject.toUpperCase() : "Subject Here"}</p>

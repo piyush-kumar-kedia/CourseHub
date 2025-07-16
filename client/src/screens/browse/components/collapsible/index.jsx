@@ -84,42 +84,40 @@ const Collapsible = ({ course, color, state }) => {
         setLoading(false);
         return currCourse;
     };
-
     const triggerGetCourse = () => {
         const run = async () => {
-            const t = await getCurrentCourse(course.code);
-            if (t) {
-                if (initial) {
-                    const prevChildren = Array.isArray(t.children?.[t.children.length - 1]?.children)
-                    ? t.children[t.children.length - 1].children : [];
-                    dispatch(ChangeCurrentYearData(t.children.length - 1, prevChildren));
-                    setInitial(false);
-                } else {
-                    try {
-                        dispatch(
-                            ChangeCurrentYearData(currentYear, t.children?.[currentYear].children)
-                        );
-                        if (!folderId) {
-                            dispatch(ChangeFolder(t.children?.[currentYear]));
-                            folderId = null;
-                        }
-                    } catch (error) {
-                        // console.log(error);
-                        dispatch(
-                            ChangeCurrentYearData(
-                                t.children.length - 1,
-                                t.children?.[t.children.length - 1].children
-                            )
-                        );
-                        dispatch(ChangeFolder(t.children?.[t.children.length - 1]));
-                        setInitial(false);
-                    }
+            try {
+                const fetched = await getCurrentCourse(course.code);
+                if (!fetched) {
+                    toast.error("Course data could not be loaded.");
+                    return;
                 }
-                dispatch(ChangeCurrentCourse(t.children, t.code));
+
+                const yearIndex = fetched.children.length - 1;
+                const yearFolder = fetched.children?.[yearIndex];
+
+                if (!yearFolder) {
+                    toast.warn("No folders available for this course.");
+                    dispatch(ChangeCurrentYearData(yearIndex, []));
+                    dispatch(ChangeFolder(null));
+                    return;
+                }
+
+                const yearChildren = Array.isArray(yearFolder.children) ? yearFolder.children : [];
+
+                dispatch(ChangeCurrentYearData(yearIndex, yearChildren));
+                dispatch(ChangeFolder(yearFolder));
+                dispatch(ChangeCurrentCourse(fetched.children, fetched.code));
+                setInitial(false);
+            } catch (error) {
+                console.error( error);
+                toast.error("Something went wrong while loading the course.");
             }
         };
+
         run();
     };
+
 
     let courseCode=course.code.replaceAll(" ", "")
     useEffect(() => {
