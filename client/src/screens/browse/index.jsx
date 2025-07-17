@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import Share from "../share";
 import FileController from "./components/collapsible/components/file-controller";
 import { RefreshCurrentFolder } from "../../actions/filebrowser_actions";
+import YearInfo from "./components/year-info";
 
 const BrowseScreen = () => {
     const user = useSelector((state) => state.user);
@@ -264,26 +265,12 @@ const BrowseScreen = () => {
                     </div>
                 </div>
                 <div className="right">
-                    <div className="year-content">
-                        {currCourse &&
-                            currCourse.map((course, idx) => {
-                                return (
-                                    <span
-                                        className={`year ${currYear === idx ? "selected" : ""}`}
-                                        onClick={() => {
-                                            dispatch(
-                                                ChangeCurrentYearData(idx, currCourse[idx].children)
-                                            );
-                                            dispatch(ChangeFolder(currCourse[idx]));
-                                            dispatch(RefreshCurrentFolder());
-                                        }}
-                                        key={idx}
-                                    >
-                                        {course.name}
-                                    </span>
-                                );
-                            })}
-                    </div>
+                    <YearInfo
+                        isBR={user.user.isBR}
+                        courseCode={currCourseCode}
+                        course={currCourse}
+                        currYear={currYear}
+                    />
                 </div>
             </div>
 
