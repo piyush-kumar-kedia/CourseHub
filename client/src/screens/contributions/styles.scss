@@ -83,6 +83,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    margin-top: 2rem;
 
     .label_description {
         font-family: 'Bold';
@@ -94,7 +95,7 @@
         width: 60%;
         padding: 0.5rem;
         font-size: 1rem;
-        height: 10vh;
+        height: 18vh;
     }
 }
 
@@ -130,24 +131,33 @@
         display: none;
         font-size: 1rem;
     }
+}
 
-    .uploaded {
-        text-align: start;
-        width: 100%;
-        margin-top: 0.75rem;
+#disclaimer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    margin-top: 2rem;
+}
 
-        span {
-            font-family: 'bold';
-            font-size: 1rem;
-        }
-    }
+#uploaded-container {
+    display: flex;
+    margin-bottom: 0;
+    gap: 8px;
+    color: #535353;
+}
 
+.disclaimer {
+    margin: 1rem 0px;
+    justify-self: center;
+    color: #535353;
 }
 
 .button {
     text-align: center;
     background-color: #FECF6F;
     padding: 1rem;
+    margin-top: 1rem;
     font-family: 'bold';
     cursor: pointer;
 
