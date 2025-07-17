@@ -25,26 +25,18 @@ const Contributions = () => {
         setContributionId(uuidv4());
     }, []);
 
-    const [description, setDescription] = useState(null);
     const [submitEnabled, setSubmitEnabled] = useState(false);
-
-    useEffect(() => {
-        if (!description) {
-            setSubmitEnabled(false);
-            return;
-        }
-        setSubmitEnabled(true);
-    }, [description]);
 
     // const [contributionId, setContributionId] = useState("");
 
     let pond = useRef();
 
+    const handleUpdateFiles = (fileItems) => {
+        if(fileItems.length > 0) setSubmitEnabled(true);
+        else setSubmitEnabled(false);
+    }
+
     async function handleSubmit() {
-        if (!description) {
-            toast.error("Please fill the complete form.");
-            return;
-        }
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
         // console.log(toggle);
@@ -56,7 +48,7 @@ const Contributions = () => {
             let resp = await CreateNewContribution({
                 parentFolder: currentFolder._id,
                 courseCode: currentFolder.course,
-                description,
+                description: "default",
                 approved: false,
                 contributionId,
                 uploadedBy,
@@ -100,24 +92,11 @@ const Contributions = () => {
                 <div className="disclaimer">
                     Selected Files will get uploaded to the current folder
                 </div>
-                <form>
-                    <div className="description">
-                        <label htmlFor="description" className="label_description">
-                            DESCRIPTION :
-                        </label>
-                        <textarea
-                            name="description"
-                            className="input_description"
-                            placeholder="Give a brief description"
-                            value={description ? description : ""}
-                            onChange={(e) => setDescription(e.target.value)}
-                        ></textarea>
-                    </div>
-                </form>
                 <div className="file_pond">
                     <FilePond
                         name="file"
                         allowMultiple={true}
+                        onupdatefiles={handleUpdateFiles}
                         maxFiles={40}
                         server={{
                             url: "http://localhost:8080/api/contribution/upload",
