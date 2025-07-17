@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from "uuid";
 import { CreateNewContribution } from "../../api/Contribution";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import googleFormLink from "../../api/googleFormLink";
 import { useDispatch } from "react-redux";
 
 import { getCourse } from "../../api/Course";
@@ -17,6 +16,7 @@ import { UpdateCourses } from "../../actions/filebrowser_actions";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
     const userName = useSelector((state) => state.user.user.name);
+    const isBR = useSelector((state) => state.user.user.isBR);
     const currentFolder = useSelector((state) => state.fileBrowser.currentFolder);
     const code = currentFolder?.course;
     const [contributionId, setContributionId] = useState("");
@@ -25,26 +25,18 @@ const Contributions = () => {
         setContributionId(uuidv4());
     }, []);
 
-    const [description, setDescription] = useState(null);
     const [submitEnabled, setSubmitEnabled] = useState(false);
-
-    useEffect(() => {
-        if (!description) {
-            setSubmitEnabled(false);
-            return;
-        }
-        setSubmitEnabled(true);
-    }, [description]);
 
     // const [contributionId, setContributionId] = useState("");
 
     let pond = useRef();
 
+    const handleUpdateFiles = (fileItems) => {
+        if(fileItems.length > 0) setSubmitEnabled(true);
+        else setSubmitEnabled(false);
+    }
+
     async function handleSubmit() {
-        if (!description) {
-            toast.error("Please fill the complete form.");
-            return;
-        }
         const collection = document.getElementsByClassName("contri");
         const contributionSection = collection[0];
         // console.log(toggle);
@@ -56,7 +48,7 @@ const Contributions = () => {
             let resp = await CreateNewContribution({
                 parentFolder: currentFolder._id,
                 courseCode: currentFolder.course,
-                description,
+                description: "default",
                 approved: false,
                 contributionId,
                 uploadedBy,
@@ -96,25 +88,15 @@ const Contributions = () => {
     return (
         <SectionC>
             <Wrapper>
-                <div className="head">Contribute to CourseHub</div>
-                <form>
-                    <div className="description">
-                        <label htmlFor="description" className="label_description">
-                            DESCRIPTION :
-                        </label>
-                        <textarea
-                            name="description"
-                            className="input_description"
-                            placeholder="Give a brief description"
-                            value={description ? description : ""}
-                            onChange={(e) => setDescription(e.target.value)}
-                        ></textarea>
-                    </div>
-                </form>
+                <div className="head">{isBR ? "📁 Add Files" : "📁 Contribute to CourseHub"}</div>
+                <div className="disclaimer">
+                    Selected Files will get uploaded to the current folder
+                </div>
                 <div className="file_pond">
                     <FilePond
                         name="file"
                         allowMultiple={true}
+                        onupdatefiles={handleUpdateFiles}
                         maxFiles={40}
                         server={{
                             url: "http://localhost:8080/api/contribution/upload",
@@ -131,12 +113,20 @@ const Contributions = () => {
                         }}
                     />
                 </div>
-                <div className="uploaded">
-                    {/* <span>UPLOADED:</span> folder/file */}
-                    Or submit link on{" "}
-                    <a href={googleFormLink} target="_blank">
-                        Google forms.
-                    </a>
+                <div id="disclaimer-container">
+                    <div id="uploaded-container">
+                        <div>🚫</div>
+                        <div>Do not close this popup until all files are successfully uploaded!</div>
+                    </div>
+                    {
+                        !isBR ?
+                            <div id="uploaded-container">
+                                <div>⚠️</div>
+                                <div>Please contact your Branch Representative to verify the files you have uploaded so that it may be visible to everyone</div>
+                            </div>
+                        :
+                            <></>
+                    }
                 </div>
                 <div className={`button ${submitEnabled}`} onClick={handleSubmit}>
                     SUBMIT
