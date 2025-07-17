@@ -104,7 +104,8 @@ const Dashboard = () => {
     }, []);
 
     const handleClick = (code) => {
-        dispatch(ChangeCurrentCourse(null, code.toUpperCase()));
+        let Code=code.replaceAll(" ","");
+        dispatch(ChangeCurrentCourse(null, Code.toUpperCase()));
         navigate("/browse");
     };
     // console.log(user);

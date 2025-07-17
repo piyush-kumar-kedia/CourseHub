@@ -26,25 +26,28 @@ const Collapsible = ({ course, color, state }) => {
     const dispatch = useDispatch();
 
     const onClick = () => {
-        if (initial && !open) triggerGetCourse();
+        if (!open) triggerGetCourse();
+        else dispatch(ChangeCurrentYearData(null, []));
         setOpen(!open);
     };
 
     const getCurrentCourse = async (code) => {
+        dispatch(ChangeCurrentYearData(null, [])); // Clear folderData till next folderData is loaded
+        setLoading(true);
         let currCourse = null;
         let insessionStorage = null;
         try {
-            currCourse = allCourseData.find(
-                (course) => course.code.toLowerCase() === code.toLowerCase().replaceAll(" ", "")
+            const allLocal = JSON.parse(sessionStorage.getItem("AllCourses"));
+            insessionStorage = allLocal?.find(
+                (course) => course.code.toLowerCase() === code.toLowerCase().replaceAll(" ","")
             );
         } catch (error) {
             sessionStorage.removeItem("AllCourses");
             location.reload();
         }
         try {
-            const allLocal = JSON.parse(sessionStorage.getItem("AllCourses"));
-            insessionStorage = allLocal?.find(
-                (course) => course.code.toLowerCase() === code.toLowerCase()
+            currCourse = allCourseData.find(
+                (course) => course.code.toLowerCase() === code.toLowerCase().replaceAll(" ","")
             );
         } catch (error) {
             sessionStorage.removeItem("AllCourses");
@@ -82,6 +85,7 @@ const Collapsible = ({ course, color, state }) => {
             }
         }
         setLoading(false);
+        dispatch(ChangeFolder(null));
         return currCourse;
     };
     const triggerGetCourse = () => {
@@ -123,14 +127,13 @@ const Collapsible = ({ course, color, state }) => {
     useEffect(() => {
         // console.log(currCourseCode);
         // console.log(course);
-        //console.log(currCourseCode?.toLowerCase(),courseCode?.toLowerCase());
         if (currCourseCode?.toLowerCase() !== courseCode?.toLowerCase()){setOpen(false);}
         if (currCourseCode?.toLowerCase() === courseCode?.toLowerCase()) {
             //console.log("called");
             triggerGetCourse();
             setOpen(true);
         }
-        setInitial(true);
+        //setInitial(true);
     }, [currCourseCode]);
 
     useEffect(() => {
@@ -143,7 +146,6 @@ const Collapsible = ({ course, color, state }) => {
 
     useEffect(() => {
         if (initial) return;
-        //console.log(code,courseCode?.toLowerCase());
         if (code && folderId && code?.toLowerCase() === courseCode?.toLowerCase()) {
             // console.log(course);
             try {
