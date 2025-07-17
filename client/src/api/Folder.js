@@ -14,11 +14,12 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-export const createFolder = async ({ name, course, parentFolder }) => {
+export const createFolder = async ({ name, course, parentFolder,childType }) => {
     const { data } = await API.post("/folder/create", {
         name,
         course,
         parentFolder,
+        childType
     });
     return data;
 };

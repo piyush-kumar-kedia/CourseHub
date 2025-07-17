@@ -35,6 +35,20 @@ const styles = {
         border: "1px solid #ccc",
         borderRadius: "5px",
     },
+    selectLabel: {
+        textAlign: "left",
+        fontWeight: "500",
+        marginBottom: "0.3em",
+        display: "block",
+    },
+    select: {
+        width: "100%",
+        padding: "10px",
+        fontSize: "1em",
+        marginBottom: "1.5em",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+    },
     buttonGroup: {
         display: "flex",
         justifyContent: "center",
@@ -64,10 +78,11 @@ const styles = {
 
 const ConfirmDialog = ({
     show,
-    message = "Enter folder name:",
     input = false,
     inputValue = "",
     onInputChange = () => {},
+    childType = "",
+    onChildTypeChange = () => {},
     onCancel,
     onConfirm,
     confirmText = "Confirm",
@@ -88,6 +103,17 @@ const ConfirmDialog = ({
                         style={styles.input}
                     />
                 )}
+                <select
+                    value={childType}
+                    onChange={(e) => onChildTypeChange(e.target.value)}
+                    style={styles.select}
+                >
+                    <option value="" disabled>
+                        Select child type
+                    </option>
+                    <option value="File">File</option>
+                    <option value="Folder">Folder</option>
+                </select>
                 <div style={styles.buttonGroup}>
                     <button style={styles.cancelBtn} onClick={onCancel}>
                         {cancelText}

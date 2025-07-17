@@ -180,7 +180,13 @@ const Collapsible = ({ course, color, state }) => {
                 {loading && "loading..."}
                 {error && "error"}
                 {notFound && "course not added yet"}
-                {!loading && !error && !notFound && <FolderController folders={folderData} />}
+                {!loading &&
+                    !error &&
+                    !notFound &&
+                    currCourseCode?.toLowerCase() ===
+                        course.code.replaceAll(" ", "").toLowerCase() && (
+                        <FolderController folders={folderData} />
+                    )}
             </div>
         </div>
     );

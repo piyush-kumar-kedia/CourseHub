@@ -1,11 +1,11 @@
 import { FolderModel } from "../course/course.model.js";
 
 async function createFolder(req, res) {
-    const { name, course, parentFolder } = req.body;
+    const { name, course, parentFolder, childType } = req.body;
     const newFolder = await FolderModel.create({
         name,
         course,
-        childType: "Folder",
+        childType,
         children: [],
     });
 
@@ -36,4 +36,4 @@ async function deleteFolder(req, res) {
         return res.status(500).json({ success: false, error: err.message });
     }
 }
-export { createFolder,deleteFolder };
+export { createFolder, deleteFolder };

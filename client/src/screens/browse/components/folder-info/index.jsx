@@ -24,6 +24,7 @@ const FolderInfo = ({
     const dispatch = useDispatch();
     const [showConfirm, setShowConfirm] = useState(false);
     const [newFolderName, setNewFolderName] = useState("");
+    const [childType, setChildType] = useState(""); 
 
 
     const handleShare = () => {
@@ -33,12 +34,13 @@ const FolderInfo = ({
 
     const handleCreateFolder = () => {
         setNewFolderName("");
+        setChildType("");
         setShowConfirm(true);
     };
 
     const handleConfirmCreateFolder = async () => {
         const folderName = newFolderName.trim();
-        if (!folderName?.trim()) return;
+        if (!folderName?.trim() || !childType) return;
 
         if (!courseCode || !folderId) {
             toast.error("No course selected.");
@@ -56,11 +58,13 @@ const FolderInfo = ({
                 name: folderName.trim(),
                 course: courseCode,
                 parentFolder: folderId,
+                childType: childType,
             });
 
             toast.success(`Folder "${folderName}" created`);
             dispatch(RefreshCurrentFolder());
         } catch (error) {
+            console.log(error);
             toast.error("Failed to create folder.");
         }
         setShowConfirm(false);
@@ -125,6 +129,8 @@ const FolderInfo = ({
                 input={true}
                 inputValue={newFolderName}
                 onInputChange={(e) => setNewFolderName(e.target.value)}
+                childType={childType}
+                onChildTypeChange={setChildType}
                 onConfirm={handleConfirmCreateFolder}
                 onCancel={() => setShowConfirm(false)}
                 confirmText="Create"

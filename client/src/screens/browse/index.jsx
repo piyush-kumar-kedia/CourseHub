@@ -181,34 +181,6 @@ const BrowseScreen = () => {
         return null;
     };
 
-    const handleCreateFolder = async () => {
-        const folderName = prompt("Enter folder name:");
-        if (!folderName?.trim()) return;
-
-        if (!currCourseCode || !folderId) {
-            toast.error("No course selected.");
-            return;
-        }
-
-        try {
-            const res = await getCourse(currCourseCode);
-            if (!res.data?.found) {
-                toast.error("Course not found. Cannot create folder.");
-                return;
-            }
-
-            await createFolder({
-                name: folderName.trim(),
-                course: currCourseCode,
-                parentFolder: folderId,
-            });
-
-            toast.success(`Folder "${folderName}" created`);
-            dispatch(RefreshCurrentFolder());
-        } catch (error) {
-            toast.error("Failed to create folder.");
-        }
-    };
     return (
         <Container color={"light"} type={"fluid"}>
             <div className="navbar-browse-screen">
@@ -303,6 +275,7 @@ const BrowseScreen = () => {
                                                 ChangeCurrentYearData(idx, currCourse[idx].children)
                                             );
                                             dispatch(ChangeFolder(currCourse[idx]));
+                                            dispatch(RefreshCurrentFolder());
                                         }}
                                         key={idx}
                                     >

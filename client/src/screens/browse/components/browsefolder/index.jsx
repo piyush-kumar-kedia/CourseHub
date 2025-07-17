@@ -20,6 +20,7 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData })
             toast.success("Folder deleted successfully!");
             dispatch(RefreshCurrentFolder());
         } catch (err) {
+            console.log(err);
             toast.error("Failed to delete folder.");
         }
         setShowConfirm(false);
@@ -128,12 +129,6 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData })
                         </p>
                     </div>
                 </div>
-                <ConfirmDialog
-                    isOpen={showConfirm}
-                    type="delete"
-                    onConfirm={handleDelete}
-                    onCancel={cancelDelete}
-                />
             </div>
             <ConfirmDialog
                 isOpen={showConfirm}
