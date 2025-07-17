@@ -1,30 +1,38 @@
 import "./styles.scss";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { ChangeFolder } from "../../../../actions/filebrowser_actions";
 import { deleteFolder } from "../../../../api/Folder";
 import { toast } from "react-toastify";
-import { RefreshCurrentFolder } from "../../../../actions/filebrowser_actions"; 
+import { RefreshCurrentFolder } from "../../../../actions/filebrowser_actions";
+import { ConfirmDialog } from "./confirmDialog";
 const BrowseFolder = ({ type = "file", color, path, name, subject, folderData }) => {
     const dispatch = useDispatch();
+    const [showConfirm, setShowConfirm] = useState(false);
     const onClick = (folderData) => {
         // return;
         dispatch(ChangeFolder(folderData));
     };
+
     const handleDelete = async (e) => {
-        e.stopPropagation();
-        if (!window.confirm(`Delete folder "${name}"?`)) return;
         try {
             await deleteFolder({ folderId: folderData._id, parentFolderId: folderData.parent });
             toast.success("Folder deleted successfully!");
             dispatch(RefreshCurrentFolder());
-            
         } catch (err) {
             toast.error("Failed to delete folder.");
         }
+        setShowConfirm(false);
     };
+
+    const cancelDelete = () => {
+        setShowConfirm(false);
+    };
+
     return (
-        <div className="browse-folder" onClick={() => onClick(folderData)}>
-            {/* {type === "folder" ? (
+        <>
+            <div className="browse-folder" onClick={() => onClick(folderData)}>
+                {/* {type === "folder" ? (
                 <svg
                     width="200"
                     height="175"
@@ -101,22 +109,39 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData })
                     />
                 </svg>
             )} */}
-            <div className="content">
-                <div className="top">
-                    <p className="path">{""}</p>
-                    <p className="name">{name ? name : "Name"}</p>
-                    <span
-                        className="delete"
-                        onClick={handleDelete}
-                        title="Delete folder"
-                        >
-                    </span>
+                <div className="content">
+                    <div className="top">
+                        <p className="path">{""}</p>
+                        <p className="name">{name ? name : "Name"}</p>
+                        <span
+                            className="delete"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowConfirm(true);
+                            }}
+                            title="Delete folder"
+                        ></span>
+                    </div>
+                    <div className="bottom">
+                        <p className="subject">
+                            {subject ? subject.toUpperCase() : "Subject Here"}
+                        </p>
+                    </div>
                 </div>
-                <div className="bottom">
-                    <p className="subject">{subject ? subject.toUpperCase() : "Subject Here"}</p>
-                </div>
+                <ConfirmDialog
+                    isOpen={showConfirm}
+                    type="delete"
+                    onConfirm={handleDelete}
+                    onCancel={cancelDelete}
+                />
             </div>
-        </div>
+            <ConfirmDialog
+                isOpen={showConfirm}
+                type="delete"
+                onConfirm={handleDelete}
+                onCancel={cancelDelete}
+            />
+        </>
     );
 };
 

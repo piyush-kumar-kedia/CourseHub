@@ -10,6 +10,7 @@ import { UpdateCourses } from "../../../../actions/filebrowser_actions";
 import { AddNewCourseLocal } from "../../../../actions/user_actions";
 import { useDispatch } from "react-redux";
 import { RefreshCurrentFolder } from "../../../../actions/filebrowser_actions"; 
+import {ConfirmDialog} from "./confirmDialog";
 
 const FolderInfo = ({
     isBR,
@@ -21,13 +22,22 @@ const FolderInfo = ({
     courseCode,
 }) => {
     const dispatch = useDispatch();
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [newFolderName, setNewFolderName] = useState("");
+
 
     const handleShare = () => {
         const sectionShare = document.getElementById("share");
         sectionShare.classList.add("show");
     };
-    const handleCreateFolder = async () => {
-        const folderName = prompt("Enter folder name:");
+
+    const handleCreateFolder = () => {
+        setNewFolderName("");
+        setShowConfirm(true);
+    };
+
+    const handleConfirmCreateFolder = async () => {
+        const folderName = newFolderName.trim();
         if (!folderName?.trim()) return;
 
         if (!courseCode || !folderId) {
@@ -53,6 +63,7 @@ const FolderInfo = ({
         } catch (error) {
             toast.error("Failed to create folder.");
         }
+        setShowConfirm(false);
     };
 
     return (
@@ -99,16 +110,26 @@ const FolderInfo = ({
                 ) : (
                     <></>
                 )}
-                { isBR && !canDownload &&
-                <div className="btn-container">
-                    <button className="btn plus" onClick={handleCreateFolder}>
-                        <span className="icon plus-icon"></span>
-                        <span className="text">Add Folder</span>
-                    </button>
-                </div>
-     }
+                {isBR && !canDownload && (
+                    <div className="btn-container">
+                        <button className="btn plus" onClick={handleCreateFolder}>
+                            <span className="icon plus-icon"></span>
+                            <span className="text">Add Folder</span>
+                        </button>
+                    </div>
+                )}
             </div>
             <Share link={`${clientRoot}/browse/${courseCode}/${folderId}`} />
+            <ConfirmDialog
+                show={showConfirm}
+                input={true}
+                inputValue={newFolderName}
+                onInputChange={(e) => setNewFolderName(e.target.value)}
+                onConfirm={handleConfirmCreateFolder}
+                onCancel={() => setShowConfirm(false)}
+                confirmText="Create"
+                cancelText="Cancel"
+            />
         </>
     );
 };
