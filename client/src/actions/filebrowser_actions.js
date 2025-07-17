@@ -56,3 +56,8 @@ export const RemoveFileFromFolder = (fileId) => ({
     type: "REMOVE_FILE_FROM_FOLDER",
     payload: fileId,
 });
+
+export const RefreshCurrentFolder = () => ({
+    type: "REFRESH_CURRENT_FOLDER",
+    payload: Date.now(), 
+});

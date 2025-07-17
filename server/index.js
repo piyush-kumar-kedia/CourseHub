@@ -29,6 +29,7 @@ import scheduleRoutes from "./modules/schedule/schedule.routes.js";
 import snapshotRoutes from "./modules/snapshot/snapshot.routes.js";
 import brRoutes from "./modules/br/br.routes.js";
 import fileRoutes from "./modules/file/file.routes.js";
+import folderRoutes from "./modules/folder/folder.routes.js";
 
 const app = express();
 
@@ -62,6 +63,7 @@ app.use("/api/schedule", scheduleRoutes);
 app.use("/api/snapshot", snapshotRoutes);
 app.use("/api/br", brRoutes);
 app.use("/api/files", fileRoutes);
+app.use("/api/folder", folderRoutes);
 
 app.use(
     "/homepage",

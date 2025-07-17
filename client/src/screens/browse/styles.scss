@@ -15,6 +15,12 @@
         max-width: 300px;
         border-right: 1px solid rgba(0, 0, 0, 0.33);
         overflow-y: auto;
+        .heading{
+            padding: 10px 20px;
+            font-family: 'Bold';
+            font-size: 1.2rem;
+            background-color:  #FECF6F;
+        }
     }
     .middle{
         flex: 6;
@@ -26,6 +32,9 @@
             display: flex;
             flex-wrap: wrap;
             // justify-content: space-between;
+        }
+        .empty-message{
+            font-size: 1.2rem;
         }
         &::-webkit-scrollbar{
             display: none;

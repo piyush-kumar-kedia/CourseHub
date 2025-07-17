@@ -88,34 +88,40 @@ const Collapsible = ({ course, color, state }) => {
         dispatch(ChangeFolder(null));
         return currCourse;
     };
-
     const triggerGetCourse = () => {
         const run = async () => {
-            const t = await getCurrentCourse(course.code);
-            if (t) {
-                const yearChildren = Array.isArray(t.children?.[t.children.length - 1]?.children)
-                ? t.children[t.children.length - 1].children : [];
-                if (initial) {
-                    dispatch(ChangeCurrentYearData(t.children.length - 1, yearChildren));
-                    setInitial(false);
-                } else {
-                    try {
-                        dispatch(ChangeCurrentYearData(t.children.length - 1, yearChildren));
-                        if (!folderId) {
-                            dispatch(ChangeFolder(t.children?.[t.children.length - 1]));
-                            folderId = null;
-                        }
-                    } catch (error) {
-                        // console.log(error);
-                        dispatch(ChangeCurrentYearData(t.children.length - 1,yearChildren));
-                        dispatch(ChangeFolder(t.children?.[t.children.length - 1]));
-                    }
+            try {
+                const fetched = await getCurrentCourse(course.code);
+                if (!fetched) {
+                    toast.error("Course data could not be loaded.");
+                    return;
                 }
-                dispatch(ChangeCurrentCourse(t.children, t.code));
+
+                const yearIndex = fetched.children.length - 1;
+                const yearFolder = fetched.children?.[yearIndex];
+
+                if (!yearFolder) {
+                    toast.warn("No folders available for this course.");
+                    dispatch(ChangeCurrentYearData(yearIndex, []));
+                    dispatch(ChangeFolder(null));
+                    return;
+                }
+
+                const yearChildren = Array.isArray(yearFolder.children) ? yearFolder.children : [];
+
+                dispatch(ChangeCurrentYearData(yearIndex, yearChildren));
+                dispatch(ChangeFolder(yearFolder));
+                dispatch(ChangeCurrentCourse(fetched.children, fetched.code));
+                setInitial(false);
+            } catch (error) {
+                console.error( error);
+                toast.error("Something went wrong while loading the course.");
             }
         };
+
         run();
     };
+
 
     let courseCode=course.code.replaceAll(" ", "")
     useEffect(() => {
@@ -174,7 +180,13 @@ const Collapsible = ({ course, color, state }) => {
                 {loading && "loading..."}
                 {error && "error"}
                 {notFound && "course not added yet"}
-                {!loading && !error && !notFound && <FolderController folders={folderData} />}
+                {!loading &&
+                    !error &&
+                    !notFound &&
+                    currCourseCode?.toLowerCase() ===
+                        course.code.replaceAll(" ", "").toLowerCase() && (
+                        <FolderController folders={folderData} />
+                    )}
             </div>
         </div>
     );
