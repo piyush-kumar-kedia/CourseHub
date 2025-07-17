@@ -99,7 +99,7 @@ const FolderInfo = ({
                 ) : (
                     <></>
                 )}
-                { isBR &&
+                { isBR && !canDownload &&
                 <div className="btn-container">
                     <button className="btn plus" onClick={handleCreateFolder}>
                         <span className="icon plus-icon"></span>
