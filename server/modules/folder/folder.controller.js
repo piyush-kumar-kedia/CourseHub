@@ -42,6 +42,10 @@ async function deleteFolder(req, res) {
 }
 
 async function recursiveDelete(folder){
+    if(!folder.children) {
+        await FolderModel.findByIdAndDelete(folder._id);
+        return;
+    }
     if (folder.childType === "Folder"){
         for(const subfolder of folder.children){
             await recursiveDelete(subfolder);
