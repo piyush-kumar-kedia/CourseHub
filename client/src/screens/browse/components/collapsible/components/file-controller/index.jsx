@@ -15,8 +15,8 @@ const FileController = ({ files }) => {
 		return file.isVerified;
 	});
 
-	console.log("Received files in FileController:", files);
-	console.log("Visible files after filtering:", visibleFiles);
+	// console.log("Received files in FileController:", files);
+	// console.log("Visible files after filtering:", visibleFiles);
 
 	return visibleFiles.map((file) => (
 		<FileDisplay file={file} key={file._id}/>
