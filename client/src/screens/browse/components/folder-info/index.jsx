@@ -24,8 +24,7 @@ const FolderInfo = ({
     const dispatch = useDispatch();
     const [showConfirm, setShowConfirm] = useState(false);
     const [newFolderName, setNewFolderName] = useState("");
-    const [childType, setChildType] = useState(""); 
-
+    const [childType, setChildType] = useState("File"); 
 
     const handleShare = () => {
         const sectionShare = document.getElementById("share");
@@ -34,7 +33,7 @@ const FolderInfo = ({
 
     const handleCreateFolder = () => {
         setNewFolderName("");
-        setChildType("");
+        setChildType("File");
         setShowConfirm(true);
     };
 
@@ -133,8 +132,6 @@ const FolderInfo = ({
                 onChildTypeChange={setChildType}
                 onConfirm={handleConfirmCreateFolder}
                 onCancel={() => setShowConfirm(false)}
-                confirmText="Create"
-                cancelText="Cancel"
             />
         </>
     );

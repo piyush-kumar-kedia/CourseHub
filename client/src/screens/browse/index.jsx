@@ -238,6 +238,7 @@ const BrowseScreen = () => {
                                     name={folder.name}
                                     subject={folder.course}
                                     folderData={folder}
+                                    parentFolder={folderData}
                                 />
                             ))
                         )}

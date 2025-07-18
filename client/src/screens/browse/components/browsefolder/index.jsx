@@ -6,7 +6,7 @@ import { deleteFolder } from "../../../../api/Folder";
 import { toast } from "react-toastify";
 import { RefreshCurrentFolder } from "../../../../actions/filebrowser_actions";
 import { ConfirmDialog } from "./confirmDialog";
-const BrowseFolder = ({ type = "file", color, path, name, subject, folderData }) => {
+const BrowseFolder = ({ type = "file", color, path, name, subject, folderData, parentFolder }) => {
     const dispatch = useDispatch();
     const [showConfirm, setShowConfirm] = useState(false);
     const onClick = (folderData) => {
@@ -16,7 +16,7 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData })
 
     const handleDelete = async (e) => {
         try {
-            await deleteFolder({ folderId: folderData._id, parentFolderId: folderData.parent });
+            await deleteFolder({ folder: folderData, parentFolderId: parentFolder._id });
             toast.success("Folder deleted successfully!");
             dispatch(RefreshCurrentFolder());
         } catch (err) {
