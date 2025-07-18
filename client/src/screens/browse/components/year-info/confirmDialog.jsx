@@ -1,5 +1,5 @@
 import React from "react";
-
+import options from "./year-options";
 const styles = {
     overlay: {
         position: "fixed",
@@ -109,10 +109,20 @@ const ConfirmDialog = ({
                     style={styles.select}
                 >
                     <option value="" disabled>
-                        Select year name
+                        Select year
                     </option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
+                    
+                    {options.map((opt, idx) => {
+                        return (
+                            <option
+                                className={"option"}
+                                value={opt}
+                            >
+                                {opt}
+                            </option>
+                        );
+                    })}
+                    
                 </select>
                 <div style={styles.buttonGroup}>
                     <button style={styles.cancelBtn} onClick={onCancel}>
