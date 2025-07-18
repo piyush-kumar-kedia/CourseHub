@@ -94,11 +94,14 @@ const YearInfo = ({
                                         key={idx}
                                     >
                                         {year.name}
-                                        <div 
-                                            className="delete" 
-                                            onClick={handleDeleteYear}
-                                            title="Delete Year"
-                                        ></div>
+                                        {isBR?
+                                            <div 
+                                                className="delete" 
+                                                onClick={handleDeleteYear}
+                                                title="Delete Year"
+                                            ></div>
+                                            :null
+                                        }
                                         
                                     </span>
                                     <ConfirmDelDialog
@@ -111,30 +114,33 @@ const YearInfo = ({
                             );
                         })}
                 </div>
-                <div className="year-content year add-year">
-                    {course &&
-                        <div>
-                            <div className="">
-                                <span className="" onClick={handleAddYear}>
-                                    <span className="text">New Year</span>
-                                </span>
+                {isBR?
+                    <div className="year-content year add-year">
+                        {course &&
+                            <div>
+                                <div className="">
+                                    <span className="" onClick={handleAddYear}>
+                                        <span className="text">New Year</span>
+                                    </span>
+                                </div>
+                                <ConfirmDialog
+                                    show={showConfirm}
+                                    input={true}
+                                    // inputValue={newFolderName}
+                                    // onInputChange={(e) => setNewFolderName(e.target.value)}
+                                    yearName={newYearName}
+                                    onYearNameChange={setNewYearName}
+                                    onConfirm={handleConfirmAddYear}
+                                    onCancel={() => setShowConfirm(false)}
+                                    confirmText="Create"
+                                    cancelText="Cancel"
+                                    course={course}
+                                />
                             </div>
-                            <ConfirmDialog
-                                show={showConfirm}
-                                input={true}
-                                // inputValue={newFolderName}
-                                // onInputChange={(e) => setNewFolderName(e.target.value)}
-                                yearName={newYearName}
-                                onYearNameChange={setNewYearName}
-                                onConfirm={handleConfirmAddYear}
-                                onCancel={() => setShowConfirm(false)}
-                                confirmText="Create"
-                                cancelText="Cancel"
-                                course={course}
-                            />
-                        </div>
-                    }
-                </div>
+                        }
+                    </div>
+                    :null
+                }
             </div>
         </>
     );

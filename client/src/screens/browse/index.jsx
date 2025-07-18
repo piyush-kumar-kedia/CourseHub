@@ -186,7 +186,6 @@ const BrowseScreen = () => {
             folderData?.childType === "Folder"? "Select a folder..."
                     :currCourse?"No data available for this course":"Select a course..."
 
-
     return (
         <Container color={"light"} type={"fluid"}>
             <div className="navbar-browse-screen">
@@ -205,7 +204,9 @@ const BrowseScreen = () => {
                     {user.localCourses?.map((course, idx) => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
-                    
+                    {user.user?.isBR && (
+                        <h4 className="heading">PREVIOUS COURSES</h4>
+                    )}
                     {!(user.user?.isBR && user.user?.previousCourses?.length > 0)
                         ? ""
                         : `<h4 className="heading">PREVIOUS COURSES</h4>` &&
