@@ -28,6 +28,8 @@ const YearInfo = ({
     const handleConfirmAddYear = async () => {
         const yearName = newYearName.trim();
 
+        if(!yearName) return;
+        console.log(yearName);
         if (!courseCode) {
             toast.error("No course selected.");
             return;
@@ -94,7 +96,11 @@ const YearInfo = ({
                                         key={idx}
                                     >
                                         {year.name}
-                                        <div className="delete" onClick={handleDeleteYear}></div>
+                                        <div 
+                                            className="delete" 
+                                            onClick={handleDeleteYear}
+                                            title="Delete Year"
+                                        ></div>
                                         
                                     </span>
                                     <ConfirmDelDialog
@@ -112,7 +118,7 @@ const YearInfo = ({
                         <div>
                             <div className="">
                                 <span className="" onClick={handleAddYear}>
-                                    <span className="text">Add Year</span>
+                                    <span className="text">New Year</span>
                                 </span>
                             </div>
                             <ConfirmDialog

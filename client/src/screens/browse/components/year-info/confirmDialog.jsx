@@ -30,7 +30,7 @@ const ConfirmDialog = ({
     confirmText = "Confirm",
     cancelText = "Cancel",
 }) => {
-    const [submitEnabled, setSubmitEnabled] = useState(true);
+    const [submitEnabled, setSubmitEnabled] = useState(false);
     if (!show) return null;
 
     return (
@@ -50,7 +50,11 @@ const ConfirmDialog = ({
                         name="section"
                         className="select_section"
                         value={yearName}
-                        onChange={(e) => onYearNameChange(e.target.value)}
+                        onChange={(e) => {
+                            if (e.target.value) setSubmitEnabled(true);
+                            else setSubmitEnabled(false);
+                            onYearNameChange(e.target.value);
+                        }}
                     >
                         <option value="" disabled>
                             Select year
