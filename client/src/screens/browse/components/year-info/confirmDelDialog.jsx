@@ -33,6 +33,7 @@ const styles = {
     },
     heading: {
         fontSize: "2em",
+        color: "black",
     },
     message: {
         fontSize: "1em",

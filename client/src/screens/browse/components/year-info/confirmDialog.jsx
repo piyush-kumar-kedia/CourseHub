@@ -1,5 +1,8 @@
 import React from "react";
 import options from "./year-options";
+import { useState } from "react";
+import Wrapper from "../../../contributions/components/wrapper";
+
 const styles = {
     overlay: {
         position: "fixed",
@@ -12,67 +15,6 @@ const styles = {
         alignItems: "center",
         justifyContent: "center",
         zIndex: 1000,
-    },
-    dialog: {
-        backgroundColor: "#fff",
-        padding: "25px 30px",
-        borderRadius: "8px",
-        maxWidth: "400px",
-        width: "90%",
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
-        textAlign: "center",
-        fontFamily: "sans-serif",
-    },
-    heading: {
-        fontSize: "2em",
-        marginBottom: "0.5em",
-    },
-    input: {
-        padding: "10px",
-        fontSize: "1em",
-        width: "100%",
-        marginBottom: "1.5em",
-        border: "1px solid #ccc",
-        borderRadius: "5px",
-    },
-    selectLabel: {
-        textAlign: "left",
-        fontWeight: "500",
-        marginBottom: "0.3em",
-        display: "block",
-    },
-    select: {
-        width: "100%",
-        padding: "10px",
-        fontSize: "1em",
-        marginBottom: "1.5em",
-        border: "1px solid #ccc",
-        borderRadius: "5px",
-    },
-    buttonGroup: {
-        display: "flex",
-        justifyContent: "center",
-        gap: "1em",
-    },
-    confirmBtn: {
-        backgroundColor: "#22c55e",
-        color: "#fff",
-        border: "none",
-        padding: "10px 18px",
-        borderRadius: "5px",
-        cursor: "pointer",
-        fontWeight: "bold",
-        fontSize: "1em",
-    },
-    cancelBtn: {
-        backgroundColor: "#9ca3af",
-        color: "#fff",
-        border: "none",
-        padding: "10px 18px",
-        borderRadius: "5px",
-        cursor: "pointer",
-        fontWeight: "bold",
-        fontSize: "1em",
     },
 };
 
@@ -88,51 +30,54 @@ const ConfirmDialog = ({
     confirmText = "Confirm",
     cancelText = "Cancel",
 }) => {
+    const [submitEnabled, setSubmitEnabled] = useState(true);
     if (!show) return null;
 
     return (
         <div style={styles.overlay}>
-            <div style={styles.dialog}>
-                <h2 style={styles.heading}>Enter Year Name</h2>
-                {/* {input && (
-                    <input
-                        type="text"
-                        placeholder="Year name"
-                        value={inputValue}
-                        onChange={onInputChange}
-                        style={styles.input}
-                    />
-                )} */}
-                <select
-                    value={yearName}
-                    onChange={(e) => onYearNameChange(e.target.value)}
-                    style={styles.select}
-                >
-                    <option value="" disabled>
-                        Select year
-                    </option>
-                    
-                    {options.map((opt, idx) => {
-                        return (
-                            <option
-                                className={"option"}
-                                value={opt}
-                            >
-                                {opt}
-                            </option>
-                        );
-                    })}
-                    
-                </select>
-                <div style={styles.buttonGroup}>
-                    <button style={styles.cancelBtn} onClick={onCancel}>
-                        {cancelText}
-                    </button>
-                    <button style={styles.confirmBtn} onClick={onConfirm}>
-                        {confirmText}
-                    </button>
+
+            <Wrapper>
+                <div className="head">📁 Add Year</div>
+                <div className="disclaimer">
+                    The year will be added in the current course
                 </div>
-            </div>
+                
+                <div className="section" id="bottommarginneeded">
+                    <label htmlFor="section" className="label_section">
+                        YEAR: 
+                    </label>
+                    <select
+                        name="section"
+                        className="select_section"
+                        value={yearName}
+                        onChange={(e) => onYearNameChange(e.target.value)}
+                    >
+                        <option value="" disabled>
+                            Select year
+                        </option>
+                        
+                        {options.map((opt, idx) => {
+                            return (
+                                <option className={"option"} value={opt}>
+                                    {opt}
+                                </option>
+                            );
+                        })}
+                    </select>
+                </div>
+                
+                <div className="addfolderbuttoncontainer">
+                    <div className="button cancelbutton addfolderbutton" onClick={onCancel}>
+                        CANCEL
+                    </div>
+                    <div className={`button ${submitEnabled} submitbutton addfolderbutton`} onClick={onConfirm}>
+                        ADD
+                    </div>
+                </div>
+            </Wrapper>
+
+            
+            
         </div>
     );
 };
