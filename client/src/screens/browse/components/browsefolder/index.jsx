@@ -11,6 +11,7 @@ import { ConfirmDialog } from "./confirmDialog";
 const BrowseFolder = ({ type = "file", color, path, name, subject, folderData, parentFolder }) => {
     const dispatch = useDispatch();
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
+    const isBR = useSelector((state) => state.user.user.isBR);
     const [showConfirm, setShowConfirm] = useState(false);
     const onClick = (folderData) => {
         // return;
@@ -120,14 +121,14 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData, p
                     <div className="top">
                         <p className="path">{""}</p>
                         <p className="name">{name ? name : "Name"}</p>
-                        <span
+                        {isBR && <span
                             className="delete"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setShowConfirm(true);
                             }}
                             title="Delete folder"
-                        ></span>
+                        ></span>}
                     </div>
                     <div className="bottom">
                         <p className="subject">
@@ -136,12 +137,12 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData, p
                     </div>
                 </div>
             </div>
-            <ConfirmDialog
+            {isBR &&<ConfirmDialog
                 isOpen={showConfirm}
                 type="delete"
                 onConfirm={handleDelete}
                 onCancel={cancelDelete}
-            />
+            />}
         </>
     );
 };
