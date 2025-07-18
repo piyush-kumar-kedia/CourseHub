@@ -4,6 +4,7 @@ import { useState } from "react";
 import { addYear } from "../../../../api/Year";
 import { getCourse } from "../../../../api/Course";
 import { useDispatch } from "react-redux";
+import { ChangeCurrentYearData,ChangeFolder,RefreshCurrentFolder } from "../../../../actions/filebrowser_actions";
 
 import {ConfirmDialog} from "./confirmDialog";
 
@@ -63,7 +64,7 @@ const YearInfo = ({
                                     dispatch(
                                         ChangeCurrentYearData(idx, course[idx].children)
                                     );
-                                    dispatch(ChangeFolder(currCourse[idx]));
+                                    dispatch(ChangeFolder(course[idx]));
                                     dispatch(RefreshCurrentFolder());
                                 }}
                                 key={idx}
