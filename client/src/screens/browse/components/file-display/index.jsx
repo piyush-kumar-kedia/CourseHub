@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { UpdateFavourites } from "../../../../actions/user_actions";
 import { getCourse } from "../../../../api/Course.js";
-import { UpdateCourses } from "../../../../actions/filebrowser_actions.js";
+import { RefreshCurrentFolder, UpdateCourses, ChangeCurrentYearData } from "../../../../actions/filebrowser_actions.js";
 import { downloadFile, previewFile, getThumbnail } from "../../../../api/File";
 import clientRoot from "../../../../api/client";
 import capitalise from "../../../../utils/capitalise.js";
@@ -17,11 +17,12 @@ import ConfirmDialog from "./components/ConfirmDialog.jsx";
 
 const FileDisplay = ({ file, path, code }) => {
     const user = useSelector((state) => state.user?.user);
+    const currYear = useSelector((state) => state.fileBrowser.currentYear);
     const fileSize = formatFileSize(file.size);
     const fileType = formatFileType(file.name);
     const [showDialog, setShowDialog] = useState(false);
     const [dialogType, setDialogType] = useState("verify");
-    const [onConfirmAction, setOnConfirmAction] = useState(() => () => {});
+    const [onConfirmAction, setOnConfirmAction] = useState(() => () => { });
 
     let name = file.name;
     let _dispName = formatFileName(name);
@@ -44,9 +45,9 @@ const FileDisplay = ({ file, path, code }) => {
     const currFolderId = useSelector((state) => state.fileBrowser?.currentFolder?._id);
     const currentUser = useSelector((state) => state.user.user);
 
-if (!file.isVerified && !currentUser?.isBR) {
-    return null;
-}
+    if (!file.isVerified && !currentUser?.isBR) {
+        return null;
+    }
     const dispatch = useDispatch();
 
     const preview_url = file.webUrl;
@@ -96,53 +97,60 @@ if (!file.isVerified && !currentUser?.isBR) {
         const resp = await AddToFavourites(file.id, file.name, path, code);
         if (resp?.data?.favourites) {
             dispatch(UpdateFavourites(resp?.data?.favourites));
-        }    
+        }
     };
-const handleVerify =  () => {
-//   const confirmAction = window.confirm("Are you sure you want to verify this file?");
-//   if (!confirmAction) return;
-    setDialogType("verify");
-    setOnConfirmAction(()=> async()=>{
+    const handleVerify = async () => {
+        //   const confirmAction = window.confirm("Are you sure you want to verify this file?");
+        //   if (!confirmAction) return;
+        setDialogType("verify");
+        setOnConfirmAction(() => async () => {
 
-  try {
-    console.log("Verifying file:", file._id);
-    await verifyFile(file._id);
-    toast.success("File verified!");
-    // window.location.reload();
-    dispatch(UpdateFileVerificationStatus(file._id, true));
-    // Instead of reload:
-    // fetchCourseDataAgain(currCourseCode); // (write this action to refetch the course and update redux)
-  } catch (err) {
-    console.error("Error verifying:", err);
-    toast.error("Failed to verify file.");
-  } finally{
-    setShowDialog(false);
-  }
-});
-  setShowDialog(true);
-};
+            try {
+                console.log("Verifying file:", file._id);
+                await verifyFile(file._id);
+                toast.success("File verified!");
+                dispatch(UpdateFileVerificationStatus(file._id, true));
 
-const handleUnverify =  () => {
-//   const confirmAction = window.confirm("Are you sure you want to permanently delete this file?");
-//   if (!confirmAction) return;
-    setDialogType("delete");
-    setOnConfirmAction(()=>async()=>{
-  try {
-    console.log("Deleting file:", file._id);
-    await unverifyFile(file._id, file.fileId, currFolderId);
-    toast.success("File deleted!");
-    // window.location.reload();
-    dispatch(RemoveFileFromFolder(file._id, true));
-    // fetchCourseDataAgain(currCourseCode);
-  } catch (err) {
-    console.error("Error deleting:", err);
-    toast.error("Failed to delete file.");
-  } finally {
-      setShowDialog(false);
-    }
-});
- setShowDialog(true);
-};
+                // Instead of reload:
+                const { data } = await getCourse(currCourseCode);
+                dispatch(UpdateCourses(data));
+                dispatch(ChangeCurrentYearData(currYear, data.children[currYear].children));
+                dispatch(RefreshCurrentFolder());
+            } catch (err) {
+                console.error("Error verifying:", err);
+                toast.error("Failed to verify file.");
+            } finally {
+                setShowDialog(false);
+            }
+        });
+        setShowDialog(true);
+    };
+
+    const handleUnverify = () => {
+        //   const confirmAction = window.confirm("Are you sure you want to permanently delete this file?");
+        //   if (!confirmAction) return;
+        setDialogType("delete");
+        setOnConfirmAction(() => async () => {
+            try {
+                console.log("Deleting file:", file._id);
+                await unverifyFile(file._id, file.fileId, currFolderId);
+                toast.success("File deleted!");
+                // window.location.reload();
+                dispatch(RemoveFileFromFolder(file._id, true));
+                // fetchCourseDataAgain(currCourseCode);
+                const { data } = await getCourse(currCourseCode);
+                dispatch(UpdateCourses(data));
+                dispatch(ChangeCurrentYearData(currYear, data.children[currYear].children));
+                dispatch(RefreshCurrentFolder());
+            } catch (err) {
+                console.error("Error deleting:", err);
+                toast.error("Failed to delete file.");
+            } finally {
+                setShowDialog(false);
+            }
+        });
+        setShowDialog(true);
+    };
 
 
     return (
@@ -174,8 +182,8 @@ const handleUnverify =  () => {
                 <div className="top">
                     {user?.isBR && (
                         <>
-                         <span className="verify" onClick={handleVerify} title="Verify"></span>
-                        <span className="unverify" onClick={handleUnverify} title="Delete"></span>
+                            <span className="verify" onClick={handleVerify} title="Verify"></span>
+                            <span className="unverify" onClick={handleUnverify} title="Delete"></span>
                         </>
                     )}
                     <span className="share" onClick={handleShare}></span>
@@ -206,10 +214,10 @@ const handleUnverify =  () => {
             </div>
             <Share link={`${clientRoot}/browse/${currCourseCode.toLowerCase()}/${currFolderId}`} />
             <ConfirmDialog
-            isOpen={showDialog}
-            type={dialogType}
-            onConfirm={onConfirmAction}
-            onCancel={() => setShowDialog(false)}
+                isOpen={showDialog}
+                type={dialogType}
+                onConfirm={onConfirmAction}
+                onCancel={() => setShowDialog(false)}
             />
 
         </div>
