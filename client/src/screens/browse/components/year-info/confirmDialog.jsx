@@ -1,5 +1,5 @@
 import React from "react";
-import options from "./year-options";
+import Yroptions from "./year-options";
 import { useState } from "react";
 import Wrapper from "../../../contributions/components/wrapper";
 
@@ -20,15 +20,11 @@ const styles = {
 
 const ConfirmDialog = ({
     show,
-    // input = false,
-    // inputValue = "",
-    // onInputChange = () => {},
     yearName = "",
     onYearNameChange = () => {},
     onCancel,
     onConfirm,
-    confirmText = "Confirm",
-    cancelText = "Cancel",
+    course,
 }) => {
     const [submitEnabled, setSubmitEnabled] = useState(false);
     if (!show) return null;
@@ -60,13 +56,9 @@ const ConfirmDialog = ({
                             Select year
                         </option>
                         
-                        {options.map((opt, idx) => {
-                            return (
-                                <option className={"option"} value={opt}>
-                                    {opt}
-                                </option>
-                            );
-                        })}
+                        <Yroptions
+                            course={course}
+                        />
                     </select>
                 </div>
                 

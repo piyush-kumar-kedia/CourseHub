@@ -182,8 +182,7 @@ const BrowseScreen = () => {
         return null;
     };
 
-    const HeaderText=folderData?.path ? folderData.path : 
-        folderData?.childType === "File"? "Select a file...":
+    const HeaderText= folderData?.childType === "File"? "Select a file...":
             folderData?.childType === "Folder"? "Select a folder..."
                     :currCourse?"No data available for this course":"Select a course..."
 
@@ -206,21 +205,22 @@ const BrowseScreen = () => {
                     {user.localCourses?.map((course, idx) => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
-                    <h4 className="heading">PREVIOUS COURSES</h4>
+                    
                     {!(user.user?.isBR && user.user?.previousCourses?.length > 0)
                         ? ""
-                        : user.user?.previousCourses?.map((course, idx) => {
-                              return (
-                                  <Collapsible color={getColors(idx)} key={idx} course={course} />
-                              );
-                          })}
+                        : `<h4 className="heading">PREVIOUS COURSES</h4>` &&
+                        user.user?.previousCourses?.map((course, idx) => {
+                            return (
+                                <Collapsible color={getColors(idx)} key={idx} course={course} />
+                            );
+                        })}
                 </div>
                 <div className="middle">
                     {folderData && (
                         <FolderInfo
                             isBR={user.user.isBR}
-                            path={HeaderText}
-                            name={HeaderText}
+                            path={folderData?.path ? folderData.path :HeaderText}
+                            name={folderData?.name ? folderData.name : HeaderText}
                             canDownload={folderData?.childType === "File"}
                             contributionHandler={contributionHandler}
                             folderId={folderData?._id}

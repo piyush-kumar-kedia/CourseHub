@@ -29,7 +29,6 @@ const YearInfo = ({
         const yearName = newYearName.trim();
 
         if(!yearName) return;
-        console.log(yearName);
         if (!courseCode) {
             toast.error("No course selected.");
             return;
@@ -61,7 +60,6 @@ const YearInfo = ({
 
     const handleConfirmDeleteYear = async (e) => {
         try {
-            console.log(course[currYear]);
             await deleteYear({ folder: course[currYear], courseCode: courseCode });
             toast.success("Year deleted successfully!");
             const {data} = await getCourse(courseCode);
@@ -132,6 +130,7 @@ const YearInfo = ({
                                 onCancel={() => setShowConfirm(false)}
                                 confirmText="Create"
                                 cancelText="Cancel"
+                                course={course}
                             />
                         </div>
                     }
