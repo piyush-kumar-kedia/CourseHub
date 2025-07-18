@@ -1,4 +1,6 @@
 import React from "react";
+import { useState } from "react";
+import Wrapper from "../../../contributions/components/wrapper";
 
 const styles = {
     overlay: {
@@ -13,116 +15,104 @@ const styles = {
         justifyContent: "center",
         zIndex: 1000,
     },
-    dialog: {
-        backgroundColor: "#fff",
-        padding: "25px 30px",
-        borderRadius: "8px",
-        maxWidth: "400px",
-        width: "90%",
-        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
-        textAlign: "center",
-        fontFamily: "sans-serif",
-    },
-    heading: {
-        fontSize: "2em",
-        marginBottom: "0.5em",
-    },
-    input: {
-        padding: "10px",
-        fontSize: "1em",
-        width: "100%",
-        marginBottom: "1.5em",
-        border: "1px solid #ccc",
-        borderRadius: "5px",
-    },
-    selectLabel: {
-        textAlign: "left",
-        fontWeight: "500",
-        marginBottom: "0.3em",
-        display: "block",
-    },
-    select: {
-        width: "100%",
-        padding: "10px",
-        fontSize: "1em",
-        marginBottom: "1.5em",
-        border: "1px solid #ccc",
-        borderRadius: "5px",
-    },
-    buttonGroup: {
-        display: "flex",
-        justifyContent: "center",
-        gap: "1em",
-    },
-    confirmBtn: {
-        backgroundColor: "#22c55e",
-        color: "#fff",
-        border: "none",
-        padding: "10px 18px",
-        borderRadius: "5px",
-        cursor: "pointer",
-        fontWeight: "bold",
-        fontSize: "1em",
-    },
-    cancelBtn: {
-        backgroundColor: "#9ca3af",
-        color: "#fff",
-        border: "none",
-        padding: "10px 18px",
-        borderRadius: "5px",
-        cursor: "pointer",
-        fontWeight: "bold",
-        fontSize: "1em",
-    },
 };
 
 const ConfirmDialog = ({
     show,
     input = false,
     inputValue = "",
-    onInputChange = () => {},
+    onInputChange = () => { },
     childType = "",
-    onChildTypeChange = () => {},
+    onChildTypeChange = () => { },
     onCancel,
     onConfirm,
-    confirmText = "Confirm",
-    cancelText = "Cancel",
 }) => {
+    const [submitEnabled, setSubmitEnabled] = useState(false);
     if (!show) return null;
 
     return (
+        // <div style={styles.overlay}>
+        //     <div style={styles.dialog}>
+        //         <h2 style={styles.heading}>Enter Folder Name</h2>
+        //         {input && (
+        //             <input
+        //                 type="text"
+        //                 placeholder="Folder name"
+        //                 value={inputValue}
+        //                 onChange={onInputChange}
+        //                 style={styles.input}
+        //             />
+        //         )}
+        //         <select
+        //             value={childType}
+        //             onChange={(e) => onChildTypeChange(e.target.value)}
+        //             style={styles.select}
+        //         >
+        //             <option value="" disabled>
+        //                 Select child type
+        //             </option>
+        //             <option value="File">File</option>
+        //             <option value="Folder">Folder</option>
+        //         </select>
+        //         <div style={styles.buttonGroup}>
+        //             <button style={styles.cancelBtn} onClick={onCancel}>
+        //                 {cancelText}
+        //             </button>
+        //             <button style={styles.confirmBtn} onClick={onConfirm}>
+        //                 {confirmText}
+        //             </button>
+        //         </div>
+        //     </div>
+        // </div>
         <div style={styles.overlay}>
-            <div style={styles.dialog}>
-                <h2 style={styles.heading}>Enter Folder Name</h2>
-                {input && (
-                    <input
-                        type="text"
-                        placeholder="Folder name"
-                        value={inputValue}
-                        onChange={onInputChange}
-                        style={styles.input}
-                    />
-                )}
-                <select
-                    value={childType}
-                    onChange={(e) => onChildTypeChange(e.target.value)}
-                    style={styles.select}
-                >
-                    <option value="" disabled>
-                        Select child type
-                    </option>
-                    <option value="File">File</option>
-                    <option value="Folder">Folder</option>
-                </select>
-                <div style={styles.buttonGroup}>
-                    <button style={styles.cancelBtn} onClick={onCancel}>
-                        {cancelText}
-                    </button>
-                    <button style={styles.confirmBtn} onClick={onConfirm}>
-                        {confirmText}
-                    </button>
+            <Wrapper>
+                <div className="head">📁 Add Folder</div>
+                <div className="disclaimer">
+                    The new folder will be a subfolder of the current folder
                 </div>
-            </div>
+                <div className="course">
+                    <label className="label_course" htmlFor="folder">
+                        NAME :
+                    </label>
+                    <input
+                        placeholder="Name of Folder"
+                        name="folder"
+                        className="input_course"
+                        value={inputValue}
+                        onChange={(e) => {
+                            if (e.target.value.length > 0) setSubmitEnabled(true);
+                            else setSubmitEnabled(false);
+                            onInputChange(e);
+                        }}
+                    />
+                </div>
+                <div className="section" id="bottommarginneeded">
+                    <label htmlFor="section" className="label_section">
+                        CHILD TYPE :
+                    </label>
+                    <select
+                        name="section"
+                        className="select_section"
+                        value={childType}
+                        onChange={(e) => onChildTypeChange(e.target.value)}
+                    >
+                        <option value="File">File</option>
+                        <option value="Folder">Folder</option>
+                    </select>
+                </div>
+                <div id="uploaded-container">
+                        <div>⚠️</div>
+                        <div>The Child Type of the folder indicates whether this new folder will have subfolders or files inside it</div>
+                    </div>
+                <div className="addfolderbuttoncontainer">
+                    <div className="button cancelbutton addfolderbutton" onClick={onCancel}>
+                        CANCEL
+                    </div>
+                    <div className={`button ${submitEnabled} submitbutton addfolderbutton`} onClick={onConfirm}>
+                        CREATE
+                    </div>
+                </div>
+            </Wrapper>
         </div>
     );
 };
