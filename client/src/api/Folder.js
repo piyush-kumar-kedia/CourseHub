@@ -26,7 +26,7 @@ export const createFolder = async ({ name, course, parentFolder,childType }) => 
 
 export const deleteFolder = async ({ folder, parentFolderId }) => {
     const { data } = await API.delete(`/folder/delete`, {
-        params: { folder, parentFolderId },
+        data: { folder, parentFolderId },
     });
     return data;
 };

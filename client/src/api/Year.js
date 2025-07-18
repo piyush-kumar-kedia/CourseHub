@@ -24,3 +24,10 @@ export const addYear = async ({ name, course}) => {
     });
     return data;
 };
+
+export const deleteYear = async ({ folder, courseCode}) => {
+    const { data } = await API.delete("/year/delete", {
+        data:{folder, courseCode}
+    });
+    return data;
+};

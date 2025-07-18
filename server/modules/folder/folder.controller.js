@@ -20,7 +20,7 @@ async function createFolder(req, res) {
     return res.json(newFolder);
 }
 async function deleteFolder(req, res) {
-    const { folder, parentFolderId } = req.query;
+    const { folder, parentFolderId } = req.body;
     const folderId = folder._id;
 
     try {

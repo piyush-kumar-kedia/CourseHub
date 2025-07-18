@@ -60,6 +60,12 @@
                 &.selected{
                     color: #000;
                     background-color: #fff;
+                    .delete{
+                        background-color: red;
+                        height:15px;
+                        width: 15px;
+                        border-radius: 50%;
+                    }
                 }
             }
         }
