@@ -1,33 +1,35 @@
 import { FolderModel } from "../course/course.model.js";
+import CourseModel from "../course/course.model.js";
 import { deleteFile } from "../file/file.controller.js";
 
-async function createFolder(req, res) {
-    const { name, course, parentFolder, childType } = req.body;
-    console.log(req.body);
-    const newFolder = await FolderModel.create({
+async function addYear(req, res) {
+    const { name, course} = req.body;
+    const newYear = await FolderModel.create({
         name,
         course,
-        childType,
         children: [],
+        childType:"Folder"
     });
 
-    if (parentFolder) {
-        const parent = await FolderModel.findById(parentFolder);
-        parent.children.push(newFolder._id);
+    if (course) {
+        const parent = await CourseModel.findOne({code:course});
+        parent.children.push(newYear._id);
         await parent.save();
     }
 
-    return res.json(newFolder);
+    return res.json(newYear);
 }
-async function deleteFolder(req, res) {
-    const { folder, parentFolderId } = req.body;
+
+async function deleteYear(req, res) {
+    const { folder, courseCode } = req.body;
     const folderId = folder._id;
 
     try {
-        if (parentFolderId) {
-            await FolderModel.findByIdAndUpdate(parentFolderId, {
-                $pull: { children: folderId },
-            });
+        if (courseCode) {
+            await CourseModel.findOneAndUpdate(
+                {code: courseCode}, 
+                {$pull: { children: folderId }}
+            );
         }
         // const deleted = await FolderModel.findByIdAndDelete(folderId);
         // if (!deleted) {
@@ -37,6 +39,7 @@ async function deleteFolder(req, res) {
 
         return res.json({ success: true, folderId });
     } catch (err) {
+        console.error("Error deleting year:", err);
         return res.status(500).json({ success: false, error: err.message });
     }
 }
@@ -61,4 +64,4 @@ async function recursiveDelete(folder){
     }
 }
 
-export { createFolder, deleteFolder };
+export {addYear,deleteYear}

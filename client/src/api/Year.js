@@ -1,5 +1,6 @@
 import axios from "axios";
 import serverRoot from "./server";
+import { Children } from "react";
 
 // Create axios instance with baseURL and withCredentials
 const API = axios.create({
@@ -14,20 +15,19 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-export const createFolder = async ({ name, course, parentFolder,childType }) => {
-    const { data } = await API.post("/folder/create", {
+export const addYear = async ({ name, course}) => {
+    const { data } = await API.post("/year", {
         name,
         course,
-        parentFolder,
-        childType
+        childType:"Folder",
+        Children:[],
     });
     return data;
 };
 
-export const deleteFolder = async ({ folder, parentFolderId }) => {
-    const { data } = await API.delete(`/folder/delete`, {
-        data: { folder, parentFolderId },
+export const deleteYear = async ({ folder, courseCode}) => {
+    const { data } = await API.delete("/year/delete", {
+        data:{folder, courseCode}
     });
     return data;
 };
-

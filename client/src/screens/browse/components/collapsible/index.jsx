@@ -96,12 +96,12 @@ const Collapsible = ({ course, color, state }) => {
                     toast.error("Course data could not be loaded.");
                     return;
                 }
-
+                dispatch(ChangeCurrentCourse(fetched.children, fetched.code));
                 const yearIndex = fetched.children.length - 1;
                 const yearFolder = fetched.children?.[yearIndex];
 
                 if (!yearFolder) {
-                    toast.warn("No folders available for this course.");
+                    //toast.warn("No folders available for this course.");
                     dispatch(ChangeCurrentYearData(yearIndex, []));
                     dispatch(ChangeFolder(null));
                     return;
@@ -111,7 +111,7 @@ const Collapsible = ({ course, color, state }) => {
 
                 dispatch(ChangeCurrentYearData(yearIndex, yearChildren));
                 dispatch(ChangeFolder(yearFolder));
-                dispatch(ChangeCurrentCourse(fetched.children, fetched.code));
+                
                 setInitial(false);
             } catch (error) {
                 console.error( error);
