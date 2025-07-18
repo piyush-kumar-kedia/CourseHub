@@ -204,7 +204,9 @@ const BrowseScreen = () => {
                     {user.localCourses?.map((course, idx) => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
-                    <h4 className="heading">PREVIOUS COURSES</h4>
+                    {user.user?.isBR && (
+                        <h4 className="heading">PREVIOUS COURSES</h4>
+                    )}
                     {!(user.user?.isBR && user.user?.previousCourses?.length > 0)
                         ? ""
                         : user.user?.previousCourses?.map((course, idx) => {
