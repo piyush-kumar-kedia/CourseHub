@@ -34,6 +34,13 @@ export const unverifyFile = async (req, res) => {
     }
 };
 
+//Delete File function for folders
+export const deleteFile = async (file) => {
+    console.log(file.fileId);
+    await FileModel.findByIdAndDelete(file._id);
+    await DeleteFile(file.fileId);
+}
+
 export const getAllFiles = async (req, res) => {
     try {
         console.log(req.user);

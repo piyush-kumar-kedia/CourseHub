@@ -12,11 +12,12 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 
 import { getCourse } from "../../api/Course";
-import { UpdateCourses } from "../../actions/filebrowser_actions";
+import { UpdateCourses, RefreshCurrentFolder, ChangeCurrentYearData } from "../../actions/filebrowser_actions";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
     const userName = useSelector((state) => state.user.user.name);
     const isBR = useSelector((state) => state.user.user.isBR);
+    const currYear = useSelector((state) => state.fileBrowser.currentYear);
     const currentFolder = useSelector((state) => state.fileBrowser.currentFolder);
     const code = currentFolder?.course;
     const [contributionId, setContributionId] = useState("");
@@ -77,12 +78,14 @@ const Contributions = () => {
                 toast.error("Course data not found!");
                 return;
             }
-            toast.dismiss(loadingCourseToastId);
+            dispatch(RefreshCurrentFolder());
             dispatch(UpdateCourses(data));
+            dispatch(ChangeCurrentYearData(currYear, data.children[currYear].children));
+            toast.dismiss(loadingCourseToastId);
         } catch (error) {
+            console.log(error);
             return null;
         }
-        location.reload();
     }
 
     return (

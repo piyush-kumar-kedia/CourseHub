@@ -90,3 +90,24 @@
         }
     }
 }
+
+.addfolderbuttoncontainer{
+    display: flex;
+    gap: 1rem;
+}
+
+.addfolderbutton {
+    flex: 1;
+}
+
+.cancelbutton {
+    background-color: #535353 !important;
+}
+
+.submitbutton {
+    background-color: #FECF6F !important;
+}
+
+#bottommarginneeded {
+    margin-bottom: 2rem;
+}

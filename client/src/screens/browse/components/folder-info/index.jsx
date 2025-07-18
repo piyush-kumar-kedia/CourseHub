@@ -6,9 +6,9 @@ import Share from "../../../share";
 import { useState } from "react";
 import { createFolder } from "../../../../api/Folder";
 import { getCourse } from "../../../../api/Course";
-import { UpdateCourses } from "../../../../actions/filebrowser_actions";
+import { ChangeCurrentCourse, ChangeCurrentYearData, ChangeFolder, UpdateCourses } from "../../../../actions/filebrowser_actions";
 import { AddNewCourseLocal } from "../../../../actions/user_actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RefreshCurrentFolder } from "../../../../actions/filebrowser_actions"; 
 import {ConfirmDialog} from "./confirmDialog";
 
@@ -22,10 +22,10 @@ const FolderInfo = ({
     courseCode,
 }) => {
     const dispatch = useDispatch();
+    const currYear = useSelector((state) => state.fileBrowser.currentYear);
     const [showConfirm, setShowConfirm] = useState(false);
     const [newFolderName, setNewFolderName] = useState("");
-    const [childType, setChildType] = useState(""); 
-
+    const [childType, setChildType] = useState("File"); 
 
     const handleShare = () => {
         const sectionShare = document.getElementById("share");
@@ -34,7 +34,7 @@ const FolderInfo = ({
 
     const handleCreateFolder = () => {
         setNewFolderName("");
-        setChildType("");
+        setChildType("File");
         setShowConfirm(true);
     };
 
@@ -60,9 +60,11 @@ const FolderInfo = ({
                 parentFolder: folderId,
                 childType: childType,
             });
-
-            toast.success(`Folder "${folderName}" created`);
+            const {data} = await getCourse(courseCode);
+            dispatch(UpdateCourses(data));
+            dispatch(ChangeCurrentYearData(currYear, data.children[currYear].children));
             dispatch(RefreshCurrentFolder());
+            toast.success(`Folder "${folderName}" created`);
         } catch (error) {
             console.log(error);
             toast.error("Failed to create folder.");
@@ -133,8 +135,6 @@ const FolderInfo = ({
                 onChildTypeChange={setChildType}
                 onConfirm={handleConfirmCreateFolder}
                 onCancel={() => setShowConfirm(false)}
-                confirmText="Create"
-                cancelText="Cancel"
             />
         </>
     );
