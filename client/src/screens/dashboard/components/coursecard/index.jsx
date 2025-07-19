@@ -10,8 +10,8 @@ const CourseCard = ({ code, color, name, type, setClicked }) => {
     useEffect(() => {
         async function SetCourseAvailability() {
             try {
-                const { data } = await IsCourseAvailable(code);
-                setIsAvailable(data.isAvailable);
+                // const { data } = await IsCourseAvailable(code);
+                setIsAvailable(true);
                 // console.log(data.isAvailable);
             } catch (error) {
                 // console.log(error);
@@ -21,19 +21,20 @@ const CourseCard = ({ code, color, name, type, setClicked }) => {
         SetCourseAvailability();
     }, []);
     return type === "ADD" ? (
-        <div className="coursecard ADD" onClick={setClicked}>
-            <div className="content">
-                <i className="fa fa-xl fa-plus" aria-hidden="true"></i>
-                <p>Add Course</p>
-            </div>
-        </div>
+        // <div className="coursecard ADD" onClick={setClicked}>
+        //     <div className="content">
+        //         <i className="fa fa-xl fa-plus" aria-hidden="true"></i>
+        //         <p>Add Course</p>
+        //     </div>
+        // </div>
+        <></>
     ) : (
         <div
             className={`coursecard ${isAvailable}`}
             style={{ backgroundColor: color }}
             // onClick={isAvailable ? setClicked : () => {}}
         >
-            <span
+            {/* <span
                 className="remove-course"
                 onClick={async () => {
                     try {
@@ -43,7 +44,7 @@ const CourseCard = ({ code, color, name, type, setClicked }) => {
                         toast.error("Something went wrong!");
                     }
                 }}
-            ></span>
+            ></span> */}
             <div className="card-content" onClick={isAvailable ? setClicked : () => {}}>
                 <div
                     style={{
