@@ -244,7 +244,10 @@ const Dashboard = () => {
                                 />
                             ))
                         ) : (
-                            <div className="no-fav-graphic"></div>
+                            <>
+                                <div className="favorites-coming-soon">Coming Soon!</div>
+                                <div className="no-fav-graphic"></div>
+                            </>
                         )}
                     </div>
                 </Container>

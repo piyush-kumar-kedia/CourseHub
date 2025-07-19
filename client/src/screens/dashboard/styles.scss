@@ -33,7 +33,7 @@
 .no-fav-graphic {
     width: 100%;
     height: 350px;
-    background: url(./graphic.svg);
+    background: url(./graphic-cropped.svg);
     background-position: center;
     background-repeat: no-repeat;
     margin-bottom: 32px;
@@ -50,4 +50,12 @@
         justify-content: flex-start;
     }
 
+}
+
+.favorites-coming-soon{
+    width: 100%;
+    text-align: center;
+    font-weight: 530;
+    font-size: 1.5rem;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }

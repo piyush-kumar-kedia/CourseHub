@@ -182,20 +182,20 @@ const FileDisplay = ({ file, path, code }) => {
                 <div className="top">
                     {user?.isBR && (
                         <>
-                            <span className="verify" onClick={handleVerify} title="Verify"></span>
+                        {!(file.isVerified)? <span className="verify" onClick={handleVerify} title="Verify"></span> : <></>}
                             <span className="unverify" onClick={handleUnverify} title="Delete"></span>
                         </>
                     )}
                     <span className="share" onClick={handleShare}></span>
 
                     <span className="download" onClick={handleDownload}></span>
-                    <span
+                    {/* <span
                         className="star"
                         onClick={() => {
                             handleAddToFavourites();
                             toast("Added to favourites.");
                         }}
-                    ></span>
+                    ></span> */}
                 </div>
                 <div className="view" onClick={handlePreview} title={file.name}>
                     View
