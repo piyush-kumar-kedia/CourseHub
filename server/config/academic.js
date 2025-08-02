@@ -6,7 +6,7 @@ const currentMonth = currdate.getMonth();
 var session;
 //session='Jan-May';
 if(currentMonth<=5||(currentMonth==6&&currdatenumber<=23)) session='Jan-May';
-else session='Jul-Nov';
+else session='July-Nov';
 
 export default {
     currentYear,
