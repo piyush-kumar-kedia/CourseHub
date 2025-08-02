@@ -156,6 +156,17 @@ const Dashboard = () => {
                                 name={course.name}
                                 color={getColors(index)}
                                 setClicked={() => handleClick(course.code)}
+                                isReadOnly={false}
+                            />
+                        ))}
+                        {user.user.readOnly.map((course, index) => (
+                            <CourseCard
+                                key={course.name}
+                                code={course?.code?.toUpperCase()}
+                                name={course.name}
+                                color={getColors(index)}
+                                setClicked={() => handleClick(course.code)}
+                                isReadOnly={true}
                             />
                         ))}
                         {/* {user.localCourses.map((course) => (
@@ -193,7 +204,11 @@ const Dashboard = () => {
                                 style={{ cursor: "pointer", display: "inline-block" }}
                             >
                                 <SubHeading
-                                    text={showPrevious ? "▼ HIDE PREVIOUS COURSES" : "▶ SHOW PREVIOUS COURSES"}
+                                    text={
+                                        showPrevious
+                                            ? "▼ HIDE PREVIOUS COURSES"
+                                            : "▶ SHOW PREVIOUS COURSES"
+                                    }
                                     color={"light"}
                                     type={"bold"}
                                 />
@@ -225,7 +240,6 @@ const Dashboard = () => {
                         </>
                     )}
                     <Space amount={50} />
-
                 </Container>
                 <ContributionBanner contributionHandler={contributionHandler} />
                 <Space amount={50} />

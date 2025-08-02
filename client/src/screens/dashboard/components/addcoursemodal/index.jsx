@@ -6,6 +6,7 @@ import "./styles.scss";
 import Space from "../../../../components/space";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { GetSearchResult } from "../../../../api/Search";
 import Result from "./components/result";
 const AddCourseModal = ({ handleAddCourse }) => {
@@ -14,6 +15,8 @@ const AddCourseModal = ({ handleAddCourse }) => {
     const [err, setErr] = useState(null);
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
+    const user = useSelector((state) => state.user);
+    const userCourses = user.user?.courses || [];
 
     useEffect(() => {
         if (code.length > 2) {
@@ -82,16 +85,25 @@ const AddCourseModal = ({ handleAddCourse }) => {
                 {err === null
                     ? loading
                         ? "Loading courses..."
-                        : results.map((course) => (
-                              <Result
-                                  key={course._id}
-                                  _id={course._id}
-                                  code={course.code}
-                                  name={course.name}
-                                  handleClick={handleAddCourse}
-                                  handleModalClose={handleModalClose}
-                              />
-                          ))
+                        : results
+                              .filter(
+                                  (course) =>
+                                      !userCourses.some(
+                                          (userCourse) =>
+                                              userCourse.code.toLowerCase() ===
+                                              course.code.toLowerCase()
+                                      )
+                              )
+                              .map((course) => (
+                                  <Result
+                                      key={course._id}
+                                      _id={course._id}
+                                      code={course.code}
+                                      name={course.name}
+                                      handleClick={handleAddCourse}
+                                      handleModalClose={handleModalClose}
+                                  />
+                              ))
                     : err}
                 <Space amount={35} />
 
