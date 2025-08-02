@@ -22,7 +22,7 @@ const FileBrowserReducer = (
             };
         case "UPDATE_COURSES":
             // console.log("Updated");
-            let arr = state.allCourseData;
+            let arr = Array.isArray(state.allCourseData) ? [...state.allCourseData] : [];
             if (
                 arr.find(
                     (course) =>
