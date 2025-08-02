@@ -4,7 +4,7 @@ import { useState } from "react";
 import { addYear,deleteYear } from "../../../../api/Year";
 import { getCourse } from "../../../../api/Course";
 import { useDispatch } from "react-redux";
-import { ChangeCurrentYearData,ChangeFolder,RefreshCurrentFolder } from "../../../../actions/filebrowser_actions";
+import { ChangeCurrentYearData,ChangeFolder,LoadCourses,RefreshCurrentFolder} from "../../../../actions/filebrowser_actions";
 
 import {ConfirmDialog} from "./confirmDialog";
 import {ConfirmDelDialog} from "./confirmDelDialog";
@@ -12,7 +12,7 @@ import {ConfirmDelDialog} from "./confirmDelDialog";
 const YearInfo = ({
     isBR,
     courseCode,
-    course,
+    course, // years list
     currYear,
 }) => {
     const dispatch = useDispatch();
@@ -40,11 +40,15 @@ const YearInfo = ({
                 toast.error("Course not found. Cannot add year.");
                 return;
             }
-
-            await addYear({
+            const newYear=await addYear({
                 name: yearName.trim(),
                 course: courseCode,
             });
+
+            course.push(newYear);
+            dispatch(LoadCourses(newYear));
+            dispatch(ChangeCurrentYearData(course.length-1, []));
+            dispatch(ChangeFolder(newYear));
 
             toast.success(`Year "${yearName}" added`);
         } catch (error) {
