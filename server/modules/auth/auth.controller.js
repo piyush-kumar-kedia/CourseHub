@@ -91,6 +91,7 @@ export const fetchCourses = async (rollNumber) => {
             });
         }
     });
+
     return courses;
 };
 

@@ -46,7 +46,7 @@ const YearInfo = ({
             });
 
             course.push(newYear);
-            dispatch(LoadCourses(newYear));
+            //dispatch(LoadCourses());
             dispatch(ChangeCurrentYearData(course.length-1, []));
             dispatch(ChangeFolder(newYear));
 
@@ -64,11 +64,16 @@ const YearInfo = ({
 
     const handleConfirmDeleteYear = async (e) => {
         try {
-            await deleteYear({ folder: course[currYear], courseCode: courseCode });
+            await deleteYear({ 
+                folder: course[currYear], 
+                courseCode: courseCode,
+            });
+            course.splice(currYear,1);
+            // dispatch(LoadCourses());
+            dispatch(ChangeCurrentYearData(course.length-1, []));
+            dispatch(ChangeFolder(course[course.length-1]));
+
             toast.success("Year deleted successfully!");
-            const {data} = await getCourse(courseCode);
-           
-       
         } catch (err) {
             console.log(err);
             toast.error("Failed to delete year.");
