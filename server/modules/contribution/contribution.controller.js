@@ -105,7 +105,7 @@ async function CreateNewContribution(req, res, next) {
 }
 
 async function GetMyContributions(req, res, next) {
-    const myContributions = await Contribution.find({ uploadedBy: req.user._id });
+    const myContributions = await Contribution.find({ uploadedBy: req.user._id }).populate({path: 'files'});
     res.json(myContributions);
 }
 

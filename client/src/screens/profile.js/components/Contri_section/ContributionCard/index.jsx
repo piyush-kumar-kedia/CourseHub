@@ -10,12 +10,12 @@ export default function ContributionCard(props) {
             <div className="path">
                 <p>{finalDate}</p>
                 <p>
-                    {props.courseCode} {">"} {props.year} {">"} {props.section}
+                    {props.courseCode}
                 </p>
             </div>
             <p className="content">{props.content}</p>
             <div className="btn">
-                <Button text={props.isApproved === "true" ? "APPROVED" : "PENDING"} />
+                <Button text={props.isApproved === true ? "APPROVED" : "PENDING"} />
             </div>
         </div>
     );

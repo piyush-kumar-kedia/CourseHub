@@ -17,18 +17,18 @@ const Contrisection = () => {
         };
         callBack();
     }, []);
-
-    const ContriCard = myContributions.map((contributionItem) => (
-        <Contribution_card
-            courseCode={contributionItem.courseCode}
-            section={contributionItem.folder}
-            year={contributionItem.year}
-            uploadDate={contributionItem.updatedAt}
-            key={contributionItem.contributionId}
-            isApproved={`${contributionItem.approved}`}
-            content={`${contributionItem.description}`}
-        />
-    ));
+    let ContriCard = [];
+    for(const key of myContributions) {
+        ContriCard.push(key.files.map((file) => (
+            <Contribution_card
+                courseCode={key.courseCode}
+                uploadDate={key.updatedAt}
+                isApproved={file.isVerified}
+                content={file.name}
+                key={file._id}
+            />
+        )))
+    }
 
     return isLoading ? (
         "loading"
