@@ -214,6 +214,10 @@ const BrowseScreen = () => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
 
+                    {user.user?.readOnly?.length > 0 && (
+                        <h4 className="heading">OTHERS</h4>
+                    )}
+
                     {user.user?.readOnly?.map((course, idx) => (
                         <Collapsible
                             color={course.color}

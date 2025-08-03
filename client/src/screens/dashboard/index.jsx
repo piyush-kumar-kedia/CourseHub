@@ -104,7 +104,7 @@ const Dashboard = () => {
     }, []);
 
     const handleClick = (code) => {
-        let Code=code.replaceAll(" ","");
+        let Code = code.replaceAll(" ", "");
         dispatch(ChangeCurrentCourse(null, Code.toUpperCase()));
         navigate("/browse");
     };
@@ -159,6 +159,37 @@ const Dashboard = () => {
                                 isReadOnly={false}
                             />
                         ))}
+                        {/* {user.localCourses.map((course) => (
+                        <CourseCard
+                            key={course.name}
+                            code={course?.code?.toUpperCase()}
+                            name={course.name}
+                            color={course.color}
+                            setClicked={() => handleClick(course.code)}
+                        />
+                    ))} */}
+
+                        {/* <CourseCard
+                            type={"ADD"}
+                            setClicked={() => {
+                                // dispatch(
+                                //     AddNewCourseLocal({
+                                //         _id: "638f1709897b3c84b7d8d32c",
+                                //         name: "Introduction to Engineering Drawing",
+                                //         code: "ce101",
+                                //         color: "#DBCEFF",
+                                //     })
+                                // );
+                                // console.log(user);
+                                addCourseModalShowHandler();
+                            }}
+                        /> */}
+                    </div>
+                    <Space amount={50} />
+
+                    <SubHeading text={"OTHERS"} color={"light"} type={"bold"} />
+                    <Space amount={20} />
+                    <div className="coursecard-container">
                         {user.user.readOnly.map((course, index) => (
                             <CourseCard
                                 key={course.name}
@@ -178,7 +209,6 @@ const Dashboard = () => {
                             setClicked={() => handleClick(course.code)}
                         />
                     ))} */}
-
                         <CourseCard
                             type={"ADD"}
                             setClicked={() => {
@@ -195,6 +225,7 @@ const Dashboard = () => {
                             }}
                         />
                     </div>
+
                     <Space amount={50} />
 
                     {user.user.isBR && user.user.previousCourses?.length > 0 && (
