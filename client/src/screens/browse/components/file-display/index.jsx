@@ -132,7 +132,7 @@ const FileDisplay = ({ file, path, code }) => {
         setDialogType("delete");
         setOnConfirmAction(() => async () => {
             try {
-                console.log("Deleting file:", file._id);
+                //console.log("Deleting file:", file._id);
                 await unverifyFile(file._id, file.fileId, currFolderId);
                 toast.success("File deleted!");
                 // window.location.reload();
