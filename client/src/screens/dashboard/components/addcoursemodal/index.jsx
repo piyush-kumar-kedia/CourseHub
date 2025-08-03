@@ -6,6 +6,7 @@ import "./styles.scss";
 import Space from "../../../../components/space";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { GetSearchResult } from "../../../../api/Search";
 import Result from "./components/result";
 const AddCourseModal = ({ handleAddCourse }) => {
@@ -14,6 +15,14 @@ const AddCourseModal = ({ handleAddCourse }) => {
     const [err, setErr] = useState(null);
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
+    const user = useSelector((state) => state.user);
+    const userCourses = user.user?.courses || [];
+    const previousCourses = user.user?.previousCourses || [];
+    const readOnlyCourses = user.user?.readOnly || [];
+
+    const allUserCourseCodes = [...userCourses, ...previousCourses, ...readOnlyCourses].map((c) =>
+        c.code?.replace(/\s+/g, "").toLowerCase()
+    );
 
     useEffect(() => {
         if (code.length > 2) {
@@ -30,12 +39,13 @@ const AddCourseModal = ({ handleAddCourse }) => {
             setLoading(true);
             setErr(null);
             let searchArr;
-            if(/\d/.test(code)){    //if code contains number then pass it as one element array
+            if (/\d/.test(code)) {
+                //if code contains number then pass it as one element array
                 let codeWithoutSpace = code.replace(/\s+/g, "");
-                searchArr= [codeWithoutSpace]
-            }
-            else{                  //if code does not contain number then split it and pass array of words
-                searchArr= code.split(" ")
+                searchArr = [codeWithoutSpace];
+            } else {
+                //if code does not contain number then split it and pass array of words
+                searchArr = code.split(" ");
             }
             const { data } = await GetSearchResult(searchArr);
             if (data?.found === true) {
@@ -61,7 +71,9 @@ const AddCourseModal = ({ handleAddCourse }) => {
     return (
         <SectionC>
             <Wrapper>
-                <div className="head">Add new course</div>
+                <div className="head">Add New Course</div>
+                <div className="info-message">This course will be read only</div>
+                <div className="info-message.secondary">No space between course code, for e.g- CS101</div>
                 <form onSubmit={(e) => e.preventDefault()}>
                     <div className="course">
                         <label htmlFor="course" className="label_course">
@@ -82,16 +94,27 @@ const AddCourseModal = ({ handleAddCourse }) => {
                 {err === null
                     ? loading
                         ? "Loading courses..."
-                        : results.map((course) => (
-                              <Result
-                                  key={course._id}
-                                  _id={course._id}
-                                  code={course.code}
-                                  name={course.name}
-                                  handleClick={handleAddCourse}
-                                  handleModalClose={handleModalClose}
-                              />
-                          ))
+                        : (() => {
+                              const filtered = results.filter(
+                                  (course) =>
+                                      !allUserCourseCodes.includes(
+                                          course.code?.replace(/\s+/g, "").toLowerCase()
+                                      )
+                              );
+                              if (results.length > 0 && filtered.length === 0) {
+                                  return "Course already exists";
+                              }
+                              return filtered.map((course) => (
+                                  <Result
+                                      key={course._id}
+                                      _id={course._id}
+                                      code={course.code}
+                                      name={course.name}
+                                      handleClick={handleAddCourse}
+                                      handleModalClose={handleModalClose}
+                                  />
+                              ));
+                          })()
                     : err}
                 <Space amount={35} />
 

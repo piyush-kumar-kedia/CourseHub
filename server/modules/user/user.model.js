@@ -14,6 +14,7 @@ const userSchema = Schema({
     semester: { type: Number, reqiured: true },
     degree: { type: String, required: true },
     courses: { type: Array, default: [], required: true },
+    readOnly: {type: Array, default: []},
     isBR: { type: Boolean },
     previousCourses: { type: Array, default: [] },
     // contri
@@ -72,6 +73,7 @@ export const validateUser = function (obj) {
         isBR: Joi.boolean().optional(),
         previousCourses: Joi.array().required(),
         department: Joi.string().required(),
+        readOnly: Joi.array().required(),
     });
     return joiSchema.validate(obj);
 };
@@ -147,6 +149,19 @@ export const AddNewCourse = async (userid, code, name) => {
     const updatedUser = await UserData.save();
     return updatedUser;
 };
+
+export const AddReadOnlyCourse = async (userid, code, name) => {
+    const UserData = await User.findById(userid);
+    const color = getRandomColor();
+    UserData.readOnly.push({
+        code,
+        name,
+        color,
+    });
+    const updatedUser = await UserData.save();
+    return updatedUser;
+};
+
 export const RemoveCourse = async (userid, code) => {
     const UserData = await User.findById(userid);
     let filtered = UserData.courses.filter(

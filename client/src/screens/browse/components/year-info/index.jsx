@@ -1,7 +1,7 @@
 //import "./styles.scss";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { addYear,deleteYear } from "../../../../api/Year";
+import { useSelector } from "react-redux";import { addYear,deleteYear } from "../../../../api/Year";
 import { getCourse } from "../../../../api/Course";
 import { useDispatch } from "react-redux";
 import { ChangeCurrentYearData,ChangeFolder,LoadCourses,RefreshCurrentFolder} from "../../../../actions/filebrowser_actions";
@@ -19,6 +19,10 @@ const YearInfo = ({
     const [showConfirm, setShowConfirm] = useState(false);
     const [showConfirmDel, setShowConfirmDel] = useState(false);
     const [newYearName, setNewYearName] = useState("");
+    const user = useSelector((state) => state.user.user);
+    const isReadOnlyCourse = user?.readOnly?.some(
+        (c) => c.code.toLowerCase() === courseCode?.toLowerCase()
+    );
 
     const handleAddYear = () => {
         setNewYearName("");
@@ -123,7 +127,7 @@ const YearInfo = ({
                             );
                         })}
                 </div>
-                {isBR?
+                {isBR && !isReadOnlyCourse?
                     <div className="year-content year add-year">
                         {course &&
                             <div>

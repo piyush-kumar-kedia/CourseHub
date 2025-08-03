@@ -6,6 +6,20 @@
 
 }
 
+.info-message {
+    font-family: 'Bold';
+    font-size: 1.2rem;
+
+    
+}
+
+.info-message.secondary {
+    font-family: 'Regular';
+    font-size: 1rem;
+    color: grey;
+    
+}
+
 .course {
     display: flex;
     align-items: center;

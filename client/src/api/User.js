@@ -21,7 +21,8 @@ export const handleLogin = () => {
     window.location.href = "http://localhost:8080/api/auth/login"
 };
 export const AddNewCourseAPI = async (code, name) => {
-    const resp = await axios.post(`${serverRoot}/api/user/course`, { code, name });
+    // const resp = await axios.post(`${serverRoot}/api/user/course`, { code, name });
+    const resp = await axios.post(`${serverRoot}/api/user/readonly`, { code, name });
     // console.log(resp);
     return resp;
 };

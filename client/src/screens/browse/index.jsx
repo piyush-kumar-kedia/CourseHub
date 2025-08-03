@@ -202,29 +202,46 @@ const BrowseScreen = () => {
                         ? ""
                         : user.user?.courses?.map((course, idx) => {
                               return (
-                                  <Collapsible color={getColors(idx)} key={idx} course={course} />
+                                  <Collapsible
+                                      color={getColors(idx)}
+                                      key={idx}
+                                      course={course}
+                                      isReadOnly={false}
+                                  />
                               );
                           })}
                     {user.localCourses?.map((course, idx) => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
-                    {user.user?.isBR && (
-                        <h4 className="heading">PREVIOUS COURSES</h4>
+
+                    {user.user?.readOnly?.length > 0 && (
+                        <h4 className="heading">OTHERS</h4>
                     )}
+
+                    {user.user?.readOnly?.map((course, idx) => (
+                        <Collapsible
+                            color={course.color}
+                            key={`readonly-${idx}`}
+                            course={course}
+                            isReadOnly={true}
+                        />
+                    ))}
+
+                    {user.user?.isBR && <h4 className="heading">PREVIOUS COURSES</h4>}
                     {!(user.user?.isBR && user.user?.previousCourses?.length > 0)
                         ? ""
                         : `<h4 className="heading">PREVIOUS COURSES</h4>` &&
-                        user.user?.previousCourses?.map((course, idx) => {
-                            return (
-                                <Collapsible color={getColors(idx)} key={idx} course={course} />
-                            );
-                        })}
+                          user.user?.previousCourses?.map((course, idx) => {
+                              return (
+                                  <Collapsible color={getColors(idx)} key={idx} course={course} />
+                              );
+                          })}
                 </div>
                 <div className="middle">
                     {folderData && (
                         <FolderInfo
                             isBR={user.user.isBR}
-                            path={folderData?.path ? folderData.path :HeaderText}
+                            path={folderData?.path ? folderData.path : HeaderText}
                             name={folderData?.name ? folderData.name : HeaderText}
                             canDownload={folderData?.childType === "File"}
                             contributionHandler={contributionHandler}
@@ -236,9 +253,11 @@ const BrowseScreen = () => {
                         {!folderData ? (
                             <div className="empty-message">{HeaderText}</div>
                         ) : folderData?.childType === "File" ? (
-                                folderData?.children?.length === 0 ? 
-                                    <p className="empty-message">No files available.</p>
-                                    :<FileController files={folderData?.children} />
+                            folderData?.children?.length === 0 ? (
+                                <p className="empty-message">No files available.</p>
+                            ) : (
+                                <FileController files={folderData?.children} />
+                            )
                         ) : folderData?.children?.length === 0 ? (
                             <div className="empty-folder">
                                 <p className="empty-message">No folders available.</p>
