@@ -1,7 +1,7 @@
 //import "./styles.scss";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { addYear,deleteYear } from "../../../../api/Year";
+import { useSelector } from "react-redux";import { addYear,deleteYear } from "../../../../api/Year";
 import { getCourse } from "../../../../api/Course";
 import { useDispatch } from "react-redux";
 import { ChangeCurrentYearData,ChangeFolder,LoadCourses,RefreshCurrentFolder} from "../../../../actions/filebrowser_actions";
@@ -19,6 +19,10 @@ const YearInfo = ({
     const [showConfirm, setShowConfirm] = useState(false);
     const [showConfirmDel, setShowConfirmDel] = useState(false);
     const [newYearName, setNewYearName] = useState("");
+    const user = useSelector((state) => state.user.user);
+    const isReadOnlyCourse = user?.readOnly?.some(
+        (c) => c.code.toLowerCase() === courseCode?.toLowerCase()
+    );
 
     const handleAddYear = () => {
         setNewYearName("");
@@ -46,7 +50,7 @@ const YearInfo = ({
             });
 
             course.push(newYear);
-            dispatch(LoadCourses(newYear));
+            //dispatch(LoadCourses());
             dispatch(ChangeCurrentYearData(course.length-1, []));
             dispatch(ChangeFolder(newYear));
 
@@ -64,11 +68,16 @@ const YearInfo = ({
 
     const handleConfirmDeleteYear = async (e) => {
         try {
-            await deleteYear({ folder: course[currYear], courseCode: courseCode });
+            await deleteYear({ 
+                folder: course[currYear], 
+                courseCode: courseCode,
+            });
+            course.splice(currYear,1);
+            // dispatch(LoadCourses());
+            dispatch(ChangeCurrentYearData(course.length-1, []));
+            dispatch(ChangeFolder(course[course.length-1]));
+
             toast.success("Year deleted successfully!");
-            const {data} = await getCourse(courseCode);
-           
-       
         } catch (err) {
             console.log(err);
             toast.error("Failed to delete year.");
@@ -118,7 +127,7 @@ const YearInfo = ({
                             );
                         })}
                 </div>
-                {isBR?
+                {isBR && !isReadOnlyCourse?
                     <div className="year-content year add-year">
                         {course &&
                             <div>

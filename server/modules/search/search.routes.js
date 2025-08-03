@@ -3,6 +3,9 @@ import catchAsync from "../../utils/catchAsync.js";
 import SearchResult from "./search.model.js";
 import isAuthenticated from "../../middleware/isAuthenticated.js";
 const router = Router();
+import CourseModel from "../course/course.model.js";
+
+
 
 // router.post(
 //     "/",
@@ -27,13 +30,33 @@ router.post(
     // isAuthenticated,
     catchAsync(async (req, res, next) => {
         let { words } = req.body;
+        const searchWords = words.map((w) => w.toLowerCase());
+        const allCourses = await CourseModel.find().select("code name");
 
-        const agg = await SearchResult.getSearchResults(words);
-        const payload = [];
-        agg.forEach((item) => {
-            if (item.numberOfWordsMatched > 0 || item.codeMatch) payload.push(item);
-        });
-        return res.status(200).json({ found: payload.length > 0 ? true : false, results: payload });
+        const payload = allCourses
+            .map((course) => {
+                const matchCount = searchWords.reduce((acc, word) => {
+                    if (
+                        course.code.toLowerCase().includes(word) ||
+                        course.name.toLowerCase().includes(word)
+                    ) {
+                        return acc + 1;
+                    }
+                    return acc;
+                }, 0);
+                return { code: course.code, name: course.name, matchCount };
+            })
+            .filter((course) => course.matchCount > 0)
+            .sort((a, b) => b.matchCount - a.matchCount);
+
+        return res.status(200).json({ found: payload.length > 0, results: payload });
+
+        // const agg = await SearchResult.getSearchResults(words);
+        // const payload = [];
+        // agg.forEach((item) => {
+        //     if (item.numberOfWordsMatched > 0 || item.codeMatch) payload.push(item);
+        // });
+        // return res.status(200).json({ found: payload.length > 0 ? true : false, results: payload });
     })
 );
 

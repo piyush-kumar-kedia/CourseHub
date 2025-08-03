@@ -13,6 +13,12 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData, p
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
     const isBR = useSelector((state) => state.user.user.isBR);
     const [showConfirm, setShowConfirm] = useState(false);
+    const user = useSelector((state) => state.user.user);
+    const courseCode = subject || folderData?.course;
+    const isReadOnlyCourse = user?.readOnly?.some(
+        (c) => c.code.toLowerCase() === courseCode?.toLowerCase()
+    );
+
     const onClick = (folderData) => {
         // return;
         dispatch(ChangeFolder(folderData));
@@ -121,14 +127,16 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData, p
                     <div className="top">
                         <p className="path">{""}</p>
                         <p className="name">{name ? name : "Name"}</p>
-                        {isBR && <span
-                            className="delete"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setShowConfirm(true);
-                            }}
-                            title="Delete folder"
-                        ></span>}
+                        {isBR && !isReadOnlyCourse && (
+                            <span
+                                className="delete"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowConfirm(true);
+                                }}
+                                title="Delete folder"
+                            ></span>
+                        )}
                     </div>
                     <div className="bottom">
                         <p className="subject">
@@ -137,12 +145,14 @@ const BrowseFolder = ({ type = "file", color, path, name, subject, folderData, p
                     </div>
                 </div>
             </div>
-            {isBR &&<ConfirmDialog
-                isOpen={showConfirm}
-                type="delete"
-                onConfirm={handleDelete}
-                onCancel={cancelDelete}
-            />}
+            {isBR && !isReadOnlyCourse && (
+                <ConfirmDialog
+                    isOpen={showConfirm}
+                    type="delete"
+                    onConfirm={handleDelete}
+                    onCancel={cancelDelete}
+                />
+            )}
         </>
     );
 };

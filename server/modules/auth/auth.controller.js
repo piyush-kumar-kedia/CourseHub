@@ -29,6 +29,7 @@ import {
 } from "../snapshot/snapshot.controller.js";
 
 import BR from "../br/br.model.js";
+import { read } from "fs";
 //not used
 export const loginHandler = (req, res) => {
     res.redirect(
@@ -92,6 +93,7 @@ export const fetchCourses = async (rollNumber) => {
             });
         }
     });
+
     return courses;
 };
 
@@ -248,6 +250,7 @@ export const redirectHandler = async (req, res, next) => {
             department: department,
             isBR: br ? true : false,
             previousCourses: br ? previousCourses : [],
+            readOnly: [],
         };
 
         const { error } = validateUser(userData);
