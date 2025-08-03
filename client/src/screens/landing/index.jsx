@@ -62,10 +62,10 @@ const LandingPage = () => {
                         </div>
                         <div className="btn-container">
                             <MicrosoftSignIn setClicked={handleLogin} />
-                            <div className="line"></div>
+                            {/* <div className="line"></div>
                             <SearchCourseButton
                                 searchCourseShowModalHandler={searchCourseShowModalHandler}
-                            />
+                            /> */}
                         </div>
                     </div>
                 </div>
