@@ -19,7 +19,7 @@ const Yroptions = ({
         <>
             {options.map((opt, idx) => {
                 return (
-                    <option className={"option"} value={opt}>
+                    <option className={"option"} value={opt} key={idx}>
                         {opt}
                     </option>
                 );

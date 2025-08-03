@@ -22,12 +22,14 @@ import { getUser } from "../../api/User";
 import { useParams } from "react-router-dom";
 import { getCourse } from "../../api/Course";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import Share from "../share";
 import FileController from "./components/collapsible/components/file-controller";
 import { RefreshCurrentFolder } from "../../actions/filebrowser_actions";
 import YearInfo from "./components/year-info";
 
 const BrowseScreen = () => {
+    const navigate = useNavigate();
     const user = useSelector((state) => state.user);
     const folderData = useSelector((state) => state.fileBrowser.currentFolder);
     const refreshKey = useSelector((state) => state.fileBrowser.refreshKey);
@@ -112,11 +114,13 @@ const BrowseScreen = () => {
                 dispatch(AddNewCourseLocal(fetchedData));
             } else {
                 let fetchingToast = toast.loading("Loading course data...");
-                fetchedData = await getCourse(code.toLowerCase());
+                fetchedData = await getCourse(code.toUpperCase());
                 if (fetchedData.data.found) {
                     toast.dismiss(fetchingToast);
-                    dispatch(UpdateCourses(fetchedData.data));
-                    dispatch(AddNewCourseLocal(fetchedData.data));
+                    dispatch(ChangeCurrentCourse(null, code.toUpperCase()));
+                    navigate("/browse");
+                    // dispatch(UpdateCourses(fetchedData.data));
+                    // dispatch(AddNewCourseLocal(fetchedData.data));
                     root = fetchedData.data;
                 } else {
                     toast.dismiss(fetchingToast);
