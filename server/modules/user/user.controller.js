@@ -1,6 +1,6 @@
 import AppError from "../../utils/appError.js";
 import User, { RemoveCourse } from "./user.model.js";
-import { addToFavourites, removeFromFavourites, AddNewCourse } from "./user.model.js";
+import { addToFavourites, removeFromFavourites, AddNewCourse , AddReadOnlyCourse } from "./user.model.js";
 import { updateUserData } from "./user.model.js";
 import BR from "../br/br.model.js";
 
@@ -23,6 +23,7 @@ export const getUser = async (req, res, next) => {
         favourites: user.favourites,
         deviceToken: user.deviceToken,
         isBR: !!isBR,
+        readOnly: user.readOnly,
     };
 
     if (isBR) {
@@ -63,6 +64,15 @@ export const addNewCourse = async (req, res, next) => {
     const updatedUser = await AddNewCourse(req.user._id, data.code, data.name);
     return res.status(200).json(updatedUser);
 };
+
+export const addReadOnly = async (req, res, next) => {
+    const data = req.body;
+    if (!data.code || !data.name) return res.sendStatus(400);
+
+    const updatedUser = await AddReadOnlyCourse(req.user._id, data.code, data.name);
+    return res.status(200).json(updatedUser);
+};
+
 export const deleteCourse = async (req, res, next) => {
     const { code } = req.params;
     if (!code) return res.sendStatus(400);

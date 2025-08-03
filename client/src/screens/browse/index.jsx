@@ -22,12 +22,14 @@ import { getUser } from "../../api/User";
 import { useParams } from "react-router-dom";
 import { getCourse } from "../../api/Course";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import Share from "../share";
 import FileController from "./components/collapsible/components/file-controller";
 import { RefreshCurrentFolder } from "../../actions/filebrowser_actions";
 import YearInfo from "./components/year-info";
 
 const BrowseScreen = () => {
+    const navigate = useNavigate();
     const user = useSelector((state) => state.user);
     const folderData = useSelector((state) => state.fileBrowser.currentFolder);
     const refreshKey = useSelector((state) => state.fileBrowser.refreshKey);
@@ -112,11 +114,13 @@ const BrowseScreen = () => {
                 dispatch(AddNewCourseLocal(fetchedData));
             } else {
                 let fetchingToast = toast.loading("Loading course data...");
-                fetchedData = await getCourse(code.toLowerCase());
+                fetchedData = await getCourse(code.toUpperCase());
                 if (fetchedData.data.found) {
                     toast.dismiss(fetchingToast);
-                    dispatch(UpdateCourses(fetchedData.data));
-                    dispatch(AddNewCourseLocal(fetchedData.data));
+                    dispatch(ChangeCurrentCourse(null, code.toUpperCase()));
+                    navigate("/browse");
+                    // dispatch(UpdateCourses(fetchedData.data));
+                    // dispatch(AddNewCourseLocal(fetchedData.data));
                     root = fetchedData.data;
                 } else {
                     toast.dismiss(fetchingToast);
@@ -198,29 +202,46 @@ const BrowseScreen = () => {
                         ? ""
                         : user.user?.courses?.map((course, idx) => {
                               return (
-                                  <Collapsible color={getColors(idx)} key={idx} course={course} />
+                                  <Collapsible
+                                      color={getColors(idx)}
+                                      key={idx}
+                                      course={course}
+                                      isReadOnly={false}
+                                  />
                               );
                           })}
                     {user.localCourses?.map((course, idx) => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
-                    {user.user?.isBR && (
-                        <h4 className="heading">PREVIOUS COURSES</h4>
+
+                    {user.user?.readOnly?.length > 0 && (
+                        <h4 className="heading">OTHERS</h4>
                     )}
+
+                    {user.user?.readOnly?.map((course, idx) => (
+                        <Collapsible
+                            color={course.color}
+                            key={`readonly-${idx}`}
+                            course={course}
+                            isReadOnly={true}
+                        />
+                    ))}
+
+                    {user.user?.isBR && <h4 className="heading">PREVIOUS COURSES</h4>}
                     {!(user.user?.isBR && user.user?.previousCourses?.length > 0)
                         ? ""
                         : `<h4 className="heading">PREVIOUS COURSES</h4>` &&
-                        user.user?.previousCourses?.map((course, idx) => {
-                            return (
-                                <Collapsible color={getColors(idx)} key={idx} course={course} />
-                            );
-                        })}
+                          user.user?.previousCourses?.map((course, idx) => {
+                              return (
+                                  <Collapsible color={getColors(idx)} key={idx} course={course} />
+                              );
+                          })}
                 </div>
                 <div className="middle">
                     {folderData && (
                         <FolderInfo
                             isBR={user.user.isBR}
-                            path={folderData?.path ? folderData.path :HeaderText}
+                            path={folderData?.path ? folderData.path : HeaderText}
                             name={folderData?.name ? folderData.name : HeaderText}
                             canDownload={folderData?.childType === "File"}
                             contributionHandler={contributionHandler}
@@ -232,9 +253,11 @@ const BrowseScreen = () => {
                         {!folderData ? (
                             <div className="empty-message">{HeaderText}</div>
                         ) : folderData?.childType === "File" ? (
-                                folderData?.children?.length === 0 ? 
-                                    <p className="empty-message">No files available.</p>
-                                    :<FileController files={folderData?.children} />
+                            folderData?.children?.length === 0 ? (
+                                <p className="empty-message">No files available.</p>
+                            ) : (
+                                <FileController files={folderData?.children} />
+                            )
                         ) : folderData?.children?.length === 0 ? (
                             <div className="empty-folder">
                                 <p className="empty-message">No folders available.</p>

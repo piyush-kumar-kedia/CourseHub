@@ -27,6 +27,11 @@ const FolderInfo = ({
     const [newFolderName, setNewFolderName] = useState("");
     const [childType, setChildType] = useState("File"); 
 
+    const user = useSelector((state) => state.user.user);
+    const isReadOnlyCourse = user?.readOnly?.some(
+        (c) => c.code.toLowerCase() === courseCode?.toLowerCase()
+    );
+
     const handleShare = () => {
         const sectionShare = document.getElementById("share");
         sectionShare.classList.add("show");
@@ -97,7 +102,7 @@ const FolderInfo = ({
                         </div>
                     </div>
                 </div>
-                {canDownload ? (
+                {!isReadOnlyCourse && canDownload ? (
                     <div className="btn-container">
                         {/* <button
                             className="btn download"
@@ -116,7 +121,7 @@ const FolderInfo = ({
                 ) : (
                     <></>
                 )}
-                {isBR && !canDownload && (
+                {!isReadOnlyCourse && isBR && !canDownload && (
                     <div className="btn-container">
                         <button className="btn plus" onClick={handleCreateFolder}>
                             <span className="icon plus-icon"></span>

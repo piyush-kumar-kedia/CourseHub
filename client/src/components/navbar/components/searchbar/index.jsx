@@ -5,12 +5,14 @@ import { GetSearchResult } from "../../../../api/Search";
 import formatLongText from "../../../../utils/formatLongText";
 import { useEffect } from "react";
 import { capitalise } from "../../../../utils/capitalise";
+import { useSelector } from "react-redux";
 const SearchBar = ({ type }) => {
     const [open, setOpen] = useState(false);
     const [searched, setSearched] = useState(false);
     const [loading, setLoading] = useState(false);
     const [fetched, setFetched] = useState({});
     const [error, setError] = useState(false);
+    const courses = useSelector((state) => state.user.user.courses.concat(state.user.user?.previousCourses));
     const [searchResultStyle, setSearchResultStyle] = useState({
         "max-height": "15%",
     });
@@ -37,9 +39,21 @@ const SearchBar = ({ type }) => {
         try {
             setSearched(true);
             setLoading(true);
+            const fetched2 = courses.find((course) => {
+                return course.code.replaceAll(" ", "").toLowerCase() === value.replaceAll(" ", "").toLowerCase();
+            })
             const fetched = await GetSearchResult(value.split(" "));
-            // console.log(fetched.data);
-            setFetched(fetched.data);
+            const data = {
+                found: (fetched2)? true: false,
+                results: [{
+                    code: fetched2.code.replaceAll(" ", "").toLowerCase(),
+                    name: fetched2.name,
+                    isAvailable: true,
+                    numberOfWordsMatched: 0,
+                    _id: "null",
+                }]
+            }
+            setFetched(data);
             setError(false);
             setLoading(false);
         } catch (error) {
@@ -146,8 +160,7 @@ const SearchBar = ({ type }) => {
                         ) : (
                             <>
                                 Not found! <br />
-                                <br /> Please ensure that there are no spaces in between course
-                                code. (ce101 and not ce 101){" "}
+                                <br /> Please enter the full code like cs101 and you can only view your own courses{" "}
                                 <span
                                     onClick={() => setOpen(false)}
                                     style={{

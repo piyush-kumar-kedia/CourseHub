@@ -9,6 +9,7 @@ import {
     deleteCourse,
     updateDeviceToken,
     getFavouritesController,
+    addReadOnly
 
 } from "./user.controller.js";
 import catchAsync from "../../utils/catchAsync.js";
@@ -29,6 +30,7 @@ router.post("/favourites", isAuthenticated, catchAsync(addToFavouriteController)
 
 router.delete("/favourites/:id", isAuthenticated, catchAsync(removeFromFavouritesController));
 router.post("/course", isAuthenticated, catchAsync(addNewCourse));
+router.post("/readonly", isAuthenticated, catchAsync(addReadOnly))
 router.delete("/course/:code", isAuthenticated, catchAsync(deleteCourse));
 router.put("/devicetoken", isAuthenticated, catchAsync(updateDeviceToken));
 export default router;

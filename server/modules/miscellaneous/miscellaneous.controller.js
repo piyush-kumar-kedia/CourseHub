@@ -3,6 +3,7 @@ import express from "express";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import ImageKit from "imagekit";
+import links from "../../links.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const imagekit = new ImageKit({
@@ -29,7 +30,7 @@ async function GetPrivacyPolicy(req, res) {
 }
 
 async function PostFeedBack(req, res) {
-    // category (FEEDBACK, BUG), description necessary, screenshots 
+    // category (FEEDBACK, BUG), description necessary, screenshots
     const photos = req.files;
     req.body.rollNumber = req.user.rollNumber;
     req.body.name = req.user.name;
