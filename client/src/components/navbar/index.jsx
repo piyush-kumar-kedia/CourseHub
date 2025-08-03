@@ -6,13 +6,16 @@ import SearchBar from "./components/searchbar";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import server from "../../api/server";
+
 import { LogoutUser } from "../../actions/user_actions";
 const NavBar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleLogout = () => {
         dispatch(LogoutUser());
-        window.location = "http://localhost:8080/api/auth/logout";
+        // window.location = "http://localhost:8080/api/auth/logout";
+        window.location = `${server}/api/auth/logout`;
     };
     return (
         <nav className="navbar">

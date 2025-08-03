@@ -31,11 +31,12 @@ import brRoutes from "./modules/br/br.routes.js";
 import fileRoutes from "./modules/file/file.routes.js";
 import folderRoutes from "./modules/folder/folder.routes.js";
 import yearRoutes from "./modules/year/year.routes.js";
+import links from "./links.js";
 
 const app = express();
 
 const PORT = config.port;
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: links.FRONTEND_URL, credentials: true }));
 
 app.use(express.static("static"));
 import path from "path";

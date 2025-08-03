@@ -10,9 +10,14 @@ import { CreateNewContribution } from "../../api/Contribution";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
+import server from "../../api/server";
 
 import { getCourse } from "../../api/Course";
-import { UpdateCourses, RefreshCurrentFolder, ChangeCurrentYearData } from "../../actions/filebrowser_actions";
+import {
+    UpdateCourses,
+    RefreshCurrentFolder,
+    ChangeCurrentYearData,
+} from "../../actions/filebrowser_actions";
 const Contributions = () => {
     const uploadedBy = useSelector((state) => state.user.user._id);
     const userName = useSelector((state) => state.user.user.name);
@@ -33,9 +38,9 @@ const Contributions = () => {
     let pond = useRef();
 
     const handleUpdateFiles = (fileItems) => {
-        if(fileItems.length > 0) setSubmitEnabled(true);
+        if (fileItems.length > 0) setSubmitEnabled(true);
         else setSubmitEnabled(false);
-    }
+    };
 
     async function handleSubmit() {
         const collection = document.getElementsByClassName("contri");
@@ -102,7 +107,8 @@ const Contributions = () => {
                         onupdatefiles={handleUpdateFiles}
                         maxFiles={40}
                         server={{
-                            url: "http://localhost:8080/api/contribution/upload",
+                            //url: "http://localhost:8080/api/contribution/upload",
+                            url: `${server}/api/contribution/upload`,
                             process: {
                                 headers: {
                                     "contribution-id": contributionId,
@@ -119,17 +125,21 @@ const Contributions = () => {
                 <div id="disclaimer-container">
                     <div id="uploaded-container">
                         <div>🚫</div>
-                        <div>Do not close this popup until all files are successfully uploaded!</div>
+                        <div>
+                            Do not close this popup until all files are successfully uploaded!
+                        </div>
                     </div>
-                    {
-                        !isBR ?
-                            <div id="uploaded-container">
-                                <div>⚠️</div>
-                                <div>Please contact your Branch Representative to verify the files you have uploaded so that it may be visible to everyone</div>
+                    {!isBR ? (
+                        <div id="uploaded-container">
+                            <div>⚠️</div>
+                            <div>
+                                Please contact your Branch Representative to verify the files you
+                                have uploaded so that it may be visible to everyone
                             </div>
-                        :
-                            <></>
-                    }
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                 </div>
                 <div className={`button ${submitEnabled}`} onClick={handleSubmit}>
                     SUBMIT

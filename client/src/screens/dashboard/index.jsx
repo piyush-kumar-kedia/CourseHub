@@ -104,7 +104,7 @@ const Dashboard = () => {
     }, []);
 
     const handleClick = (code) => {
-        let Code=code.replaceAll(" ","");
+        let Code = code.replaceAll(" ", "");
         dispatch(ChangeCurrentCourse(null, Code.toUpperCase()));
         navigate("/browse");
     };
@@ -156,6 +156,7 @@ const Dashboard = () => {
                                 name={course.name}
                                 color={getColors(index)}
                                 setClicked={() => handleClick(course.code)}
+                                isReadOnly={false}
                             />
                         ))}
                         {/* {user.localCourses.map((course) => (
@@ -168,6 +169,46 @@ const Dashboard = () => {
                         />
                     ))} */}
 
+                        {/* <CourseCard
+                            type={"ADD"}
+                            setClicked={() => {
+                                // dispatch(
+                                //     AddNewCourseLocal({
+                                //         _id: "638f1709897b3c84b7d8d32c",
+                                //         name: "Introduction to Engineering Drawing",
+                                //         code: "ce101",
+                                //         color: "#DBCEFF",
+                                //     })
+                                // );
+                                // console.log(user);
+                                addCourseModalShowHandler();
+                            }}
+                        /> */}
+                    </div>
+                    <Space amount={50} />
+
+                    <SubHeading text={"OTHERS"} color={"light"} type={"bold"} />
+                    <Space amount={20} />
+                    <div className="coursecard-container">
+                        {user.user.readOnly.map((course, index) => (
+                            <CourseCard
+                                key={course.name}
+                                code={course?.code?.toUpperCase()}
+                                name={course.name}
+                                color={getColors(index)}
+                                setClicked={() => handleClick(course.code)}
+                                isReadOnly={true}
+                            />
+                        ))}
+                        {/* {user.localCourses.map((course) => (
+                        <CourseCard
+                            key={course.name}
+                            code={course?.code?.toUpperCase()}
+                            name={course.name}
+                            color={course.color}
+                            setClicked={() => handleClick(course.code)}
+                        />
+                    ))} */}
                         <CourseCard
                             type={"ADD"}
                             setClicked={() => {
@@ -184,6 +225,7 @@ const Dashboard = () => {
                             }}
                         />
                     </div>
+
                     <Space amount={50} />
 
                     {user.user.isBR && user.user.previousCourses?.length > 0 && (
@@ -193,7 +235,11 @@ const Dashboard = () => {
                                 style={{ cursor: "pointer", display: "inline-block" }}
                             >
                                 <SubHeading
-                                    text={showPrevious ? "▼ HIDE PREVIOUS COURSES" : "▶ SHOW PREVIOUS COURSES"}
+                                    text={
+                                        showPrevious
+                                            ? "▼ HIDE PREVIOUS COURSES"
+                                            : "▶ SHOW PREVIOUS COURSES"
+                                    }
                                     color={"light"}
                                     type={"bold"}
                                 />
@@ -225,7 +271,6 @@ const Dashboard = () => {
                         </>
                     )}
                     <Space amount={50} />
-
                 </Container>
                 <ContributionBanner contributionHandler={contributionHandler} />
                 <Space amount={50} />

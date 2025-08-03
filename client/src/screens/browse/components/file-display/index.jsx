@@ -44,6 +44,9 @@ const FileDisplay = ({ file, path, code }) => {
     const currCourseCode = useSelector((state) => state.fileBrowser?.currentCourseCode);
     const currFolderId = useSelector((state) => state.fileBrowser?.currentFolder?._id);
     const currentUser = useSelector((state) => state.user.user);
+    const isReadOnlyCourse = currentUser?.readOnly?.some(
+        (c) => c.code.toLowerCase() === currCourseCode?.toLowerCase()
+    );
 
     if (!file.isVerified && !currentUser?.isBR) {
         return null;
@@ -132,7 +135,7 @@ const FileDisplay = ({ file, path, code }) => {
         setDialogType("delete");
         setOnConfirmAction(() => async () => {
             try {
-                console.log("Deleting file:", file._id);
+                //console.log("Deleting file:", file._id);
                 await unverifyFile(file._id, file.fileId, currFolderId);
                 toast.success("File deleted!");
                 // window.location.reload();
@@ -180,7 +183,7 @@ const FileDisplay = ({ file, path, code }) => {
                 }}
             >
                 <div className="top">
-                    {user?.isBR && (
+                    {user?.isBR && !isReadOnlyCourse && (
                         <>
                         {!(file.isVerified)? <span className="verify" onClick={handleVerify} title="Verify"></span> : <></>}
                             <span className="unverify" onClick={handleUnverify} title="Delete"></span>
