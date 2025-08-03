@@ -5,6 +5,7 @@ import catchAsync from "../../utils/catchAsync.js";
 import cheerio from "cheerio";
 
 import appConfig from "../../config/default.js";
+import links from "../../links.js";
 
 const clientid = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_VALUE;
@@ -292,7 +293,7 @@ export const mobileRedirectHandler = async (req, res, next) => {
         client_secret: clientSecret,
         client_id: clientid,
         //redirect_uri: redirect_uri,
-        redirect_uri: "https://www.coursehubiitg.in/api/auth/login/redirect/mobile",
+        redirect_uri: links.COURSEHUB_MOBILE_REDIRECT,
         scope: "user.read",
         grant_type: "authorization_code",
         code: code,
