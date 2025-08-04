@@ -25,6 +25,8 @@ jobs:
             set -e
             echo "📦 Pulling latest code..."
             cd ~/CourseHub
+            git reset --hard HEAD
+            git clean -fd
             git pull origin master
           EOF
 
