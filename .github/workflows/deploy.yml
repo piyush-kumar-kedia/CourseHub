@@ -1,125 +1,114 @@
 name: Deploy CourseHub to EC2
 
 on:
-  push:
-    branches:
-      - master
+    push:
+        branches:
+            - master
 
 jobs:
-  deploy:
-    name: Deploy on Push to Master
-    runs-on: ubuntu-latest
+    deploy:
+        name: Deploy on Push to Master
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
 
-      - name: Add SSH Private Key
-        run: |
-          echo "${{ secrets.EC2_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
+            - name: Add SSH Private Key
+              run: |
+                  echo "${{ secrets.EC2_KEY }}" > private_key.pem
+                  chmod 600 private_key.pem
 
-      - name: SSH - Pull Latest Code
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-            echo "📦 Pulling latest code..."
-            cd ~/CourseHub
-            git reset --hard HEAD
-            git clean -fd
-            git pull origin master
-          EOF
+            - name: SSH - Pull Latest Code
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    echo "📦 Pulling latest code..."
+                    cd ~/CourseHub
+                    git reset --hard HEAD
+                    git clean -fd
+                    git pull origin master
+                  EOF
 
-      - name: SSH - Update .env, token files, links.js, and server.js
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << EOF
-            set -e
-            echo "🔐 Updating .env, token files, links.js, and server.js..."
+            - name: SSH - Update Config Files
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << EOF
+                    set -e
+                    echo "🔐 Updating env and token files..."
 
-            cd ~/CourseHub/server
+                    cd ~/CourseHub/server
 
-            # Write .env
-            cat > .env << END
-${{ secrets.ENV_FILE }}
-END
+                    echo "${{ secrets.ENV_FILE }}" > .env
+                    echo "${{ secrets.ONEDRIVE_REFRESH_TOKEN }}" > onedrive-refresh-token.token
+                    echo "${{ secrets.ONEDRIVE_ACCESS_TOKEN }}" > onedrive-access-token.token
+                    echo "${{ secrets.ONEDRIVE_DEVICE_CODE }}" > onedrive-device-code.token
+                    echo "${{ secrets.LINKS_JS_FILE }}" > links.js
 
-            # Token files
-            echo "${{ secrets.ONEDRIVE_REFRESH_TOKEN }}" > onedrive-refresh-token.token
-            echo "${{ secrets.ONEDRIVE_ACCESS_TOKEN }}" > onedrive-access-token.token
-            echo "${{ secrets.ONEDRIVE_DEVICE_CODE }}" > onedrive-device-code.token
+                    cd ~/CourseHub/client/src/api
+                    echo "${{ secrets.SERVER_JS_FILE }}" > server.js
+                  EOF
 
-            # Write links.js
-            cat > links.js << END
-${{ secrets.LINKS_JS_FILE }}
-END
+            - name: SSH - Build Frontend
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    echo "🧱 Installing and building frontend..."
+                    cd ~/CourseHub/client
+                    npm install
+                    npm run build
+                  EOF
 
-            # Write server.js inside client/src/api
-            cd ~/CourseHub/client/src/api
-            cat > server.js << END
-${{ secrets.SERVER_JS_FILE }}
-END
-EOF
+            - name: SSH - Backup and Deploy Frontend
+              if: success()
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    echo "🗂️ Backing up old frontend..."
+                    timestamp=$(date +%Y%m%d-%H%M%S)
+                    sudo mkdir -p /usr/share/nginx/html-backup
+                    sudo cp -r /usr/share/nginx/html /usr/share/nginx/html-backup/html-$timestamp
 
-      - name: SSH - Build Frontend
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-            echo "🧱 Installing and building frontend..."
-            cd ~/CourseHub/client
-            npm install
-            npm run build
-          EOF
+                    echo "🚀 Deploying new frontend..."
+                    sudo rm -rf /usr/share/nginx/html/*
+                    sudo cp -r ~/CourseHub/client/dist/* /usr/share/nginx/html/
 
-      - name: SSH - Backup and Deploy Frontend
-        if: success()
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-            echo "🗂️ Backing up old frontend..."
-            timestamp=$(date +%Y%m%d-%H%M%S)
-            sudo mkdir -p /usr/share/nginx/html-backup
-            sudo cp -r /usr/share/nginx/html /usr/share/nginx/html-backup/html-$timestamp
+                    echo "🧹 Cleaning up older backups..."
+                    cd /usr/share/nginx/html-backup
+                    ls -1tr | head -n -5 | xargs -d '\n' sudo rm -rf --
+                  EOF
 
-            echo "🚀 Deploying new frontend..."
-            sudo rm -rf /usr/share/nginx/html/*
-            sudo cp -r ~/CourseHub/client/dist/* /usr/share/nginx/html/
+            - name: Rollback on Failure
+              if: failure()
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    echo "⚠️ Build failed. Restoring backup..."
+                    latest_backup=$(ls -1tr /usr/share/nginx/html-backup | tail -n 1)
+                    sudo rm -rf /usr/share/nginx/html/*
+                    sudo cp -r /usr/share/nginx/html-backup/$latest_backup/* /usr/share/nginx/html/
+                  EOF
 
-            echo "🧹 Cleaning up older backups..."
-            cd /usr/share/nginx/html-backup
-            ls -1tr | head -n -1 | xargs -d '\n' sudo rm -rf --
-          EOF
+            - name: SSH - Restart Backend with PM2
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    echo "🔄 Restarting server..."
+                    cd ~/CourseHub/server
+                    npm install
+                    pm2 delete server || true
+                    pm2 start index.js --name server
+                    pm2 save
+                  EOF
 
-      - name: Rollback on Failure
-        if: failure()
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            echo "⚠️ Build failed. Restoring backup..."
-            sudo rm -rf /usr/share/nginx/html/*
-            sudo cp -r /usr/share/nginx/html-backup/html-$(ls /usr/share/nginx/html-backup | tail -n 1)/* /usr/share/nginx/html/
-          EOF
+            - name: SSH - Test and Reload Nginx
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    echo "🧪 Testing nginx configuration..."
+                    sudo nginx -t
 
-      - name: SSH - Restart Backend with PM2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-            echo "🔄 Restarting server..."
-            cd ~/CourseHub/server
-            npm install
-            pm2 delete server || echo "No existing PM2 process to delete"
-            pm2 start index.js --name server
-            pm2 save
-          EOF
+                    echo "♻️ Reloading nginx..."
+                    sudo systemctl reload nginx
+                  EOF
 
-      - name: SSH - Test and Reload Nginx
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-            echo "🧪 Testing nginx configuration..."
-            sudo nginx -t
-
-            echo "♻️ Reloading nginx..."
-            sudo systemctl reload nginx
-          EOF
-
-      - name: Cleanup SSH key
-        run: rm -f private_key.pem
+            - name: Cleanup SSH Key
+              run: rm -f private_key.pem
