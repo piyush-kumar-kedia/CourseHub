@@ -42,7 +42,9 @@ jobs:
                     echo "${{ secrets.ONEDRIVE_REFRESH_TOKEN }}" > onedrive-refresh-token.token
                     echo "${{ secrets.ONEDRIVE_ACCESS_TOKEN }}" > onedrive-access-token.token
                     echo "${{ secrets.ONEDRIVE_DEVICE_CODE }}" > onedrive-device-code.token
-                    echo "${{ secrets.LINKS_JS_FILE }}" > links.js
+
+                    # Decode base64 and write to links.js
+                    echo "${{ secrets.LINKS_JS_FILE_BASE64 }}" | base64 -d > links.js
 
                     cd ~/CourseHub/client/src/api
                     echo "${{ secrets.SERVER_JS_FILE }}" > server.js
