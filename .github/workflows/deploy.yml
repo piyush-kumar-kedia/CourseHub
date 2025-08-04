@@ -25,6 +25,8 @@ jobs:
             set -e
             echo "📦 Pulling latest code..."
             cd ~/CourseHub
+            git reset --hard HEAD
+            git clean -fd
             git pull origin master
           EOF
 
@@ -35,22 +37,12 @@ jobs:
             echo "🔐 Updating .env and token files..."
             cd ~/CourseHub/server
 
-            cat > .env <<EOL
-${{ secrets.ENV_FILE }}
-EOL
-
-            cat > onedrive-refresh-token.token <<EOL
-${{ secrets.ONEDRIVE_REFRESH_TOKEN }}
-EOL
-
-            cat > onedrive-access-token.token <<EOL
-${{ secrets.ONEDRIVE_ACCESS_TOKEN }}
-EOL
-
-            cat > onedrive-device-code.token <<EOL
-${{ secrets.ONEDRIVE_DEVICE_CODE }}
-EOL
+            echo "${{ secrets.ENV_FILE }}" > .env
+            echo "${{ secrets.ONEDRIVE_REFRESH_TOKEN }}" > onedrive-refresh-token.token
+            echo "${{ secrets.ONEDRIVE_ACCESS_TOKEN }}" > onedrive-access-token.token
+            echo "${{ secrets.ONEDRIVE_DEVICE_CODE }}" > onedrive-device-code.token
           EOF
+
 
       - name: SSH - Build Frontend
         run: |
@@ -63,7 +55,7 @@ EOL
           EOF
 
       - name: SSH - Backup and Deploy Frontend
-      if: success()
+        if: success()
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
@@ -101,7 +93,6 @@ EOL
             pm2 delete server || echo "No existing PM2 process to delete"
             pm2 start index.js --name server
             pm2 save
-            pm2 startup
           EOF
 
       - name: SSH - Test and Reload Nginx
