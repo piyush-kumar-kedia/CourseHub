@@ -1,40 +1,121 @@
-name: Deploy CourseHub
+name: Deploy CourseHub to EC2
 
-on: 
-    push:
-        branches:
-            - main
+on:
+  push:
+    branches:
+      - master
 
 jobs:
-    deploy: 
-        runs-on: ubuntu-latest
-     
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
+  deploy:
+    name: Deploy on Push to Master
+    runs-on: ubuntu-latest
 
-            - name: Copy project files to EC2
-              uses: appleboy/scp-action@v0.1.4
-              with:
-                host: ${{ secrets.EC2_HOST }}
-                username: ec2-user
-                key: ${{ secrets.EC2_KEY }}
-                source: "."
-                target: "/home/ec2-user/coursehub"
-                
-            - name: SSH into EC2 and restart backend
-              uses: appleboy/ssh-action@v1.0.0
-              with:
-                host: ${{ secrets.EC2_HOST }}
-                username: ec2-user
-                key: ${{ secrets.EC2_KEY }}
-                script: |
-                    cd coursehub
-                    npm install
-                    echo "${{ secrets.ENV_FILE }}" > .env
-                    pm2 stop CourseHub || true
-                    pm2 start index.js --name coursehub
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Add SSH Private Key
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+      - name: SSH - Pull Latest Code
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+            echo "📦 Pulling latest code..."
+            cd ~/CourseHub
+            git pull origin master
+          EOF
+
+      - name: SSH - Update .env and Token Files
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+            echo "🔐 Updating .env and token files..."
+            cd ~/CourseHub/server
+
+            cat > .env <<EOL
+${{ secrets.ENV_FILE }}
+EOL
+
+            cat > onedrive-refresh-token.token <<EOL
+${{ secrets.ONEDRIVE_REFRESH_TOKEN }}
+EOL
+
+            cat > onedrive-access-token.token <<EOL
+${{ secrets.ONEDRIVE_ACCESS_TOKEN }}
+EOL
+
+            cat > onedrive-device-code.token <<EOL
+${{ secrets.ONEDRIVE_DEVICE_CODE }}
+EOL
+          EOF
+
+      - name: SSH - Build Frontend
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+            echo "🧱 Installing and building frontend..."
+            cd ~/CourseHub/client
+            npm install
+            npm run build
+          EOF
+
+      - name: SSH - Backup and Deploy Frontend
+      if: success()
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+            echo "🗂️ Backing up old frontend..."
+            timestamp=$(date +%Y%m%d-%H%M%S)
+            sudo mkdir -p /usr/share/nginx/html-backup
+            sudo cp -r /usr/share/nginx/html /usr/share/nginx/html-backup/html-$timestamp
+
+            echo "🚀 Deploying new frontend..."
+            sudo rm -rf /usr/share/nginx/html/*
+            sudo cp -r ~/CourseHub/client/dist/* /usr/share/nginx/html/
+
+            echo "🧹 Cleaning up older backups..."
+            cd /usr/share/nginx/html-backup
+            ls -1tr | head -n -1 | xargs -d '\n' sudo rm -rf --
+          EOF
+
+      - name: Rollback on Failure
+        if: failure()
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            echo "⚠️ Build failed. Restoring backup..."
+            sudo rm -rf /usr/share/nginx/html/*
+            sudo cp -r /usr/share/nginx/html-backup/html-$(ls /usr/share/nginx/html-backup | tail -n 1)/* /usr/share/nginx/html/
+          EOF
 
 
+      - name: SSH - Restart Backend with PM2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+            echo "🔄 Restarting server..."
+            cd ~/CourseHub/server
+            npm install
+            pm2 delete server || echo "No existing PM2 process to delete"
+            pm2 start index.js --name server
+            pm2 save
+            pm2 startup
+          EOF
+
+      - name: SSH - Test and Reload Nginx
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+            echo "🧪 Testing nginx configuration..."
+            sudo nginx -t
+
+            echo "♻️ Reloading nginx..."
+            sudo systemctl reload nginx
+          EOF
+
+      - name: Cleanup SSH key
+        run: rm -f private_key.pem
 
 
