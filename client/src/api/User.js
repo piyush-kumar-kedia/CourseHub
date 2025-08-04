@@ -44,7 +44,6 @@ export const AddToFavourites = async (id, name, path, code) => {
 };
 export const RemoveFromFavourites = async (id) => {
     const resp = await axios.delete(`${serverRoot}/api/user/favourites/${id}`);
-    // console.log(resp);
     return resp;
 };
 export const GetExamDates = async () => {
