@@ -5,8 +5,3 @@ export default {
     currentYear,
     sessionIncluesMonth: currentMonth,
 };
-
-
-
-
-//testing deployement 
