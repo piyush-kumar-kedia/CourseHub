@@ -93,7 +93,6 @@ jobs:
             pm2 delete server || echo "No existing PM2 process to delete"
             pm2 start index.js --name server
             pm2 save
-            pm2 startup
           EOF
 
       - name: SSH - Test and Reload Nginx
