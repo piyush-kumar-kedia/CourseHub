@@ -42,11 +42,8 @@ jobs:
                     echo "${{ secrets.ONEDRIVE_REFRESH_TOKEN }}" > onedrive-refresh-token.token
                     echo "${{ secrets.ONEDRIVE_ACCESS_TOKEN }}" > onedrive-access-token.token
                     echo "${{ secrets.ONEDRIVE_DEVICE_CODE }}" > onedrive-device-code.token
-
-                    echo "📝 Writing links.js"
-                    cat << 'EOL' > links.js
-                    ${{ secrets.LINKS_JS_FILE }}
-                    EOL
+                    
+                    echo "${{ secrets.LINKS_JS_FILE }}" > links.js
 
                     cd ~/CourseHub/client/src/api
                     echo "${{ secrets.SERVER_JS_FILE }}" > server.js
