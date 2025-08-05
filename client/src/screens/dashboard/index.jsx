@@ -259,12 +259,12 @@ const Dashboard = () => {
                                             />
                                         ))}
 
-                                        <CourseCard
+                                        {/* <CourseCard
                                             type={"ADD"}
                                             setClicked={() => {
                                                 addCourseModalShowHandler();
                                             }}
-                                        />
+                                        /> */}
                                     </div>
                                 </>
                             )}
