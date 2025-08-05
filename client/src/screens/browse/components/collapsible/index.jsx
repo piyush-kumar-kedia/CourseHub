@@ -170,7 +170,7 @@ const Collapsible = ({ course, color, state }) => {
                         <p className="name">
                             {course.name
                                 ? capitalise(course.name)
-                                : "Process Control and Instrumentation"}
+                                : "Name Unavailable"}
                         </p>
                     </div>
                     <div className="arrow"></div>
