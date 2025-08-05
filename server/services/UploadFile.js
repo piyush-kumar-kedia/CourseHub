@@ -6,10 +6,10 @@ import Contribution from "../modules/contribution/contribution.model.js";
 import { type } from "os";
 import User from "../modules/user/user.model.js";
 
+const parent_item_id = "01XIPLIOQB62KUCQLEINGZSRMWIX7ZLQYU";
+
 async function GetFolderId(contributionId) {
     const access_token = await getAccessToken();
-    // /me/drive/items/{parent-item-id}/children
-    const parent_item_id = "014BDXJYPR2LB6XDZPOVFLXKHUJB3GCLD7";
     const url = `https://graph.microsoft.com/v1.0/me/drive/items/${parent_item_id}/children`;
     const config = {
         headers: {
@@ -29,7 +29,7 @@ async function GetFolderId(contributionId) {
 
 async function CreateFolder(contributionId) {
     const access_token = await getAccessToken();
-    const parent_item_id = "014BDXJYPR2LB6XDZPOVFLXKHUJB3GCLD7";
+    // const parent_item_id = "014BDXJYPR2LB6XDZPOVFLXKHUJB3GCLD7";
     // /me/drive/items/{parent-item-id}/children
     const url = `https://graph.microsoft.com/v1.0/me/drive/items/${parent_item_id}/children`;
     const config = {
@@ -136,55 +136,48 @@ async function DeleteFile(fileId) {
 
     try {
         //obtain parent folder onedrive id
-        const { data } = await axios.get(`https://graph.microsoft.com/v1.0/me/drive/items/${fileId}`,
+        const { data } = await axios.get(
+            `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
-                }
+                },
             }
-        )
+        );
         const folderId = data?.parentReference?.id;
 
         //delete entire folder if it is the only file or delete only the file
-        const empty = await isFolderEmpty(folderId, access_token)
+        const empty = await isFolderEmpty(folderId, access_token);
         if (empty) {
-            await axios.delete(`https://graph.microsoft.com/v1.0/me/drive/items/${folderId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${access_token}`
-                    }
-                }
-            )
+            await axios.delete(`https://graph.microsoft.com/v1.0/me/drive/items/${folderId}`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
+        } else {
+            await axios.delete(`https://graph.microsoft.com/v1.0/me/drive/items/${fileId}`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
         }
-        else {
-            await axios.delete(`https://graph.microsoft.com/v1.0/me/drive/items/${fileId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${access_token}`,
-                    }
-                }
-            )
-        }
-
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err.response);
     }
 }
 
 async function isFolderEmpty(folderId, access_token) {
-    const { data } = await axios.get(`https://graph.microsoft.com/v1.0/me/drive/items/${folderId}/children`,
+    const { data } = await axios.get(
+        `https://graph.microsoft.com/v1.0/me/drive/items/${folderId}/children`,
         {
             headers: {
-                Authorization: `Bearer ${access_token}`
-            }
+                Authorization: `Bearer ${access_token}`,
+            },
         }
-    )
+    );
 
-    if (data.value.length === 1)
-        return true;
-    else
-        return false;
+    if (data.value.length === 1) return true;
+    else return false;
 }
 
 export { DeleteFile };
