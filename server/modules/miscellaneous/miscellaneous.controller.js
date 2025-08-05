@@ -3,7 +3,7 @@ import express from "express";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import ImageKit from "imagekit";
-import links from "../../links.js";
+// import links from "../../links.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const imagekit = new ImageKit({
