@@ -1,7 +1,6 @@
 import axios from "axios";
 import serverRoot from "./server";
 
-// Create axios instance with baseURL and withCredentials
 const API = axios.create({
     baseURL: `${serverRoot}/api`,
     withCredentials: true,
@@ -40,12 +39,11 @@ export const verifyFile = async (fileId) => {
 
 // Unverify (delete) a file (BR only)
 export const unverifyFile = async (fileId, oneDriveId, folderId) => {
-    await API.delete(`/files/unverify/${fileId}`,
-    {
+    await API.delete(`/files/unverify/${fileId}`, {
         data: {
             oneDriveId,
             folderId,
-        }
+        },
     });
 };
 
@@ -54,4 +52,4 @@ export const getThumbnail = async (fileId) => {
         fileId: fileId,
     });
     console.log("Thumbnail Refreshed");
-}
+};
