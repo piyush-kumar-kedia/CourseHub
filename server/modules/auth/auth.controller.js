@@ -230,10 +230,11 @@ export const redirectHandler = async (req, res, next) => {
 
     let br = await BR.findOne({ email: userFromToken.data.mail });
     if (!existingUser) {
-        const courses = await fetchCourses(userFromToken.data.surname);
+        //const courses = await fetchCourses(userFromToken.data.surname);
         const department = await getDepartment(AccessToken);
-        const previousCourses = await fetchCoursesForBr(userFromToken.data.surname);
-
+        //const previousCourses=[];
+        //const previousCourses = await fetchCoursesForBr(userFromToken.data.surname);
+        //const [courses,department,previousCourses]=await Promise.all([fetchCourses(userFromToken.data.surname),getDepartment(AccessToken),fetchCoursesForBr(userFromToken.data.surname)])
         const userData = {
             name: userFromToken.data.displayName,
             degree: userFromToken.data.jobTitle,
@@ -241,7 +242,7 @@ export const redirectHandler = async (req, res, next) => {
             email: userFromToken.data.mail,
             // branch: department, //calculate branch
             semester: calculateSemester(userFromToken.data.surname), //calculate sem
-            courses: courses,
+            courses: [],
             department: department,
             isBR: br ? true : false,
             previousCourses: br ? previousCourses : [],
@@ -279,8 +280,9 @@ export const redirectHandler = async (req, res, next) => {
         expires: new Date(Date.now() + 2073600000),
         httpOnly: true,
     });
+    return res.redirect(`${appConfig.clientURL}/loading`);
 
-    return res.redirect(appConfig.clientURL);
+    //return res.redirect(appConfig.clientURL);
     // return res.redirect(`${appConfig.clientURL}/login/success?token=${token}`); //to redirect with token
 };
 

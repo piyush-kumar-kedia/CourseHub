@@ -27,7 +27,7 @@ import Share from "../share";
 import FileController from "./components/collapsible/components/file-controller";
 import { RefreshCurrentFolder } from "../../actions/filebrowser_actions";
 import YearInfo from "./components/year-info";
-
+import LoadingPage from "../../loading";
 const BrowseScreen = () => {
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
@@ -62,24 +62,29 @@ const BrowseScreen = () => {
     }, []);
 
     useEffect(() => {
-        async function getAuth() {
-            try {
-                const { data } = await getUser();
-                if (!data) {
-                    dispatch(LogoutUser());
-                    setLoading(false);
-                    return;
-                }
-                dispatch(LoginUser(data));
-                setLoading(false);
-            } catch (error) {
+    async function getAuth() {
+        try {
+            const { data } = await getUser();
+            if (!data) {
                 dispatch(LogoutUser());
-                // console.log(error.message);
                 setLoading(false);
+                return;
             }
+            dispatch(LoginUser(data));
+            setLoading(false);
+            console.log("in index.js loading");
+            navigate("/loading");
+        } catch (error) {
+            dispatch(LogoutUser());
+            console.log("in index.js error loading");
+            setLoading(false);
+            navigate("/login");
         }
-        if (!user?.loggedIn) getAuth();
-    }, []);
+    }
+
+    if (!user?.loggedIn) getAuth();
+}, []);
+
 
     useEffect(() => {
         if (loading || !code) return;

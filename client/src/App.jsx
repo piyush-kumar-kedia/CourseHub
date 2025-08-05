@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import BrowseScreen from "./screens/browse";
 import Dashboard from "./screens/dashboard";
 import LandingPage from "./screens/landing";
-
+import LoadingPage from "./loading.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PrivateRoutes from "./router_utils/PrivateRoutes";
 import ProfilePage from "./screens/profile.js";
@@ -20,6 +20,9 @@ const App = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("fresh")) navigate("/loading");
+
         if (!initial) return;
         try {
             const localCourses = window.sessionStorage.getItem("LocalCourses");
@@ -50,6 +53,7 @@ const App = () => {
             />
             <Router>
                 <Routes>
+                    <Route path="/loading" element={<LoadingPage />} />
                     <Route element={<PrivateRoutes />}>
                         <Route element={<Dashboard />} path="dashboard" exact />
                         <Route element={<ProfilePage />} path="profile" exact />
