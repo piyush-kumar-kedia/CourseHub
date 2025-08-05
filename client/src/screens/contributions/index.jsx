@@ -107,7 +107,6 @@ const Contributions = () => {
                         onupdatefiles={handleUpdateFiles}
                         maxFiles={40}
                         server={{
-                            //url: "http://localhost:8080/api/contribution/upload",
                             url: `${server}/api/contribution/upload`,
                             process: {
                                 headers: {

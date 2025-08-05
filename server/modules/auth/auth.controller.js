@@ -197,13 +197,10 @@ export const redirectHandler = async (req, res, next) => {
         client_secret: clientSecret,
         client_id: clientid,
         redirect_uri: redirect_uri,
-        // redirect_uri: "https://www.coursehubiitg.in/api/auth/login/redirect",
         scope: "user.read",
         grant_type: "authorization_code",
         code: code,
     });
-
-    // console.log(data);
 
     const config = {
         method: "post",
@@ -218,8 +215,6 @@ export const redirectHandler = async (req, res, next) => {
         headers: config.headers,
     });
     if (!response.data) throw new AppError(500, "Something went wrong");
-
-    // console.log(response.data);
 
     const AccessToken = response.data.access_token;
     const RefreshToken = response.data.refresh_token;

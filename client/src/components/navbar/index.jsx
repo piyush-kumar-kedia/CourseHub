@@ -14,7 +14,6 @@ const NavBar = () => {
     const dispatch = useDispatch();
     const handleLogout = () => {
         dispatch(LogoutUser());
-        // window.location = "http://localhost:8080/api/auth/logout";
         window.location = `${server}/api/auth/logout`;
     };
     return (

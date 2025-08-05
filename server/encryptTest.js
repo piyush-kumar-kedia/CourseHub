@@ -1,7 +1,6 @@
 import aesjs from "aes-js";
 let utf8Encode = new TextEncoder();
 var key = "576D5A7134743677397A24432646294A";
-// Convert text to bytes
 var text = "Hello world!";
 var bytekey = utf8Encode.encode(key);
 var textBytes = aesjs.utils.utf8.toBytes(text);
