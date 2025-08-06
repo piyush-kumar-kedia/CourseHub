@@ -232,7 +232,7 @@ export const redirectHandler = async (req, res, next) => {
     if (!existingUser) {
         //const courses = await fetchCourses(userFromToken.data.surname);
         const department = await getDepartment(AccessToken);
-        //const previousCourses=[];
+        const previousCourses = [];
         //const previousCourses = await fetchCoursesForBr(userFromToken.data.surname);
         //const [courses,department,previousCourses]=await Promise.all([fetchCourses(userFromToken.data.surname),getDepartment(AccessToken),fetchCoursesForBr(userFromToken.data.surname)])
         const userData = {
@@ -245,7 +245,7 @@ export const redirectHandler = async (req, res, next) => {
             courses: [],
             department: department,
             isBR: br ? true : false,
-            // previousCourses: br ? previousCourses : [],
+            previousCourses: br ? previousCourses : [],
             readOnly: [],
         };
 
