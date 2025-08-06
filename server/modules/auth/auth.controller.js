@@ -245,7 +245,7 @@ export const redirectHandler = async (req, res, next) => {
             courses: [],
             department: department,
             isBR: br ? true : false,
-            previousCourses: br ? previousCourses : [],
+            // previousCourses: br ? previousCourses : [],
             readOnly: [],
         };
 
