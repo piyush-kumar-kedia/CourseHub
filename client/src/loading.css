@@ -1,30 +1,4 @@
-/* Fullscreen black background and centered layout */
-.loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; /* full viewport height */
-    width: 100vw; /* full viewport width */
-    background-color: black;
-    color: white; /* white text */
-}
-
-/* Loader container — remove absolute positioning */
-.loader {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-/* Optional spacing for text */
-.text {
-    margin-top: 40px;
-    text-align: center;
-}
-
-/* Animation styles (unchanged) */
+/* loading.css - Only keep the animation styles */
 .jimu-primary-loading:before,
 .jimu-primary-loading:after {
     position: absolute;
@@ -45,7 +19,7 @@
 .jimu-primary-loading:before,
 .jimu-primary-loading:after,
 .jimu-primary-loading {
-    background: #ffffff; /* white loader */
+    background: #ffffff;
     -webkit-animation: loading-keys-app-loading 0.8s infinite ease-in-out;
     animation: loading-keys-app-loading 0.8s infinite ease-in-out;
     width: 13.6px;
