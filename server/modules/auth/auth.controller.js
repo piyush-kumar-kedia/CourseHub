@@ -93,6 +93,11 @@ export const fetchCourses = async (rollNumber) => {
             });
         }
     });
+    if (courses.length === 0) throw new AppError(404, "No courses found for this roll number");
+    const user = await User.findOne({ rollNumber });
+    if (!user) throw new AppError(404, "User not found");
+    user.courses = courses;
+    user.save(); // Save the courses to the user document
 
     return courses;
 };
@@ -160,6 +165,11 @@ export const fetchCoursesForBr = async (rollNumber) => {
             });
         }
     });
+    if (courses.length === 0) throw new AppError(404, "No courses found for this roll number");
+    const user = await User.findOne({ rollNumber });
+    if (!user) throw new AppError(404, "User not found");
+    user.previousCourses = courses;
+    await user.save(); // Save the courses to the user document
 
     return courses;
 };

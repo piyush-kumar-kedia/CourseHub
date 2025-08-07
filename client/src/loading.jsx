@@ -20,16 +20,14 @@ const LoadingPage = () => {
                     setError("Invalid user data.");
                     return navigate("/login");
                 }
+
                 console.log("here in loading");
                 const { courses, previousCourses } = await fetchUserCoursesData(user);
 
                 user.courses = courses;
                 user.previousCourses = previousCourses;
-                console.log("after adding", user);
-                sessionStorage.setItem("user", JSON.stringify(user));
-                sessionStorage.setItem("AllCourses", JSON.stringify(user.courses));
-                dispatch(LoginUser(user));
 
+                dispatch(LoginUser(user));
                 navigate("/dashboard");
             } catch (err) {
                 console.error("Loading error:", err);
