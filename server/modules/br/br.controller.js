@@ -1,5 +1,21 @@
 import BR from "./br.model.js";
 
+const updateBRs = async(req, res)=>{
+    try {
+        const {emails} = req.body;
+
+        if (emails.length )
+            return res.status(400).json({ error: "email is required" });
+
+        const exists = await BR.findOne({ email });
+        if (exists) return res.status(409).json({ error: "BR already exists" });
+        const br = await BR.create({email});
+        res.status(201).json({ message: "BR added", br });
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
 const createBR = async (req, res) => {
     try {
         const {email} = req.body;

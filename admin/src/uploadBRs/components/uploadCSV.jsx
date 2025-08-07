@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, Mail, FileText, CheckCircle, XCircle, Download } from 'lucide-react';
 import Papa from 'papaparse';
+import axios from 'axios';
 
 export default function CSVEmailPortal() {
   const [emails, setEmails] = useState([]);
@@ -14,6 +15,21 @@ export default function CSVEmailPortal() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email?.trim());
   };
+
+  const updateBRs = async(req,res)=>{
+    try{
+      const response = await axios.post(``,{
+        emails: validEmails||[],
+      });
+
+      console.log(response.data);
+      return response.data;
+    }
+    catch(error){
+      console.log('Error updating BRs:', error);
+    }
+
+  }
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -72,16 +88,16 @@ export default function CSVEmailPortal() {
     });
   };
 
-  const downloadValidEmails = () => {
-    const csvContent = validEmails.map(item => item.email).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'valid_emails.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
+  // const downloadValidEmails = () => {
+  //   const csvContent = validEmails.map(item => item.email).join('\n');
+  //   const blob = new Blob([csvContent], { type: 'text/csv' });
+  //   const url = window.URL.createObjectURL(blob);
+  //   const a = document.createElement('a');
+  //   a.href = url;
+  //   a.download = 'valid_emails.csv';
+  //   a.click();
+  //   window.URL.revokeObjectURL(url);
+  // };
 
   const resetUpload = () => {
     setEmails([]);
@@ -183,11 +199,10 @@ export default function CSVEmailPortal() {
             {validEmails.length > 0 && (
               <div className="mb-6">
                 <button
-                  onClick={downloadValidEmails}
+                  onClick={updateBRs}
                   className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
-                  <Download className="w-5 h-5 mr-2" />
-                  Download Valid Emails
+                  Update
                 </button>
               </div>
             )}
