@@ -45,3 +45,13 @@ mongoose
         safeDeleteCourse("course_code", "course_name");
     })
     .catch((e) => console.log(e));
+
+
+
+
+
+
+
+
+
+

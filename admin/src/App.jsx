@@ -1,7 +1,8 @@
-import UploadCSV from "./components/uploadCSV";
+import CourseAdmin from "./pages/CourseAdmin";
+import "./index.css";
 
 function App() {
-    return <UploadCSV />;
+    return <CourseAdmin />;
 }
 
 export default App;
