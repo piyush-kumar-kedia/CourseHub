@@ -1,5 +1,8 @@
+import CourseAdmin from "./pages/CourseAdmin";
+import "./index.css";
+
 function App() {
-    return <div className="bg-amber-50">Hi</div>;
+    return <CourseAdmin />;
 }
 
 export default App;

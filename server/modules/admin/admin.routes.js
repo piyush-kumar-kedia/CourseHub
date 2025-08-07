@@ -3,8 +3,13 @@ import catchAsync from "../../utils/catchAsync.js";
 import adminController from "./admin.controller.js";
 import AppError from "../../utils/appError.js";
 import isAdmin from "../../middleware/isAdmin.js";
+import multer from "multer";
+import { uploadCourses, renameCourse } from "./adminDashboard.controller.js";
+
 
 const router = express.Router();
+const upload = multer({ dest: "uploads/" });
+
 
 router.post(
     "/",
@@ -35,5 +40,8 @@ router.post(
     isAdmin,
     catchAsync(adminController.createNewCourseFolders)
 );
+
+router.post("/courses/upload", isAdmin, upload.single("file"), uploadCourses);
+router.patch("/course/:code", isAdmin, renameCourse);
 
 export default router;
