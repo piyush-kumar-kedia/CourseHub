@@ -6,7 +6,7 @@ import Contribution from "../modules/contribution/contribution.model.js";
 import { type } from "os";
 import User from "../modules/user/user.model.js";
 
-const parent_item_id = "01XIPLIOQB62KUCQLEINGZSRMWIX7ZLQYU";
+const parent_item_id = process.env.PARENT_FOLDER;
 
 async function GetFolderId(contributionId) {
     const access_token = await getAccessToken();
