@@ -6,11 +6,16 @@ import Share from "../../../share";
 import { useState } from "react";
 import { createFolder } from "../../../../api/Folder";
 import { getCourse } from "../../../../api/Course";
-import { ChangeCurrentCourse, ChangeCurrentYearData, ChangeFolder, UpdateCourses } from "../../../../actions/filebrowser_actions";
+import {
+    ChangeCurrentCourse,
+    ChangeCurrentYearData,
+    ChangeFolder,
+    UpdateCourses,
+} from "../../../../actions/filebrowser_actions";
 import { AddNewCourseLocal } from "../../../../actions/user_actions";
 import { useDispatch, useSelector } from "react-redux";
-import { RefreshCurrentFolder } from "../../../../actions/filebrowser_actions"; 
-import {ConfirmDialog} from "./confirmDialog";
+import { RefreshCurrentFolder } from "../../../../actions/filebrowser_actions";
+import { ConfirmDialog } from "./confirmDialog";
 
 const FolderInfo = ({
     isBR,
@@ -23,9 +28,11 @@ const FolderInfo = ({
 }) => {
     const dispatch = useDispatch();
     const currYear = useSelector((state) => state.fileBrowser.currentYear);
+    const currentData = useSelector((state) => state.fileBrowser.currentData);
     const [showConfirm, setShowConfirm] = useState(false);
     const [newFolderName, setNewFolderName] = useState("");
-    const [childType, setChildType] = useState("File"); 
+    const [childType, setChildType] = useState("File");
+    const [isAdding, setIsAdding] = useState(false);
 
     const user = useSelector((state) => state.user.user);
     const isReadOnlyCourse = user?.readOnly?.some(
@@ -44,11 +51,26 @@ const FolderInfo = ({
     };
 
     const handleConfirmCreateFolder = async () => {
+        if (isAdding) return;
+        setIsAdding(true);
         const folderName = newFolderName.trim();
-        if (!folderName?.trim() || !childType) return;
+        if (!folderName?.trim() || !childType) {
+            setIsAdding(false);
+            return;
+        }
+
+        if (
+            currentData &&
+            currentData.some((item) => item.name.toLowerCase() === folderName.toLowerCase())
+        ) {
+            toast.error(`A file or folder named "${folderName}" already exists.`);
+            setIsAdding(false);
+            return;
+        }
 
         if (!courseCode || !folderId) {
             toast.error("No course selected.");
+            setIsAdding(false);
             return;
         }
 
@@ -56,6 +78,7 @@ const FolderInfo = ({
             const res = await getCourse(courseCode);
             if (!res.data?.found) {
                 toast.error("Course not found. Cannot create folder.");
+                setIsAdding(false);
                 return;
             }
 
@@ -65,7 +88,7 @@ const FolderInfo = ({
                 parentFolder: folderId,
                 childType: childType,
             });
-            const {data} = await getCourse(courseCode);
+            const { data } = await getCourse(courseCode);
             dispatch(UpdateCourses(data));
             dispatch(ChangeCurrentYearData(currYear, data.children[currYear].children));
             dispatch(RefreshCurrentFolder());
@@ -75,6 +98,7 @@ const FolderInfo = ({
             toast.error("Failed to create folder.");
         }
         setShowConfirm(false);
+        setIsAdding(false);
     };
 
     return (
@@ -123,9 +147,13 @@ const FolderInfo = ({
                 )}
                 {!isReadOnlyCourse && isBR && !canDownload && (
                     <div className="btn-container">
-                        <button className="btn plus" onClick={handleCreateFolder}>
+                        <button
+                            className="btn plus"
+                            onClick={handleCreateFolder}
+                            disabled={isAdding}
+                        >
                             <span className="icon plus-icon"></span>
-                            <span className="text">Add Folder</span>
+                            <span className="text">{isAdding ? "Creating..." : "Add Folder"}</span>
                         </button>
                     </div>
                 )}

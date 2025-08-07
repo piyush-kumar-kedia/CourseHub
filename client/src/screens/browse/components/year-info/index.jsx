@@ -1,13 +1,19 @@
 //import "./styles.scss";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { useSelector } from "react-redux";import { addYear,deleteYear } from "../../../../api/Year";
+import { useSelector } from "react-redux";
+import { addYear, deleteYear } from "../../../../api/Year";
 import { getCourse } from "../../../../api/Course";
 import { useDispatch } from "react-redux";
-import { ChangeCurrentYearData,ChangeFolder,LoadCourses,RefreshCurrentFolder} from "../../../../actions/filebrowser_actions";
+import {
+    ChangeCurrentYearData,
+    ChangeFolder,
+    LoadCourses,
+    RefreshCurrentFolder,
+} from "../../../../actions/filebrowser_actions";
 
-import {ConfirmDialog} from "./confirmDialog";
-import {ConfirmDelDialog} from "./confirmDelDialog";
+import { ConfirmDialog } from "./confirmDialog";
+import { ConfirmDelDialog } from "./confirmDelDialog";
 
 const YearInfo = ({
     isBR,
@@ -19,6 +25,7 @@ const YearInfo = ({
     const [showConfirm, setShowConfirm] = useState(false);
     const [showConfirmDel, setShowConfirmDel] = useState(false);
     const [newYearName, setNewYearName] = useState("");
+    const [isAddingYear, setIsAddingYear] = useState(false);
     const user = useSelector((state) => state.user.user);
     const isReadOnlyCourse = user?.readOnly?.some(
         (c) => c.code.toLowerCase() === courseCode?.toLowerCase()
@@ -30,11 +37,23 @@ const YearInfo = ({
     };
 
     const handleConfirmAddYear = async () => {
+        if (isAddingYear) return;
+        setIsAddingYear(true);
         const yearName = newYearName.trim();
 
-        if(!yearName) return;
+        if (!yearName) {
+            setIsAddingYear(false);
+            return;
+        }
+        // Prevent adding duplicate year names
+        if (course.some((y) => y.name.toLowerCase() === yearName.toLowerCase())) {
+            toast.error(`Year "${yearName}" already exists.`);
+            setIsAddingYear(false);
+            return;
+        }
         if (!courseCode) {
             toast.error("No course selected.");
+            setIsAddingYear(false);
             return;
         }
 
@@ -42,16 +61,17 @@ const YearInfo = ({
             const res = await getCourse(courseCode);
             if (!res.data?.found) {
                 toast.error("Course not found. Cannot add year.");
+                setIsAddingYear(false);
                 return;
             }
-            const newYear=await addYear({
+            const newYear = await addYear({
                 name: yearName.trim(),
                 course: courseCode,
             });
 
             course.push(newYear);
             //dispatch(LoadCourses());
-            dispatch(ChangeCurrentYearData(course.length-1, []));
+            dispatch(ChangeCurrentYearData(course.length - 1, []));
             dispatch(ChangeFolder(newYear));
 
             toast.success(`Year "${yearName}" added`);
@@ -60,6 +80,7 @@ const YearInfo = ({
             toast.error("Failed to add year.");
         }
         setShowConfirm(false);
+        setIsAddingYear(false);
     };
 
     const handleDeleteYear = () => {
@@ -68,14 +89,14 @@ const YearInfo = ({
 
     const handleConfirmDeleteYear = async (e) => {
         try {
-            await deleteYear({ 
-                folder: course[currYear], 
+            await deleteYear({
+                folder: course[currYear],
                 courseCode: courseCode,
             });
-            course.splice(currYear,1);
+            course.splice(currYear, 1);
             // dispatch(LoadCourses());
-            dispatch(ChangeCurrentYearData(course.length-1, []));
-            dispatch(ChangeFolder(course[course.length-1]));
+            dispatch(ChangeCurrentYearData(course.length - 1, []));
+            dispatch(ChangeFolder(course[course.length - 1]));
 
             toast.success("Year deleted successfully!");
         } catch (err) {
@@ -100,22 +121,22 @@ const YearInfo = ({
                                     <span
                                         className={`year ${currYear === idx ? "selected" : ""}`}
                                         onClick={() => {
-                                            dispatch(ChangeCurrentYearData(idx, course[idx].children));
+                                            dispatch(
+                                                ChangeCurrentYearData(idx, course[idx].children)
+                                            );
                                             dispatch(ChangeFolder(course[idx]));
                                             dispatch(RefreshCurrentFolder());
                                         }}
                                         key={idx}
                                     >
                                         {year.name}
-                                        {isBR?
-                                            <div 
-                                                className="delete" 
+                                        {isBR ? (
+                                            <div
+                                                className="delete"
                                                 onClick={handleDeleteYear}
                                                 title="Delete Year"
                                             ></div>
-                                            :null
-                                        }
-                                        
+                                        ) : null}
                                     </span>
                                     <ConfirmDelDialog
                                         isOpen={showConfirmDel}
@@ -127,13 +148,19 @@ const YearInfo = ({
                             );
                         })}
                 </div>
-                {isBR && !isReadOnlyCourse?
+                {isBR && !isReadOnlyCourse ? (
                     <div className="year-content year add-year">
-                        {course &&
+                        {course && (
                             <div>
                                 <div className="">
-                                    <span className="" onClick={handleAddYear}>
-                                        <span className="text">New Year</span>
+                                    <span
+                                        className=""
+                                        onClick={handleAddYear}
+                                        disabled={isAddingYear}
+                                    >
+                                        <span className="text">
+                                            {isAddingYear ? "Creating..." : "New Year"}
+                                        </span>
                                     </span>
                                 </div>
                                 <ConfirmDialog
@@ -150,10 +177,9 @@ const YearInfo = ({
                                     course={course}
                                 />
                             </div>
-                        }
+                        )}
                     </div>
-                    :null
-                }
+                ) : null}
             </div>
         </>
     );
