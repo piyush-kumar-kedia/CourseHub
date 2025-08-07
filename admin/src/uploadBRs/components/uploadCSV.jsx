@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Upload, Mail, FileText, CheckCircle, XCircle, Download } from 'lucide-react';
 import Papa from 'papaparse';
 import axios from 'axios';
+import { API_BASE_URL } from '../../apis';
 
 export default function CSVEmailPortal() {
   const [emails, setEmails] = useState([]);
@@ -16,20 +17,31 @@ export default function CSVEmailPortal() {
     return emailRegex.test(email?.trim());
   };
 
-  const updateBRs = async(req,res)=>{
-    try{
-      const response = await axios.post(``,{
-        emails: validEmails||[],
+  const updateBRs = async () => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}api/br/updateList`, {
+        emails: validEmails || [],
       });
 
       console.log(response.data);
       return response.data;
     }
-    catch(error){
+    catch (error) {
       console.log('Error updating BRs:', error);
+
+      if (error.response) {
+        // Backend responded with a non-2xx status
+        console.error("Response error:", error.response.data);
+      } else if (error.request) {
+        // Request made but no response received
+        console.error("No response received:", error.request);
+      } else {
+        // Something else happened
+        console.error("Axios error:", error.message);
+      }
     }
 
-  }
+  };
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -53,7 +65,7 @@ export default function CSVEmailPortal() {
 
           results.data.forEach((row, index) => {
             // Handle different CSV structures
-            const rowEmails = Object.values(row).filter(value => 
+            const rowEmails = Object.values(row).filter(value =>
               value && typeof value === 'string' && value.includes('@')
             );
 
@@ -125,7 +137,7 @@ export default function CSVEmailPortal() {
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
             <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-700 mb-2">Upload CSV File</h3>
-            
+
             <input
               id="csvFile"
               type="file"
@@ -133,7 +145,7 @@ export default function CSVEmailPortal() {
               onChange={handleFileUpload}
               className="hidden"
             />
-            
+
             <label
               htmlFor="csvFile"
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
