@@ -211,6 +211,7 @@ export const redirectHandler = async (req, res, next) => {
         grant_type: "authorization_code",
         code: code,
     });
+    let newUser = false;
 
     const config = {
         method: "post",
@@ -264,10 +265,10 @@ export const redirectHandler = async (req, res, next) => {
 
         const user = new User(userData);
         existingUser = await user.save();
+        newUser = true;
     }
 
     let userUpdated = await UserUpdate.findOne({ rollNumber: roll });
-    console.log(userUpdated);
     if (existingUser && !userUpdated) {
         const courses = await fetchCourses(userFromToken.data.surname);
         existingUser.courses = courses;
@@ -290,8 +291,10 @@ export const redirectHandler = async (req, res, next) => {
         expires: new Date(Date.now() + 2073600000),
         httpOnly: true,
     });
-    return res.redirect(`${appConfig.clientURL}/loading`);
-
+    if (newUser) {
+        return res.redirect(`${appConfig.clientURL}/loading`);
+    }
+    res.redirect(`${appConfig.clientURL}/dashboard`);
     //return res.redirect(appConfig.clientURL);
     // return res.redirect(`${appConfig.clientURL}/login/success?token=${token}`); //to redirect with token
 };
@@ -371,7 +374,6 @@ export const mobileRedirectHandler = async (req, res, next) => {
     const token = existingUser.generateJWT();
     await createUserSnapshotHelper(existingUser);
     await createCourseSnapshotOnce(existingUser);
-    //     const encryptedToken = EncryptText(token);
 
     return res.redirect(`${appConfig.mobileURL}://success?token=${token}`);
 };
