@@ -270,11 +270,6 @@ export const redirectHandler = async (req, res, next) => {
 
     let userUpdated = await UserUpdate.findOne({ rollNumber: roll });
     if (existingUser && !userUpdated) {
-        const courses = await fetchCourses(userFromToken.data.surname);
-        existingUser.courses = courses;
-        if (br) {
-            existingUser.previousCourses = await fetchCoursesForBr(userFromToken.data.surname);
-        }
         existingUser.semester = calculateSemester(userFromToken.data.surname);
         await existingUser.save();
         const newUpdation = new UserUpdate({ rollNumber: roll });
@@ -291,7 +286,7 @@ export const redirectHandler = async (req, res, next) => {
         expires: new Date(Date.now() + 2073600000),
         httpOnly: true,
     });
-    if (newUser) {
+    if (newUser || (existingUser && !userUpdated)) {
         return res.redirect(`${appConfig.clientURL}/loading`);
     }
     res.redirect(`${appConfig.clientURL}/dashboard`);

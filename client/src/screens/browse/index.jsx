@@ -25,9 +25,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Share from "../share";
 import FileController from "./components/collapsible/components/file-controller";
-import { RefreshCurrentFolder } from "../../actions/filebrowser_actions";
 import YearInfo from "./components/year-info";
-import LoadingPage from "../../loading";
 const BrowseScreen = () => {
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
@@ -62,29 +60,26 @@ const BrowseScreen = () => {
     }, []);
 
     useEffect(() => {
-    async function getAuth() {
-        try {
-            const { data } = await getUser();
-            if (!data) {
-                dispatch(LogoutUser());
+        async function getAuth() {
+            try {
+                const { data } = await getUser();
+                if (!data) {
+                    dispatch(LogoutUser());
+                    setLoading(false);
+                    return;
+                }
+                dispatch(LoginUser(data));
                 setLoading(false);
-                return;
+            } catch (error) {
+                dispatch(LogoutUser());
+                console.log("in index.js error loading");
+                setLoading(false);
+                navigate("/login");
             }
-            dispatch(LoginUser(data));
-            setLoading(false);
-            console.log("in index.js loading");
-            navigate("/loading");
-        } catch (error) {
-            dispatch(LogoutUser());
-            console.log("in index.js error loading");
-            setLoading(false);
-            navigate("/login");
         }
-    }
 
-    if (!user?.loggedIn) getAuth();
-}, []);
-
+        if (!user?.loggedIn) getAuth();
+    }, []);
 
     useEffect(() => {
         if (loading || !code) return;
@@ -191,9 +186,14 @@ const BrowseScreen = () => {
         return null;
     };
 
-    const HeaderText= folderData?.childType === "File"? "Select a file...":
-            folderData?.childType === "Folder"? "Select a folder..."
-                    :currCourse?"No data available for this course":"Select a course..."
+    const HeaderText =
+        folderData?.childType === "File"
+            ? "Select a file..."
+            : folderData?.childType === "Folder"
+            ? "Select a folder..."
+            : currCourse
+            ? "No data available for this course"
+            : "Select a course...";
 
     return (
         <Container color={"light"} type={"fluid"}>
@@ -219,9 +219,7 @@ const BrowseScreen = () => {
                         return <Collapsible color={course.color} key={idx} course={course} />;
                     })}
 
-                    {user.user?.readOnly?.length > 0 && (
-                        <h4 className="heading">OTHERS</h4>
-                    )}
+                    {user.user?.readOnly?.length > 0 && <h4 className="heading">OTHERS</h4>}
 
                     {user.user?.readOnly?.map((course, idx) => (
                         <Collapsible
