@@ -8,9 +8,14 @@ export default function CSVEmailPortal() {
   const [emails, setEmails] = useState([]);
   const [fileName, setFileName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState({
+    error: '',
+    existingBRs: '',
+    notInUsers: '',
+  });
   const [validEmails, setValidEmails] = useState([]);
   const [invalidEmails, setInvalidEmails] = useState([]);
+  const [showAnalysis, setShowAnalysis] = useState(false);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,14 +29,22 @@ export default function CSVEmailPortal() {
       });
 
       console.log(response.data);
+      setShowAnalysis(false);
+      alert('Updated Successfully');
       return response.data;
+
     }
     catch (error) {
       console.log('Error updating BRs:', error);
+      // alert('Error Updating');
 
       if (error.response) {
         // Backend responded with a non-2xx status
         console.error("Response error:", error.response.data);
+        setError({error: error.response.data.error, 
+                  existingBRs: error.response.data.existingEmails,
+                  notInUsers: error.response.data.notInUsers
+        });
       } else if (error.request) {
         // Request made but no response received
         console.error("No response received:", error.request);
@@ -85,6 +98,7 @@ export default function CSVEmailPortal() {
           setEmails(allEmails);
           setValidEmails(valid);
           setInvalidEmails(invalid);
+          setShowAnalysis(true);
         } catch (err) {
           setError('Error parsing CSV file');
         }
@@ -100,16 +114,6 @@ export default function CSVEmailPortal() {
     });
   };
 
-  // const downloadValidEmails = () => {
-  //   const csvContent = validEmails.map(item => item.email).join('\n');
-  //   const blob = new Blob([csvContent], { type: 'text/csv' });
-  //   const url = window.URL.createObjectURL(blob);
-  //   const a = document.createElement('a');
-  //   a.href = url;
-  //   a.download = 'valid_emails.csv';
-  //   a.click();
-  //   window.URL.revokeObjectURL(url);
-  // };
 
   const resetUpload = () => {
     setEmails([]);
@@ -168,18 +172,23 @@ export default function CSVEmailPortal() {
             </div>
           )}
 
-          {error && (
+          {error.error && (
             <div className="mt-4 p-4 bg-red-100 border border-red-300 rounded-lg">
               <div className="flex items-center">
                 <XCircle className="w-5 h-5 text-red-500 mr-2" />
-                <p className="text-red-700">{error}</p>
+                <p className="text-red-700">
+                  
+                  Error: {error.error}<br/>
+                  Already BR: {error.existingBRs}<br/>
+                  Email not listed: {error.notInUsers}
+                </p>
               </div>
             </div>
           )}
         </div>
 
         {/* Results Section */}
-        {emails.length > 0 && (
+        {emails.length > 0 && showAnalysis && (
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-800">Email Analysis Results</h2>
@@ -233,7 +242,7 @@ export default function CSVEmailPortal() {
                       {validEmails.map((item, index) => (
                         <div key={index} className="flex items-center justify-between bg-white p-2 rounded border">
                           <span className="text-green-700 font-mono">{item.email}</span>
-                          <span className="text-xs text-gray-500">Row {item.row}</span>
+                          {/* <span className="text-xs text-gray-500">Row {item.row}</span> */}
                         </div>
                       ))}
                     </div>
@@ -253,7 +262,7 @@ export default function CSVEmailPortal() {
                       {invalidEmails.map((item, index) => (
                         <div key={index} className="flex items-center justify-between bg-white p-2 rounded border">
                           <span className="text-red-700 font-mono">{item.email}</span>
-                          <span className="text-xs text-gray-500">Row {item.row}</span>
+                          {/* <span className="text-xs text-gray-500">Row {item.row}</span> */}
                         </div>
                       ))}
                     </div>
