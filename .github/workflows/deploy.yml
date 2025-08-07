@@ -75,7 +75,7 @@ jobs:
 
                     echo "🧹 Cleaning up older backups..."
                     cd /usr/share/nginx/html-backup
-                    ls -1tr | head -n -5 | xargs -d '\n' sudo rm -rf --
+                    ls -1tr | head -n -1 | xargs -r -d '\n' sudo rm -rf --
                   EOF
 
             - name: Rollback on Failure
@@ -87,6 +87,47 @@ jobs:
                     sudo rm -rf /usr/share/nginx/html/*
                     sudo cp -r /usr/share/nginx/html-backup/$latest_backup/* /usr/share/nginx/html/
                   EOF
+
+            - name: SSH - Build Admin_Frontend
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    echo "🧱 Installing and building admin_frontend..."
+                    cd ~/CourseHub/admin
+                    npm install
+                    npm run build
+                  EOF
+
+            - name: SSH - Backup and Deploy Admin_Frontend
+              if: success()
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    echo "🗂️ Backing up old admin_frontend..."
+                    timestamp=$(date +%Y%m%d-%H%M%S)
+                    sudo mkdir -p /usr/share/nginx/html/admin-backup
+                    sudo cp -r /usr/share/nginx/html/admin /usr/share/nginx/html/admin-backup/html-$timestamp
+
+                    echo "🚀 Deploying new admin_frontend..."
+                    sudo mkdir -p /usr/share/nginx/html/admin
+                    sudo rm -rf /usr/share/nginx/html/admin/*
+                    sudo cp -r ~/CourseHub/admin/dist/* /usr/share/nginx/html/admin/
+
+                    echo "🧹 Cleaning up older admin_backups..."
+                    cd /usr/share/nginx/html/admin-backup
+                    ls -1tr | head -n -1 | xargs -r -d '\n' sudo rm -rf --
+                  EOF
+
+            - name: Rollback on Failure
+              if: failure()
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    echo "⚠️ Admin_Build failed. Restoring admin_backup..."
+                    latest_backup=$(ls -1tr /usr/share/nginx/html/admin-backup | tail -n 1)
+                    sudo rm -rf /usr/share/nginx/html/admin/*
+                    sudo cp -r /usr/share/nginx/html/admin-backup/$latest_backup/* /usr/share/nginx/html/admin/
+                  EOF
+    
 
             - name: SSH - Restart Backend with PM2
               run: |
