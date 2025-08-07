@@ -103,13 +103,13 @@ jobs:
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
                     set -e
+                    sudo mkdir -p /usr/share/nginx/html/admin
                     echo "🗂️ Backing up old admin_frontend..."
                     timestamp=$(date +%Y%m%d-%H%M%S)
                     sudo mkdir -p /usr/share/nginx/html/admin-backup
                     sudo cp -r /usr/share/nginx/html/admin /usr/share/nginx/html/admin-backup/html-$timestamp
 
                     echo "🚀 Deploying new admin_frontend..."
-                    sudo mkdir -p /usr/share/nginx/html/admin
                     sudo rm -rf /usr/share/nginx/html/admin/*
                     sudo cp -r ~/CourseHub/admin/dist/* /usr/share/nginx/html/admin/
 
