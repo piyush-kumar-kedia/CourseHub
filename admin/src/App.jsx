@@ -1,5 +1,9 @@
+import UploadCSV from './uploadBRs/components/uploadCSV'
+
 function App() {
-    return <div className="bg-amber-50">Hi</div>;
+    return (
+        <UploadCSV/>
+    );
 }
 
 export default App;
