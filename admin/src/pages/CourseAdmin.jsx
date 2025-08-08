@@ -5,6 +5,8 @@ const CourseAdmin = () => {
     const [courses, setCourses] = useState([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         fetch("/api/admin/dbcourses", {
@@ -15,11 +17,10 @@ const CourseAdmin = () => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log("Fetched courses:", data); // Debug log
                 setCourses(data);
                 setLoading(false);
             })
-            .catch((err) => {
+            .catch(() => {
                 setCourses([]);
                 setLoading(false);
             });
@@ -45,38 +46,41 @@ const CourseAdmin = () => {
                         )
                     );
                 }
-                // Optionally, fetch the latest courses from backend for full sync
-                // fetch("/api/admin/dbcourses", {
-                //     credentials: "include",
-                //     headers: {
-                //         Authorization: "Bearer admin-coursehub-cc23-golang",
-                //     },
-                // })
-                //     .then((res) => res.json())
-                //     .then((data) => setCourses(data));
             });
     };
 
-    const handleUpload = (newCourses) => {
-        setCourses((courses) => [...courses, ...newCourses]);
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
-    const filtered = Array.isArray(courses)
-        ? courses
-              .sort((a, b) => {
-                  // Put courses with undefined or empty code at the end
-                  const isAInvalid = !a.code;
-                  const isBInvalid = !b.code;
-                  if (isAInvalid === isBInvalid) return 0;
-                  return isAInvalid ? 1 : -1;
-              })
-              .filter(
-                  (c) => (c.code && c.code.toLowerCase().includes(search.toLowerCase())) || !c.code
-              )
-        : [];
+    const filteredCourses = courses.filter((course) =>
+        course.code?.toLowerCase().includes(search.toLowerCase())
+    );
 
-    // Only render CourseTable, move all UI into CourseTable for single source of truth
-    return <CourseTable courses={filtered} onRename={handleRename} />;
+    return (
+        <div className="p-4">
+            <div className="mb-4 flex justify-center">
+                <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search courses by code"
+                    className="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-md"
+                />
+            </div>
+            {loading ? (
+                <div className="text-center text-gray-500">Loading...</div>
+            ) : (
+                <CourseTable
+                    courses={filteredCourses}
+                    onRename={handleRename}
+                    currentPage={currentPage}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={handlePageChange}
+                />
+            )}
+        </div>
+    );
 };
 
 export default CourseAdmin;

@@ -9,7 +9,7 @@ function App() {
                 <Sidebar />
                 <main className="flex-grow">
                     <Routes>
-                        <Route path="/br" element={<BranchRepresentatives />} />
+                        <Route path="/admin/br" element={<BranchRepresentatives />} />
                     </Routes>
                 </main>
             </div>
