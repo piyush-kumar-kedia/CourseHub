@@ -1,14 +1,19 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Modal, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from "./ui/modal";
+import { uploadBRs } from "../apis/br";
 
 const UploadBRs = ({ onUpload, onClose }) => {
     const [file, setFile] = useState(null);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const [warnings, setWarnings] = useState(null);
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
+        // Clear previous messages when new file is selected
+        setError(null);
+        setSuccess(null);
+        setWarnings(null);
     };
 
     const handleSubmit = async (e) => {
@@ -18,23 +23,41 @@ const UploadBRs = ({ onUpload, onClose }) => {
             return;
         }
 
-        const formData = new FormData();
-        formData.append("file", file);
+        // Validate file type
+        if (!file.name.toLowerCase().endsWith(".csv")) {
+            setError("Please upload a CSV file.");
+            return;
+        }
 
         try {
-            const response = await axios.post("/api/br/updateList", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            setSuccess(response.data.message);
+            const response = await uploadBRs(file);
+            setSuccess(response.message);
             setError(null);
+            setWarnings(null);
             if (onUpload) {
                 onUpload();
             }
         } catch (err) {
-            setError(err.response?.data?.error || "An error occurred during file upload.");
-            setSuccess(null);
+            // Handle partial success (409 status)
+            if (err.existingEmails || err.notInUsers) {
+                let warningMessage = "";
+                if (err.existingEmails && err.existingEmails.length > 0) {
+                    warningMessage += `Already existing BRs: ${err.existingEmails.join(", ")}. `;
+                }
+                if (err.notInUsers && err.notInUsers.length > 0) {
+                    warningMessage += `Emails not found in users: ${err.notInUsers.join(", ")}.`;
+                }
+                setWarnings(warningMessage);
+                setError(null);
+                setSuccess("Partial upload completed.");
+                if (onUpload) {
+                    onUpload();
+                }
+            } else {
+                setError(err.error || err.message || "An error occurred during file upload.");
+                setSuccess(null);
+                setWarnings(null);
+            }
         }
     };
 
@@ -44,11 +67,13 @@ const UploadBRs = ({ onUpload, onClose }) => {
             <ModalCloseButton onClose={onClose} />
             <ModalBody>
                 <p className="text-sm text-gray-600 mb-4">
-                    Upload a CSV file to update the BR list.
+                    Upload a CSV file to update the BR list. The CSV should have one column named
+                    "email".
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         type="file"
+                        accept=".csv"
                         onChange={handleFileChange}
                         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 transition-colors"
                     />
@@ -67,6 +92,11 @@ const UploadBRs = ({ onUpload, onClose }) => {
                 {success && (
                     <p className="mt-3 text-sm text-green-600 bg-green-50 p-2 rounded shadow-sm">
                         {success}
+                    </p>
+                )}
+                {warnings && (
+                    <p className="mt-3 text-sm text-yellow-600 bg-yellow-50 p-2 rounded shadow-sm">
+                        <strong>Warning:</strong> {warnings}
                     </p>
                 )}
             </ModalBody>
