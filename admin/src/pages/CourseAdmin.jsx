@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import CourseTable from "../components/CourseTable";
-import "./CourseAdmin.css";
 
 const CourseAdmin = () => {
     const [courses, setCourses] = useState([]);
@@ -32,7 +31,7 @@ const CourseAdmin = () => {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer admin-coursehub-cc23-golang",
+                Authorization: "Bearer admin-coursehub-cc23-golang",
             },
             body: JSON.stringify({ name: newName }),
             credentials: "include",
@@ -77,9 +76,7 @@ const CourseAdmin = () => {
         : [];
 
     // Only render CourseTable, move all UI into CourseTable for single source of truth
-    return (
-        <CourseTable courses={filtered} onRename={handleRename} />
-    );
+    return <CourseTable courses={filtered} onRename={handleRename} />;
 };
 
 export default CourseAdmin;
