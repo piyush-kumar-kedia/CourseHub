@@ -14,12 +14,11 @@ const updateBRs = async (req, res) => {
 
         for (const emailobj of emails) {
             const email = emailobj.email;
-            const user = await User.findOne({email: email});
-            if(user) {
+            const user = await User.findOne({ email: email });
+            if (user) {
                 user.isBR = true;
                 await user.save();
-            }
-            else{
+            } else {
                 notUser.push(email);
                 continue;
             }
@@ -32,32 +31,29 @@ const updateBRs = async (req, res) => {
         }
 
         if (alreadyExists.length > 0 || notUser.length > 0) {
-            return res.status(409).json({ 
-                error: "Some BRs already exist or do not exist in users", 
+            return res.status(409).json({
+                error: "Some BRs already exist or do not exist in users",
                 existingEmails: alreadyExists,
-                notInUsers: notUser, 
+                notInUsers: notUser,
             });
         }
 
         res.status(201).json({ message: "BRs updated successfully" });
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
-
 const createBR = async (req, res) => {
     try {
-        const {email} = req.body;
+        const { email } = req.body;
 
-        if (!email )
-            return res.status(400).json({ error: "email is required" });
+        if (!email) return res.status(400).json({ error: "email is required" });
 
         const exists = await BR.findOne({ email });
         if (exists) return res.status(409).json({ error: "BR already exists" });
-        const br = await BR.create({email});
+        const br = await BR.create({ email });
         res.status(201).json({ message: "BR added", br });
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
@@ -75,7 +71,7 @@ const getAll = async (req, res, next) => {
 
 const deleteBR = async (req, res) => {
     try {
-        const {email} = req.body;
+        const { email } = req.body;
         if (!email) return res.status(400).json({ error: "email is required" });
 
         const br = await BR.findOneAndDelete({ email });
@@ -87,4 +83,14 @@ const deleteBR = async (req, res) => {
     }
 };
 
-export { updateBRs, createBR , getAll , deleteBR };
+const getBRs = async (req, res) => {
+    try {
+        const brs = await User.find({ isBR: true });
+        res.status(200).json({ brs });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+export { updateBRs, createBR, getAll, deleteBR, getBRs };
