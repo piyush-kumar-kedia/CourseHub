@@ -47,6 +47,8 @@ jobs:
 
                     cd ~/CourseHub/client/src/api
                     echo "${{ secrets.SERVER_JS_FILE }}" > server.js
+                    cd ~/CourseHub/admin/src/apis
+                    echo "${{ secrets.ADMIN_SERVER_JS_FILE }}" > server.js
                   EOF
 
             - name: SSH - Build Frontend
@@ -142,7 +144,6 @@ jobs:
                       sudo cp -r /usr/share/nginx/html/admin-backup/$latest_backup/* /usr/share/nginx/html/admin/
                     fi
                   EOF
-    
 
             - name: SSH - Restart Backend with PM2
               run: |
