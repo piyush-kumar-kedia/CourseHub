@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Modal, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from "./ui/modal";
 
 const UploadBRs = ({ onUpload, onClose }) => {
     const [file, setFile] = useState(null);
@@ -37,55 +38,47 @@ const UploadBRs = ({ onUpload, onClose }) => {
         }
     };
 
-    const handleBackdropClick = (e) => {
-        // Close modal when clicking on backdrop (not the modal content)
-        if (e.target === e.currentTarget) {
-            onClose();
-        }
-    };
-
     return (
-        <div
-            className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50"
-            onClick={handleBackdropClick}
-        >
-            <div className="p-8 border w-96 shadow-2xl rounded-lg bg-white relative transform transition-all duration-300 ease-out">
+        <Modal isOpen={true} onClose={onClose}>
+            <ModalHeader>Upload BRs</ModalHeader>
+            <ModalCloseButton onClose={onClose} />
+            <ModalBody>
+                <p className="text-sm text-gray-600 mb-4">
+                    Upload a CSV file to update the BR list.
+                </p>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <input
+                        type="file"
+                        onChange={handleFileChange}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 transition-colors"
+                    />
+                    <button
+                        type="submit"
+                        className="mt-6 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-base font-medium rounded-md w-full shadow-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all"
+                    >
+                        Upload
+                    </button>
+                </form>
+                {error && (
+                    <p className="mt-3 text-sm text-red-600 bg-red-50 p-2 rounded shadow-sm">
+                        {error}
+                    </p>
+                )}
+                {success && (
+                    <p className="mt-3 text-sm text-green-600 bg-green-50 p-2 rounded shadow-sm">
+                        {success}
+                    </p>
+                )}
+            </ModalBody>
+            <ModalFooter>
                 <button
-                    className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
                     onClick={onClose}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 text-base font-medium rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all"
                 >
-                    ✕
+                    Close
                 </button>
-                <div className="text-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Upload BRs</h3>
-                    <div className="mt-4 px-2 py-3">
-                        <form onSubmit={handleSubmit}>
-                            <input
-                                type="file"
-                                onChange={handleFileChange}
-                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors"
-                            />
-                            <button
-                                type="submit"
-                                className="mt-6 px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors"
-                            >
-                                Upload
-                            </button>
-                        </form>
-                        {error && (
-                            <p className="mt-3 text-sm text-red-600 bg-red-50 p-2 rounded">
-                                {error}
-                            </p>
-                        )}
-                        {success && (
-                            <p className="mt-3 text-sm text-green-600 bg-green-50 p-2 rounded">
-                                {success}
-                            </p>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
+            </ModalFooter>
+        </Modal>
     );
 };
 
