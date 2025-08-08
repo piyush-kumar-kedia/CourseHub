@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { fetchCourses, updateCourseName } from "@/apis/courses";
 
 function Courses() {
     const [courses, setCourses] = useState([]);
@@ -24,45 +25,30 @@ function Courses() {
     const itemsPerPage = 10;
 
     useEffect(() => {
-        fetch("/api/admin/dbcourses", {
-            credentials: "include",
-            headers: {
-                Authorization: "Bearer admin-coursehub-cc23-golang",
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
+        const loadCourses = async () => {
+            try {
+                const data = await fetchCourses();
                 setCourses(data);
-                console.log(data);
                 setLoading(false);
-            })
-            .catch(() => {
+            } catch (error) {
                 setCourses([]);
                 setLoading(false);
-            });
+            }
+        };
+        loadCourses();
     }, []);
 
-    const handleRename = (code, newName) => {
-        const safeCode = code.toLowerCase().trim();
-        fetch(`/api/admin/course/${safeCode}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer admin-coursehub-cc23-golang",
-            },
-            body: JSON.stringify({ name: newName }),
-            credentials: "include",
-        })
-            .then((res) => res.json())
-            .then((updated) => {
-                if (updated && updated.code) {
-                    setCourses((courses) =>
-                        courses.map((c) =>
-                            c.code === updated.code ? { ...c, name: updated.name } : c
-                        )
-                    );
-                }
-            });
+    const handleRename = async (code, newName) => {
+        try {
+            const updated = await updateCourseName(code, newName);
+            if (updated && updated.code) {
+                setCourses((courses) =>
+                    courses.map((c) => (c.code === updated.code ? { ...c, name: updated.name } : c))
+                );
+            }
+        } catch (error) {
+            console.error("Error updating course:", error);
+        }
     };
 
     const startEdit = (code, currentName) => {
@@ -251,9 +237,6 @@ function Courses() {
                                         <TableHead className="font-semibold text-gray-700 py-4 pl-6">
                                             Course Name
                                         </TableHead>
-                                        <TableHead className="w-[120px] font-semibold text-gray-700 py-4 pl-6">
-                                            Status
-                                        </TableHead>
                                         <TableHead className="w-[100px] font-semibold text-gray-700 py-4 pl-6">
                                             Actions
                                         </TableHead>
@@ -325,23 +308,6 @@ function Courses() {
                                                 )}
                                             </TableCell>
                                             <TableCell className="py-4 pl-6">
-                                                {course.name ? (
-                                                    <Badge
-                                                        variant="default"
-                                                        className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0 shadow-sm"
-                                                    >
-                                                        Complete
-                                                    </Badge>
-                                                ) : (
-                                                    <Badge
-                                                        variant="secondary"
-                                                        className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white border-0 shadow-sm"
-                                                    >
-                                                        Pending
-                                                    </Badge>
-                                                )}
-                                            </TableCell>
-                                            <TableCell className="py-4 pl-6">
                                                 <div className="flex items-center space-x-2">
                                                     <Button
                                                         variant="ghost"
@@ -363,7 +329,7 @@ function Courses() {
                                     ))}
                                     {paginatedCourses.length === 0 && (
                                         <TableRow>
-                                            <TableCell colSpan={4} className="h-40 text-center">
+                                            <TableCell colSpan={3} className="h-40 text-center">
                                                 <div className="text-center space-y-4">
                                                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center shadow-inner">
                                                         <FaBook className="h-8 w-8 text-gray-400" />

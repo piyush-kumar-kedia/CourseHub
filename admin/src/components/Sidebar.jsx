@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaBook, FaUsers, FaLayerGroup } from "react-icons/fa";
+import { adminLogout } from "@/apis/auth";
 
 const navItems = [
     { label: "Branch Representatives", to: "/admin/", icon: FaUsers },
@@ -9,6 +10,15 @@ const navItems = [
 
 const Sidebar = () => {
     const location = useLocation();
+
+    const handleLogout = async () => {
+        try {
+            await adminLogout();
+        } catch (err) {
+            console.error("Logout failed", err);
+        }
+        window.location.href = "/admin/login";
+    };
 
     return (
         <aside className="h-screen w-72 sticky top-0 bg-white/80 backdrop-blur-sm border-r border-gray-200/60 shadow-lg hidden md:flex md:flex-col">
@@ -58,8 +68,14 @@ const Sidebar = () => {
             </nav>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-gray-200/60 text-xs text-gray-500">
-                © {new Date().getFullYear()} CourseHub
+            <div className="px-6 py-4 border-t border-gray-200/60 text-xs text-gray-500 flex items-center justify-between">
+                <span>© {new Date().getFullYear()} CourseHub</span>
+                <button
+                    onClick={handleLogout}
+                    className="text-blue-600 hover:text-blue-800 text-sm"
+                >
+                    Logout
+                </button>
             </div>
         </aside>
     );

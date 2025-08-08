@@ -36,7 +36,16 @@ import links from "./links.js";
 const app = express();
 
 const PORT = config.port;
-app.use(cors({ origin: "*", credentials: true }));
+app.use(
+    cors({
+        origin: [
+            "http://localhost:5174",
+            "http://localhost:5173",
+            "https://coursehub.codingclub.in",
+        ],
+        credentials: true,
+    })
+);
 
 app.use(express.static("static"));
 import path from "path";

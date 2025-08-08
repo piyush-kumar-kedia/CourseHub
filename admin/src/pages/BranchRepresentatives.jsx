@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import BrTable from "../components/brTable";
 import UploadBRs from "../components/UploadBRs";
-import { API_BASE_URL } from "../apis";
+import { fetchBRs } from "@/apis/br";
 
 export default function BranchRepresentatives() {
     const [brs, setBrs] = useState([]);
@@ -10,11 +9,11 @@ export default function BranchRepresentatives() {
     const [error, setError] = useState(null);
     const [showUploadModal, setShowUploadModal] = useState(false);
 
-    const fetchBRs = async () => {
+    const loadBRs = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_BASE_URL}api/br/allBRs`);
-            setBrs(response.data.brs);
+            const response = await fetchBRs();
+            setBrs(response.brs);
             setLoading(false);
         } catch (err) {
             setError(err.message || "An error occurred while fetching BRs.");
@@ -23,12 +22,12 @@ export default function BranchRepresentatives() {
     };
 
     useEffect(() => {
-        fetchBRs();
+        loadBRs();
     }, []);
 
     const handleUploadSuccess = () => {
         setShowUploadModal(false);
-        fetchBRs();
+        loadBRs();
     };
 
     return (

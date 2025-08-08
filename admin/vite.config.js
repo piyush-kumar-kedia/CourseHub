@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { API_BASE_URL } from "./src/apis";
+import { API_BASE_URL } from "./src/apis/server.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
