@@ -174,7 +174,26 @@ export const fetchCoursesForBr = async (rollNumber) => {
     return courses;
 };
 
-const getDepartment = async (access_token) => {
+const getDepartment = async (access_token, roll) => {
+    let rollstring = roll.toString();
+    const rollmap = {
+        "06": "Biosciences and Bioengineering",
+        "07": "Chemical Engineering",
+        "22": "Chemical Science and Technology",
+        "04": "Civil Engineering",
+        "01": "Computer Science and Engineering",
+        "50": "Data Science and Artificial Intelligence",
+        "02": "Electronics and Communication Engineering",
+        "08": "Electronics and Electrical Engineering",
+        "51": "Energy Engineering",
+        "21": "Engineering Physics",
+        "23": "Mathematics and Computing",
+        "03": "Mechanical Engineering",
+    }
+    if (rollstring.slice(2, 4) == "01" && rollstring.slice(4, 6) != "05") {
+        const dep = rollmap[rollstring.slice(4,6)];
+        if(dep) return rollmap[rollstring.slice(4, 6)];
+    }
     var config = {
         method: "get",
         url: "https://graph.microsoft.com/beta/me/profile",
@@ -242,7 +261,7 @@ export const redirectHandler = async (req, res, next) => {
     let br = await BR.findOne({ email: userFromToken.data.mail });
     if (!existingUser) {
         //const courses = await fetchCourses(userFromToken.data.surname);
-        const department = await getDepartment(AccessToken);
+        const department = await getDepartment(AccessToken, roll);
         const previousCourses = [];
         //const previousCourses = await fetchCoursesForBr(userFromToken.data.surname);
         //const [courses,department,previousCourses]=await Promise.all([fetchCourses(userFromToken.data.surname),getDepartment(AccessToken),fetchCoursesForBr(userFromToken.data.surname)])
