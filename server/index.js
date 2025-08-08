@@ -36,7 +36,7 @@ import links from "./links.js";
 const app = express();
 
 const PORT = config.port;
-app.use(cors({ origin: links.FRONTEND_URL, credentials: true }));
+app.use(cors({ origin: "*", credentials: true }));
 
 app.use(express.static("static"));
 import path from "path";
@@ -46,7 +46,6 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(cookieParser());
-// app.use(cors());
 app.use(ua.express());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);

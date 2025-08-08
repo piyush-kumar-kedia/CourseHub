@@ -32,24 +32,31 @@ export default function BranchRepresentatives() {
     };
 
     return (
-        <div>
-            <div className="p-4 sm:p-6 lg:p-8">
-                <div className="sm:flex sm:items-center">
-                    <div className="sm:flex-auto">{/* Content moved to BrTable */}</div>
-                    <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+        <div className="p-6 space-y-6">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/60 p-6">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900">Branch Representatives</h1>
+                        <p className="text-gray-600 mt-1">Manage and upload BR data</p>
+                    </div>
+                    <div>
                         <button
                             type="button"
-                            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
                             onClick={() => setShowUploadModal(true)}
                         >
                             Upload BRs
                         </button>
                     </div>
                 </div>
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/60 p-6">
                 {loading && <p>Loading...</p>}
                 {error && <p className="text-red-500">{error}</p>}
                 {!loading && !error && <BrTable brs={brs} />}
             </div>
+
             {showUploadModal && (
                 <UploadBRs
                     onUpload={handleUploadSuccess}
