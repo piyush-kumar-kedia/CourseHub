@@ -5,37 +5,22 @@ const updateBRs = async (req, res) => {
     try {
         const { emails } = req.body;
 
-        if (!emails || emails.length <= 0) {
+        if (!emails || emails.length === 0) {
             return res.status(400).json({ error: "emails are required" });
         }
 
-        const alreadyExists = [];
-        const notUser = [];
+        for (const { email } of emails) {
+            const user = await User.findOne({ email });
 
-        for (const emailobj of emails) {
-            const email = emailobj.email;
-            const user = await User.findOne({ email: email });
             if (user) {
-                user.isBR = true;
-                await user.save();
+                if (!user.isBR) {
+                    user.isBR = true;
+                    await user.save();
+                }
+                await BR.updateOne({ email }, { $set: { email } }, { upsert: true });
             } else {
-                notUser.push(email);
-                continue;
+                await BR.updateOne({ email }, { $set: { email } }, { upsert: true });
             }
-            const exists = await BR.findOne({ email });
-            if (exists) {
-                alreadyExists.push(email);
-                continue;
-            }
-            await BR.create({ email });
-        }
-
-        if (alreadyExists.length > 0 || notUser.length > 0) {
-            return res.status(409).json({
-                error: "Some BRs already exist or do not exist in users",
-                existingEmails: alreadyExists,
-                notInUsers: notUser,
-            });
         }
 
         res.status(201).json({ message: "BRs updated successfully" });
