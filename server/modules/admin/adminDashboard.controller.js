@@ -2,6 +2,8 @@ import AppError from "../../utils/appError.js";
 import CourseModel from "../course/course.model.js";
 import fs from "fs";
 import csv from "csv-parser";
+import User from "../user/user.model.js";
+import { UserUpdate } from "../miscellaneous/miscellaneous.model.js";
 
 // Get all courses from DB
 export async function getDBCourses(req, res, next) {
@@ -26,7 +28,9 @@ export async function uploadCourses(req, res, next) {
                     results.map(async ({ code, name }) => {
                         if (!code || !name) return null;
                         const codeUpper = code.trim().toUpperCase();
-                        let course = await CourseModel.findOne({ code: new RegExp(`^${codeUpper}$`, 'i') });
+                        let course = await CourseModel.findOne({
+                            code: new RegExp(`^${codeUpper}$`, "i"),
+                        });
                         if (!course) {
                             course = await CourseModel.create({ code: codeUpper, name });
                         } else {
@@ -47,18 +51,54 @@ export async function uploadCourses(req, res, next) {
         });
 }
 
-// Rename a course
 export async function renameCourse(req, res, next) {
     const { code } = req.params;
     const { name } = req.body;
-    if (!name) return next(new AppError(400, "Name required"));
-    // Use regex for case-insensitive and trimmed match
+
+    if (!name) {
+        return next(new AppError(400, "Name required"));
+    }
+
     const codeUpper = code.trim().toUpperCase();
+
     const course = await CourseModel.findOneAndUpdate(
-        { code: new RegExp(`^${codeUpper}$`, 'i') },
+        { code: new RegExp(`^${codeUpper}$`, "i") },
         { name, code: codeUpper },
         { new: true }
     );
-    if (!course) return next(new AppError(404, "Course not found"));
+    if (!course) {
+        return next(new AppError(404, "Course not found"));
+    }
+
+    // Preprocess user data to clean up code fields - remove all spaces and convert to uppercase
+    const allUsers = await User.find({});
+    for (const user of allUsers) {
+        user.courses = user.courses.map((c) => ({
+            ...c,
+            code: c.code?.replace(/\s+/g, "").toUpperCase(),
+        }));
+        user.previousCourses = user.previousCourses.map((c) => ({
+            ...c,
+            code: c.code?.replace(/\s+/g, "").toUpperCase(),
+        }));
+        user.readOnly = user.readOnly.map((c) => ({
+            ...c,
+            code: c.code?.replace(/\s+/g, "").toUpperCase(),
+        }));
+        await user.save();
+    }
+
+    const users = await User.find({
+        $or: [
+            { courses: { $elemMatch: { code: codeUpper } } },
+            { previousCourses: { $elemMatch: { code: codeUpper } } },
+            { readOnly: { $elemMatch: { code: codeUpper } } },
+        ],
+    });
+
+    for (const user of users) {
+        await UserUpdate.deleteOne({ rollNumber: user.rollNumber });
+    }
+
     res.json(course);
 }
