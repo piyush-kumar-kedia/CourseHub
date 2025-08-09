@@ -80,7 +80,7 @@ const FolderInfo = ({
         setShowConfirm(false);
     };
 
-    const downloadFolder = async (id, folderPath = "") => {
+const downloadFolder = async (id, folderPath = "") => {
     try {
         const response = await fetch(`${server}/api/folder/content/${id}`);
         if (!response.ok) {
@@ -93,9 +93,9 @@ const FolderInfo = ({
         
         // Process all children
         const childType = data.childType || "File"; // Default to "File" if not specified
-
+        
         for (const child of data.children) {
-            if (childType === "older") {
+            if (childType === "Folder") {
                 // Recursive case: child is a folder
                 const childFolderPath = folderPath ? `${folderPath}/${child.name}` : child.name;
                 
@@ -104,44 +104,45 @@ const FolderInfo = ({
                 
                 if (childZip) {
                     // Add all files from child folder to current zip
+                    // Use async approach to properly extract file content
+                    const promises = [];
                     childZip.forEach((relativePath, file) => {
-                        // Add the folder structure to the path
-                        const fullPath = folderPath ? `${folderPath}/${relativePath}` : relativePath;
-                        zip.file(fullPath, file);
+                        // Skip directory entries
+                        if (!file.dir) {
+                            promises.push(
+                                file.async("blob").then(content => {
+                                    zip.file(relativePath, content);
+                                }).catch(error => {
+                                    console.error(`Error processing file ${relativePath}:`, error);
+                                })
+                            );
+                        }
                     });
+                    await Promise.all(promises);
                 }
             } else {
                 // Base case: child is a file
                 try {
-
-                    console.log(child);
-
-                    const getFileResponse = await fetch(`${server}/api/files/link/${child._id}`);
-                    if (!getFileResponse.ok) {
-                        toast.error(`Failed to get link for file: ${child.name}`);
-                        continue;
-                    }
-                    const fileUrlData = await getFileResponse.json();
-                    const UrlLink = fileUrlData.webUrl;
+                    
                     const fileResponse = await fetch(`${server}/api/files/download`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({ url : UrlLink }),
+                        body: JSON.stringify({ url: child.webUrl }),
                     });
                     
                     if (!fileResponse.ok) {
                         toast.error(`Failed to download file: ${child.name}`);
                         continue;
                     }
-
+                    
                     const fileData = await fileResponse.json();
                     const downloadLink = fileData.downloadLink;
-
+                    
                     const curfile = await fetch(downloadLink);
                     const fileBlob = await curfile.blob();
-
+                    
                     // Add file to zip with proper folder structure
                     const filePath = folderPath ? `${folderPath}/${child.name}` : child.name;
                     zip.file(filePath, fileBlob);
@@ -151,7 +152,7 @@ const FolderInfo = ({
                 }
             }
         }
-
+        
         return zip;
     } catch (error) {
         console.error(`Error downloading folder content:`, error);
@@ -160,40 +161,40 @@ const FolderInfo = ({
     }
 };
 
-// Usage function to initiate download and save the ZIP
+// Usage function remains the same
 const downloadAndSaveFolder = async (folderId, folderName = "folder") => {
     try {
         toast.info("Starting folder download...");
         
+        // Use either the fixed version or the alternative approach
         const zip = await downloadFolder(folderId);
+        // const zip = await downloadFolderAlternative(folderId);
         
         if (!zip) {
             toast.error("Failed to create folder archive.");
             return;
         }
-
+        
         // Generate the final ZIP blob
-        const zipBlob = await zip.generateAsync({ 
+        const zipBlob = await zip.generateAsync({
             type: "blob",
             compression: "DEFLATE",
             compressionOptions: { level: 6 }
         });
-
+        
         // Save the ZIP file using saveAs
         saveAs(zipBlob, `${folderName}.zip`);
-
+        
         toast.success("Folder downloaded successfully!");
     } catch (error) {
         console.error("Error in downloadAndSaveFolder:", error);
         toast.error("Failed to download folder.");
     }
 };
-
-
     return (
         <>
             <div className="folder-info">
-            <button onClick={downloadAndSaveFolder(folderId)}>download</button>
+            <button onClick={()=>downloadAndSaveFolder(folderId)}>download</button>
                 <div className="info">
                     <p className="path">{path}</p>
                     <div className="curr-folder">
