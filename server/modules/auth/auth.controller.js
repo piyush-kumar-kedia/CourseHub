@@ -103,6 +103,7 @@ export const fetchCourses = async (rollNumber) => {
 };
 
 export const fetchCoursesForBr = async (rollNumber) => {
+    const rollstring = rollNumber.toString();
     var evenConfig = {
         method: "post",
         url: "https://academic.iitg.ac.in/sso/gen/student1.jsp",
@@ -128,43 +129,83 @@ export const fetchCoursesForBr = async (rollNumber) => {
         }),
     };
 
-    const [even, odd] = await Promise.all([
-        axios.post(evenConfig.url, evenConfig.data, { headers: evenConfig.headers }),
-        axios.post(oddConfig.url, oddConfig.data, { headers: oddConfig.headers }),
-    ]);
-    if (!even.data || !odd.data) throw new AppError(500, "Something went wrong");
-
-    const $even = cheerio.load(even.data);
-    const $odd = cheerio.load(odd.data);
-
     const courses = [];
 
-    $even("tr").each((i, elem) => {
-        const details = $even(elem).find("td");
-        const studentRollNo = details.eq(2).text();
-        const code = details.eq(3).text(); //course code
-        const name = courselist[code]; //course name
+    if (rollstring.slice(0, 2) == "24") {
+        const newroll = parseInt("2501" + rollstring.slice(4, 6) + "001");
+        var config = {
+            method: "post",
+            url: "https://academic.iitg.ac.in/sso/gen/student1.jsp",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            data: qs.stringify({
+                cid: "All",
+                sess: academic.session,
+                yr: academic.currentYear,
+            }),
+        };
 
-        if (code && studentRollNo == rollNumber && !code.includes("SA")) {
-            courses.push({
-                name,
-                code,
-            });
-        }
-    });
-    $odd("tr").each((i, elem) => {
-        const details = $odd(elem).find("td");
-        const studentRollNo = details.eq(2).text();
-        const code = details.eq(3).text(); //course code
-        const name = courselist[code]; //course name
+        const response = await axios.post(config.url, config.data, {
+            headers: config.headers,
+        });
 
-        if (code && studentRollNo == rollNumber && !code.includes("SA")) {
-            courses.push({
-                name,
-                code,
-            });
-        }
-    });
+        if (!response.data) throw new AppError(500, "Something went wrong");
+
+        const $ = cheerio.load(response.data);
+
+        $("tr").each((i, elem) => {
+            const details = $(elem).find("td");
+            const studentRollNo = details.eq(2).text();
+            const code = details.eq(3).text(); //course code
+            const name = courselist[code]; //course name
+
+            if (code && studentRollNo == newroll && !code.includes("SA")) {
+                courses.push({
+                    name,
+                    code,
+                });
+            }
+        });
+        if (courses.length === 0) throw new AppError(404, "No courses found for this roll number");
+    }
+    else {
+        const [even, odd] = await Promise.all([
+            axios.post(evenConfig.url, evenConfig.data, { headers: evenConfig.headers }),
+            axios.post(oddConfig.url, oddConfig.data, { headers: oddConfig.headers }),
+        ]);
+        if (!even.data || !odd.data) throw new AppError(500, "Something went wrong");
+
+        const $even = cheerio.load(even.data);
+        const $odd = cheerio.load(odd.data);
+
+        $even("tr").each((i, elem) => {
+            const details = $even(elem).find("td");
+            const studentRollNo = details.eq(2).text();
+            const code = details.eq(3).text(); //course code
+            const name = courselist[code]; //course name
+
+            if (code && studentRollNo == rollNumber && !code.includes("SA")) {
+                courses.push({
+                    name,
+                    code,
+                });
+            }
+        });
+        $odd("tr").each((i, elem) => {
+            const details = $odd(elem).find("td");
+            const studentRollNo = details.eq(2).text();
+            const code = details.eq(3).text(); //course code
+            const name = courselist[code]; //course name
+
+            if (code && studentRollNo == rollNumber && !code.includes("SA")) {
+                courses.push({
+                    name,
+                    code,
+                });
+            }
+        });
+    }
     if (courses.length === 0) throw new AppError(404, "No courses found for this roll number");
     const user = await User.findOne({ rollNumber });
     if (!user) throw new AppError(404, "User not found");
@@ -191,8 +232,8 @@ const getDepartment = async (access_token, roll) => {
         "03": "Mechanical Engineering",
     }
     if (rollstring.slice(2, 4) == "01" && rollstring.slice(4, 6) != "05") {
-        const dep = rollmap[rollstring.slice(4,6)];
-        if(dep) return rollmap[rollstring.slice(4, 6)];
+        const dep = rollmap[rollstring.slice(4, 6)];
+        if (dep) return rollmap[rollstring.slice(4, 6)];
     }
     var config = {
         method: "get",
