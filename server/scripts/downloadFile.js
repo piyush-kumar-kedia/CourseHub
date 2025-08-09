@@ -15,7 +15,8 @@ const encodeGraphShareUrl = (shareUrl) => {
   return `u!${base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")}`;
 };
 
- const accessToken = await getAccessToken();
+ const access = await getAccessToken();
+
  export const downloadFiles = async (req, res) => {
   try {
     const inputUrl = req.body?.url;
@@ -32,7 +33,7 @@ const encodeGraphShareUrl = (shareUrl) => {
       {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${accessToken}`
+          Authorization: `Bearer ${access}`
         }
       }
     );
