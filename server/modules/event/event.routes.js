@@ -7,4 +7,5 @@ const router = Router();
 
 router.get("/examdates", isAuthenticated, catchAsync(EventController.GetExamDates));
 router.get("/mobileversion/:platform", catchAsync(EventController.GetLatestMobileVersion));
+router.post("/create", catchAsync(EventController.CreateEvent));
 export default router;

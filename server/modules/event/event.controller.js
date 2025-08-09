@@ -15,4 +15,10 @@ async function GetLatestMobileVersion(req, res, next) {
     return res.json({ details: updateDetails });
 }
 
-export default { GetExamDates, GetLatestMobileVersion };
+async function CreateEvent(req, res) {
+    const content = req.body;
+    const event = await EventModel.create(content);
+    return res.status(201).json({ event });
+}
+
+export default { GetExamDates, GetLatestMobileVersion, CreateEvent };
