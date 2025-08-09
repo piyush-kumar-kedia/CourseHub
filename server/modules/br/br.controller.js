@@ -1,6 +1,6 @@
 import BR from "./br.model.js";
 import User from "../user/user.model.js";
-
+import { fetchCoursesForBr } from "../auth/auth.controller.js";
 const updateBRs = async (req, res) => {
     try {
         const { emails } = req.body;
@@ -15,6 +15,7 @@ const updateBRs = async (req, res) => {
             if (user) {
                 if (!user.isBR) {
                     user.isBR = true;
+                    await fetchCoursesForBr(user.rollNumber);
                     await user.save();
                 }
                 await BR.updateOne({ email }, { $set: { email } }, { upsert: true });
