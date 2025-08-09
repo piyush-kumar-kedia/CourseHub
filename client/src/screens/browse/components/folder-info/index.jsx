@@ -194,7 +194,12 @@ const downloadAndSaveFolder = async (folderId, folderName = "folder") => {
     return (
         <>
             <div className="folder-info">
-            <button onClick={()=>downloadAndSaveFolder(folderId)}>download</button>
+                <div className="btn-container">
+                        <button className="btn plus" onClick={()=>downloadAndSaveFolder(folderId)}>
+                            <span className="icon download-icon"></span>
+                            <span className="text">Download Folder</span>
+                        </button>
+                    </div>
                 <div className="info">
                     <p className="path">{path}</p>
                     <div className="curr-folder">
