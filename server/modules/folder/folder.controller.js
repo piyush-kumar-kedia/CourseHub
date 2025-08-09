@@ -61,4 +61,17 @@ async function recursiveDelete(folder){
     }
 }
 
-export { createFolder, deleteFolder };
+async function getFolderContent(req, res) {
+    const {folderId} = req.params;
+    try {
+        const folder = await FolderModel.findById(folderId).populate('children');
+        if (!folder) {
+            return res.status(404).json({ message: "Folder not found" });
+        }
+        return res.json(folder);
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+}
+
+export { createFolder, deleteFolder,getFolderContent };

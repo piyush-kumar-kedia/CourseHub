@@ -66,7 +66,7 @@ const FileDisplay = ({ file, path, code }) => {
             return;
         }
 
-        const response = await fetch( server + '/api/links/download',{
+        const response = await fetch( server + '/api/files/download',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
