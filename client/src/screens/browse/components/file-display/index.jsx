@@ -14,6 +14,7 @@ import Share from "../../../share";
 import { verifyFile, unverifyFile } from "../../../../api/File";
 import { RemoveFileFromFolder, UpdateFileVerificationStatus } from "../../../../actions/filebrowser_actions.js";
 import ConfirmDialog from "./components/ConfirmDialog.jsx";
+import server from "../../../../api/server.js";
 
 const FileDisplay = ({ file, path, code }) => {
     const user = useSelector((state) => state.user?.user);
@@ -64,7 +65,32 @@ const FileDisplay = ({ file, path, code }) => {
             toast.error("Please login to download.");
             return;
         }
-        window.open(file.downloadUrl);
+
+        const response = await fetch( server + '/api/links/download',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: file.webUrl }),
+        })
+
+        const data = await response.json();
+        const downloadLink = data.downloadLink;
+
+        if (!downloadLink) {
+            toast.error("Failed to generate download link.");
+            return;
+        }
+
+        //download file using downloadLink
+        const a = document.createElement("a");
+        a.href = downloadLink;
+        a.download = file.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast.success("Downloading file...");
+        // window.open(file.downloadUrl);
         //     const openedWindow = window.open("", "_blank");
         //     openedWindow.document.write("Please close this window after download starts.");
         //     const existingUrl = urls.downloadUrls.find((data) => data.id === file.id);

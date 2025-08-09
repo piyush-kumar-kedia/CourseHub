@@ -1,6 +1,6 @@
 import axios from "axios";
 import links from "../links.js";
-const baseUrl = links.LOCAL_API_BASE_URL;
+const baseUrl = links? links.LOCAL_API_BASE_URL : "";
 
 const wait = async (ms) => {
     return new Promise((resolve) => {
