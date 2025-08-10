@@ -66,21 +66,20 @@ jobs:
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
                     set -e
-                    sudo mkdir -p /usr/share/nginx/html/client
+                    sudo mkdir -p /usr/share/nginx/html
                     echo "🗂️ Backing up old frontend..."
                     timestamp=$(date +%Y%m%d-%H%M%S)
-                    sudo mkdir -p /usr/share/nginx/html/client-backup
-                    if [ -d "/usr/share/nginx/html/client" ] && [ "$(ls -A /usr/share/nginx/html/client)" ]; then
-                       sudo cp -r /usr/share/nginx/html/client /usr/share/nginx/html/client-backup/html-$timestamp
+                    sudo mkdir -p /usr/share/nginx/html-backup
+                    if [ -d "/usr/share/nginx/html" ] && [ "$(ls -A /usr/share/nginx/html)" ]; then
+                       sudo cp -r /usr/share/nginx/html /usr/share/nginx/html-backup/html-$timestamp
                     fi
 
-
                     echo "🚀 Deploying new frontend..."
-                    sudo rm -rf /usr/share/nginx/html/client/*
-                    sudo cp -r ~/CourseHub/client/dist/* /usr/share/nginx/html/client/
+                    sudo rm -rf /usr/share/nginx/html/*
+                    sudo cp -r ~/CourseHub/client/dist/* /usr/share/nginx/html/
 
                     echo "🧹 Cleaning up older backups..."
-                    cd /usr/share/nginx/html/client-backup
+                    cd /usr/share/nginx/html-backup
                     ls -1tr | head -n -1 | xargs -r -d '\n' sudo rm -rf --
                   EOF
 
@@ -89,12 +88,12 @@ jobs:
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
                     echo "⚠️ Build failed. Restoring backup..."
-                    latest_backup=$(ls -1tr /usr/share/nginx/html/client-backup 2>/dev/null | tail -n 1 || true )
-                    if [ -n "$latest_backup" ] && [ -d "/usr/share/nginx/html/client-backup/$latest_backup" ] && [ "$(ls -A /usr/share/nginx/html/client-backup/$latest_backup 2>/dev/null)" ]; then
+                    latest_backup=$(ls -1tr /usr/share/nginx/html-backup 2>/dev/null | tail -n 1 || true )
+                    if [ -n "$latest_backup" ] && [ -d "/usr/share/nginx/html-backup/$latest_backup" ] && [ "$(ls -A /usr/share/nginx/html-backup/$latest_backup 2>/dev/null)" ]; then
                       echo "✅ Found backup: $latest_backup. Restoring..."
-                      sudo mkdir -p /usr/share/nginx/html/client
-                      sudo rm -rf /usr/share/nginx/html/client/*
-                      sudo cp -r /usr/share/nginx/html/client-backup/$latest_backup/* /usr/share/nginx/html/client/
+                      sudo mkdir -p /usr/share/nginx/html
+                      sudo rm -rf /usr/share/nginx/html/*
+                      sudo cp -r /usr/share/nginx/html-backup/$latest_backup/* /usr/share/nginx/html/
                     fi
                   EOF
 
