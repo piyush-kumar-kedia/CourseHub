@@ -49,28 +49,7 @@ function SemCard(props) {
     return (
         <div className="semCard">
             <div className="inner1">
-                {isEditSem ? (
-                    <div className="inputDiv">
-                        <input
-                            autofocus="autofocus"
-                            className="inputSem"
-                            value={userSem}
-                            size={1}
-                            maxLength={1}
-                            onChange={(event) => {
-                                setUserSem((prev) => event.target.value);
-                            }}
-                            type="text"
-                        />
-                    </div>
-                ) : (
-                    <div className="inputDiv">{props.sem}</div>
-                )}
-                {isEditSem ? (
-                    <div className="tickSvg" onClick={submitSemHandler} />
-                ) : (
-                    <div className="editSvg" onClick={editSemHandler} />
-                )}
+                <div className="inputDiv">{props.sem}</div>
             </div>
             <div className="inner2">Semester</div>
             <ToastContainer />

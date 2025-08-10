@@ -62,7 +62,7 @@ export async function renameCourse(req, res, next) {
     const codeUpper = code.trim().toUpperCase();
 
     const course = await CourseModel.findOneAndUpdate(
-        { code: new RegExp(`^${codeUpper}$`, "i") },
+        { code: codeUpper },
         { name, code: codeUpper },
         { new: true }
     );

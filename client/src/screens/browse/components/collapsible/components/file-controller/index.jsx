@@ -3,7 +3,7 @@ import FileDisplay from "../../../file-display";
 import { useSelector } from "react-redux";
 
 
-const FileController = ({ files }) => {
+const FileController = ({ files, code }) => {
 
     const user = useSelector((state) => state.user.user);
 
@@ -19,7 +19,7 @@ const FileController = ({ files }) => {
 	// console.log("Visible files after filtering:", visibleFiles);
 
 	return visibleFiles.map((file) => (
-		<FileDisplay file={file} key={file._id}/>
+		<FileDisplay file={file} key={file._id} code={code}/>
 	));
 	};
 

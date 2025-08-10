@@ -3,7 +3,6 @@ import BrowseScreen from "./screens/browse";
 import Dashboard from "./screens/dashboard";
 import LandingPage from "./screens/landing";
 import LoadingPage from "./loading.jsx";
-import MobilePage from "./mobile.jsx";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import PrivateRoutes from "./router_utils/PrivateRoutes";
 import ProfilePage from "./screens/profile.js";
@@ -22,6 +21,7 @@ const App = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         if (params.get("fresh")) {
+            window.location.href = "/loading";
             return;
         }
 
