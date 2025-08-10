@@ -36,7 +36,16 @@ import links from "./links.js";
 const app = express();
 
 const PORT = config.port;
-app.use(cors({ origin: links.FRONTEND_URL, credentials: true }));
+app.use(
+    cors({
+        origin: [
+            "http://localhost:5174",
+            "http://localhost:5173",
+            "https://coursehub.codingclub.in",
+        ],
+        credentials: true,
+    })
+);
 
 app.use(express.static("static"));
 import path from "path";
@@ -46,7 +55,6 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(cookieParser());
-// app.use(cors());
 app.use(ua.express());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -93,12 +101,8 @@ app.use((err, req, res, next) => {
 app.use(express.static("static"));
 
 app.get("*", (req, res) => {
-    if (req.useragent?.isAndroid) {
-        return res.redirect(
-            "https://play.google.com/store/apps/details?id=com.codingclub.coursehub"
-        );
-    } else if (req.useragent?.isiPhone) {
-        return res.redirect("https://apps.apple.com/us/app/coursehub/id6447286863");
+    if (req.useragent?.isAndroid || req.useragent?.isiPhone) {
+        return res.sendFile(path.resolve(__dirname, "static", "mobile.html"));
     }
     res.sendFile(path.resolve(__dirname, "static", "index.html"));
 });

@@ -14,6 +14,7 @@ import {
 
 //not used
 router.get("/login", loginHandler);
+//router.get("/loading", LoadingPage);
 // router.get("/make/guest", makeGuestHanlder);
 router.get("/login/guest", guestLoginHanlder);
 router.post("/fetchCourses", async (req, res, next) => {

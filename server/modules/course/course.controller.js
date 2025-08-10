@@ -5,15 +5,15 @@ import SearchResults from "../search/search.model.js";
 import courselist from "./course.list.js";
 import { response } from "express";
 
-const createCourse = async(code) => {
+const createCourse = async (code) => {
     const course = CourseModel.create({
         code: code.toUpperCase().replaceAll(" ", ""),
-        name: courselist[code.slice(0,2) + " " + code.slice(-3)],
+        name: courselist[code.slice(0, 2) + " " + code.slice(-3)] || "Name Unavailable",
         children: [],
         books: [],
-    })
+    });
     return course;
-}
+};
 
 export const getCourse = async (req, res, next) => {
     const { code } = req.params;
@@ -63,7 +63,7 @@ export const getCourse = async (req, res, next) => {
 
     if (!course) {
         course = await createCourse(code);
-    };
+    }
     return res.json({ found: true, ...course["_doc"] });
 };
 

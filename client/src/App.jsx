@@ -2,16 +2,15 @@ import { useState, useEffect } from "react";
 import BrowseScreen from "./screens/browse";
 import Dashboard from "./screens/dashboard";
 import LandingPage from "./screens/landing";
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoadingPage from "./loading.jsx";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import PrivateRoutes from "./router_utils/PrivateRoutes";
 import ProfilePage from "./screens/profile.js";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ErrorScreen from "./screens/error";
-import { useDispatch } from "react-redux";
 import { LoadLocalCourses } from "./actions/user_actions";
 
 const App = () => {
@@ -20,22 +19,34 @@ const App = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!initial) return;
-        try {
-            const localCourses = window.sessionStorage.getItem("LocalCourses");
-            if (!localCourses) return;
-            dispatch(LoadLocalCourses(JSON.parse(localCourses)));
-        } catch (error) {
-            window.sessionStorage.removeItem("LocalCourses");
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("fresh")) {
+            return;
         }
-    }, []);
+
+        if (!initial) return;
+
+        try {
+            const localCourses = window.localStorage.getItem("LocalCourses");
+            if (!localCourses) return;
+
+            const parsedCourses = JSON.parse(localCourses);
+            if (Array.isArray(parsedCourses)) {
+                dispatch(LoadLocalCourses(parsedCourses)); // ✅ Use localStorage
+            } else {
+                throw new Error("Invalid course format");
+            }
+        } catch (error) {
+            console.error("Error loading local courses:", error);
+            window.localStorage.removeItem("LocalCourses");
+        }
+    }, [initial, dispatch]);
 
     useEffect(() => {
         if (initial && isLoggedIn) {
-            // toast.success("Logged In!");
             setInitial(false);
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, initial]);
 
     return window.screen.width >= 640 ? (
         <div className="App">
@@ -50,6 +61,7 @@ const App = () => {
             />
             <Router>
                 <Routes>
+                    <Route path="/loading" element={<LoadingPage />} />
                     <Route element={<PrivateRoutes />}>
                         <Route element={<Dashboard />} path="dashboard" exact />
                         <Route element={<ProfilePage />} path="profile" exact />

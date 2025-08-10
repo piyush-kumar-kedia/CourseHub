@@ -17,7 +17,6 @@ const userSchema = Schema({
     readOnly: {type: Array, default: []},
     isBR: { type: Boolean },
     previousCourses: { type: Array, default: [] },
-    // contri
     department: { type: String, required: true }, //dup
     favourites: [
         {

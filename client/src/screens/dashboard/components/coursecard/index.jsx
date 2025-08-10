@@ -56,7 +56,7 @@ const CourseCard = ({ code, color, name, type, setClicked }) => {
                     {!isAvailable && <p className="unavailable">UNAVAILABLE</p>}
                 </div>
                 <div className="name">
-                    <p>{name ? formatLongText(capitalise(name), 39) : "name"}</p>
+                    <p>{name ? formatLongText(capitalise(name), 39) : "Name Unavailable"}</p>
                 </div>
             </div>
         </div>

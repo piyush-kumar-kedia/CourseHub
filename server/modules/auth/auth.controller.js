@@ -69,35 +69,82 @@ export const fetchCourses = async (rollNumber) => {
             yr: academic.currentYear,
         }),
     };
-
     const response = await axios.post(config.url, config.data, {
         headers: config.headers,
     });
-
-    if (!response.data) throw new AppError(500, "Something went wrong");
-
+    if (!response.data) {
+        throw new AppError(500, "Something went wrong");
+    }
     const $ = cheerio.load(response.data);
-
     const courses = [];
 
+    // Get all course codes first and normalize them
+    const courseCodes = [];
     $("tr").each((i, elem) => {
         const details = $(elem).find("td");
         const studentRollNo = details.eq(2).text();
-        const code = details.eq(3).text(); //course code
-        const name = courselist[code]; //course name
-
-        if (code && studentRollNo == rollNumber && !code.includes("SA")) {
-            courses.push({
-                name,
-                code,
+        const rawCode = details.eq(3).text(); //course code
+        if (rawCode && studentRollNo == rollNumber && !rawCode.includes("SA")) {
+            // Normalize the code: remove spaces and convert to uppercase
+            const normalizedCode = rawCode.replace(/\s+/g, "").toUpperCase();
+            courseCodes.push({
+                original: rawCode,
+                normalized: normalizedCode,
             });
         }
     });
 
+    // Fetch course names from database using both normalized and original codes
+    const CourseModel = (await import("../course/course.model.js")).default;
+    const normalizedCodes = courseCodes.map((c) => c.normalized);
+    const originalCodes = courseCodes.map((c) => c.original);
+    const allCodes = [...normalizedCodes, ...originalCodes];
+    const dbCourses = await CourseModel.find({
+        code: { $in: allCodes },
+    });
+
+    $("tr").each((i, elem) => {
+        const details = $(elem).find("td");
+        const studentRollNo = details.eq(2).text();
+        const rawCode = details.eq(3).text();
+
+        if (rawCode && studentRollNo == rollNumber && !rawCode.includes("SA")) {
+            const normalizedCode = rawCode.replace(/\s+/g, "").toUpperCase();
+
+            // Find course name from database first - try both normalized and original codes
+            const dbCourse = dbCourses.find(
+                (course) =>
+                    course.code === normalizedCode ||
+                    course.code === rawCode ||
+                    course.code.replace(/\s+/g, "").toUpperCase() === normalizedCode
+            );
+
+            let name;
+            if (dbCourse) {
+                name = dbCourse.name;
+            } else {
+                // Try courselist with both normalized and original codes
+                name = courselist[normalizedCode] || courselist[rawCode];
+            }
+
+            courses.push({
+                name,
+                code: normalizedCode, // Store the normalized code consistently
+            });
+        }
+    });
+
+    if (courses.length === 0) {
+        throw new AppError(404, "No courses found for this roll number");
+    }
+
+    // Update user courses using findOneAndUpdate to avoid version conflicts
+    await User.findOneAndUpdate({ rollNumber }, { courses }, { new: true, upsert: false });
     return courses;
 };
 
 export const fetchCoursesForBr = async (rollNumber) => {
+    const rollstring = rollNumber.toString();
     var evenConfig = {
         method: "post",
         url: "https://academic.iitg.ac.in/sso/gen/student1.jsp",
@@ -123,48 +170,242 @@ export const fetchCoursesForBr = async (rollNumber) => {
         }),
     };
 
-    const [even, odd] = await Promise.all([
-        axios.post(evenConfig.url, evenConfig.data, { headers: evenConfig.headers }),
-        axios.post(oddConfig.url, oddConfig.data, { headers: oddConfig.headers }),
-    ]);
-    if (!even.data || !odd.data) throw new AppError(500, "Something went wrong");
-
-    const $even = cheerio.load(even.data);
-    const $odd = cheerio.load(odd.data);
-
     const courses = [];
+    const courseCodes = [];
 
-    $even("tr").each((i, elem) => {
-        const details = $even(elem).find("td");
-        const studentRollNo = details.eq(2).text();
-        const code = details.eq(3).text(); //course code
-        const name = courselist[code]; //course name
+    if (rollstring.slice(0, 2) == "24") {
+        const newroll = parseInt("2501" + rollstring.slice(4, 6) + "001");
+        var config = {
+            method: "post",
+            url: "https://academic.iitg.ac.in/sso/gen/student1.jsp",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            data: qs.stringify({
+                cid: "All",
+                sess: academic.session,
+                yr: academic.currentYear,
+            }),
+        };
 
-        if (code && studentRollNo == rollNumber && !code.includes("SA")) {
-            courses.push({
-                name,
-                code,
-            });
+        const response = await axios.post(config.url, config.data, {
+            headers: config.headers,
+        });
+
+        if (!response.data) {
+            throw new AppError(500, "Something went wrong");
         }
-    });
-    $odd("tr").each((i, elem) => {
-        const details = $odd(elem).find("td");
-        const studentRollNo = details.eq(2).text();
-        const code = details.eq(3).text(); //course code
-        const name = courselist[code]; //course name
 
-        if (code && studentRollNo == rollNumber && !code.includes("SA")) {
-            courses.push({
-                name,
-                code,
-            });
+        const $ = cheerio.load(response.data);
+
+        // First pass: collect course codes and normalize them
+        $("tr").each((i, elem) => {
+            const details = $(elem).find("td");
+            const studentRollNo = details.eq(2).text();
+            const rawCode = details.eq(3).text(); //course code
+
+            if (rawCode && studentRollNo == newroll && !rawCode.includes("SA")) {
+                // Normalize the code: remove spaces and convert to uppercase
+                const normalizedCode = rawCode.replace(/\s+/g, "").toUpperCase();
+                courseCodes.push({
+                    original: rawCode,
+                    normalized: normalizedCode,
+                });
+            }
+        });
+
+        // Fetch course names from database using both normalized and original codes
+        const CourseModel = (await import("../course/course.model.js")).default;
+        const normalizedCodes = courseCodes.map((c) => c.normalized);
+        const originalCodes = courseCodes.map((c) => c.original);
+        const allCodes = [...normalizedCodes, ...originalCodes];
+        const dbCourses = await CourseModel.find({
+            code: { $in: allCodes },
+        });
+
+        // Second pass: build courses array with names
+        $("tr").each((i, elem) => {
+            const details = $(elem).find("td");
+            const studentRollNo = details.eq(2).text();
+            const rawCode = details.eq(3).text(); //course code
+
+            if (rawCode && studentRollNo == newroll && !rawCode.includes("SA")) {
+                const normalizedCode = rawCode.replace(/\s+/g, "").toUpperCase();
+
+                // Find course name from database first - try both normalized and original codes
+                const dbCourse = dbCourses.find(
+                    (course) =>
+                        course.code === normalizedCode ||
+                        course.code === rawCode ||
+                        course.code.replace(/\s+/g, "").toUpperCase() === normalizedCode
+                );
+
+                let name;
+                if (dbCourse) {
+                    name = dbCourse.name;
+                } else {
+                    // Try courselist with both normalized and original codes
+                    name = courselist[normalizedCode] || courselist[rawCode];
+                }
+
+                courses.push({
+                    name,
+                    code: normalizedCode, // Store the normalized code consistently
+                });
+            }
+        });
+        if (courses.length === 0) {
+            throw new AppError(404, "No courses found for this roll number");
         }
-    });
+    } else {
+        const [even, odd] = await Promise.all([
+            axios.post(evenConfig.url, evenConfig.data, { headers: evenConfig.headers }),
+            axios.post(oddConfig.url, oddConfig.data, { headers: oddConfig.headers }),
+        ]);
+
+        if (!even.data || !odd.data) {
+            throw new AppError(500, "Something went wrong");
+        }
+
+        const $even = cheerio.load(even.data);
+        const $odd = cheerio.load(odd.data);
+
+        // First pass: collect course codes from both semesters and normalize them
+        $even("tr").each((i, elem) => {
+            const details = $even(elem).find("td");
+            const studentRollNo = details.eq(2).text();
+            const rawCode = details.eq(3).text(); //course code
+
+            if (rawCode && studentRollNo == rollNumber && !rawCode.includes("SA")) {
+                // Normalize the code: remove spaces and convert to uppercase
+                const normalizedCode = rawCode.replace(/\s+/g, "").toUpperCase();
+                courseCodes.push({
+                    original: rawCode,
+                    normalized: normalizedCode,
+                });
+            }
+        });
+        $odd("tr").each((i, elem) => {
+            const details = $odd(elem).find("td");
+            const studentRollNo = details.eq(2).text();
+            const rawCode = details.eq(3).text(); //course code
+
+            if (rawCode && studentRollNo == rollNumber && !rawCode.includes("SA")) {
+                // Normalize the code: remove spaces and convert to uppercase
+                const normalizedCode = rawCode.replace(/\s+/g, "").toUpperCase();
+                courseCodes.push({
+                    original: rawCode,
+                    normalized: normalizedCode,
+                });
+            }
+        });
+
+        // Fetch course names from database using both normalized and original codes
+        const CourseModel = (await import("../course/course.model.js")).default;
+        const normalizedCodes = courseCodes.map((c) => c.normalized);
+        const originalCodes = courseCodes.map((c) => c.original);
+        const allCodes = [...normalizedCodes, ...originalCodes];
+        const dbCourses = await CourseModel.find({
+            code: { $in: allCodes },
+        });
+
+        // Second pass: build courses array with names
+        $even("tr").each((i, elem) => {
+            const details = $even(elem).find("td");
+            const studentRollNo = details.eq(2).text();
+            const rawCode = details.eq(3).text(); //course code
+
+            if (rawCode && studentRollNo == rollNumber && !rawCode.includes("SA")) {
+                const normalizedCode = rawCode.replace(/\s+/g, "").toUpperCase();
+
+                // Find course name from database first - try both normalized and original codes
+                const dbCourse = dbCourses.find(
+                    (course) =>
+                        course.code === normalizedCode ||
+                        course.code === rawCode ||
+                        course.code.replace(/\s+/g, "").toUpperCase() === normalizedCode
+                );
+
+                let name;
+                if (dbCourse) {
+                    name = dbCourse.name;
+                } else {
+                    // Try courselist with both normalized and original codes
+                    name = courselist[normalizedCode] || courselist[rawCode];
+                }
+
+                courses.push({
+                    name,
+                    code: normalizedCode, // Store the normalized code consistently
+                });
+            }
+        });
+        $odd("tr").each((i, elem) => {
+            const details = $odd(elem).find("td");
+            const studentRollNo = details.eq(2).text();
+            const rawCode = details.eq(3).text(); //course code
+
+            if (rawCode && studentRollNo == rollNumber && !rawCode.includes("SA")) {
+                const normalizedCode = rawCode.replace(/\s+/g, "").toUpperCase();
+
+                // Find course name from database first - try both normalized and original codes
+                const dbCourse = dbCourses.find(
+                    (course) =>
+                        course.code === normalizedCode ||
+                        course.code === rawCode ||
+                        course.code.replace(/\s+/g, "").toUpperCase() === normalizedCode
+                );
+
+                let name;
+                if (dbCourse) {
+                    name = dbCourse.name;
+                } else {
+                    // Try courselist with both normalized and original codes
+                    name = courselist[normalizedCode] || courselist[rawCode];
+                }
+
+                courses.push({
+                    name,
+                    code: normalizedCode, // Store the normalized code consistently
+                });
+            }
+        });
+    }
+
+    if (courses.length === 0) {
+        throw new AppError(404, "No courses found for this roll number");
+    }
+
+    // Update user previousCourses using findOneAndUpdate to avoid version conflicts
+    await User.findOneAndUpdate(
+        { rollNumber },
+        { previousCourses: courses },
+        { new: true, upsert: false }
+    );
 
     return courses;
 };
 
-const getDepartment = async (access_token) => {
+const getDepartment = async (access_token, roll) => {
+    let rollstring = roll.toString();
+    const rollmap = {
+        "06": "Biosciences and Bioengineering",
+        "07": "Chemical Engineering",
+        22: "Chemical Science and Technology",
+        "04": "Civil Engineering",
+        "01": "Computer Science and Engineering",
+        50: "Data Science and Artificial Intelligence",
+        "02": "Electronics and Communication Engineering",
+        "08": "Electronics and Electrical Engineering",
+        51: "Energy Engineering",
+        21: "Engineering Physics",
+        23: "Mathematics and Computing",
+        "03": "Mechanical Engineering",
+    };
+    if (rollstring.slice(2, 4) == "01" && rollstring.slice(4, 6) != "05") {
+        const dep = rollmap[rollstring.slice(4, 6)];
+        if (dep) return rollmap[rollstring.slice(4, 6)];
+    }
     var config = {
         method: "get",
         url: "https://graph.microsoft.com/beta/me/profile",
@@ -193,6 +434,7 @@ function calculateSemester(rollNumber) {
 
 export const redirectHandler = async (req, res, next) => {
     const { code } = req.query;
+
     const data = qs.stringify({
         client_secret: clientSecret,
         client_id: clientid,
@@ -201,6 +443,8 @@ export const redirectHandler = async (req, res, next) => {
         grant_type: "authorization_code",
         code: code,
     });
+
+    let newUser = false;
 
     const config = {
         method: "post",
@@ -211,58 +455,63 @@ export const redirectHandler = async (req, res, next) => {
         },
         data: data,
     };
+
     const response = await axios.post(config.url, config.data, {
         headers: config.headers,
     });
-    if (!response.data) throw new AppError(500, "Something went wrong");
+
+    if (!response.data) {
+        throw new AppError(500, "Something went wrong");
+    }
 
     const AccessToken = response.data.access_token;
     const RefreshToken = response.data.refresh_token;
 
     const userFromToken = await getUserFromToken(AccessToken);
 
-    if (!userFromToken || !userFromToken.data) throw new AppError(401, "Access Denied");
+    if (!userFromToken || !userFromToken.data) {
+        throw new AppError(401, "Access Denied");
+    }
 
     const roll = userFromToken.data.surname;
-    if (!roll) throw new AppError(401, "Sign in using Institute Account");
+
+    if (!roll) {
+        throw new AppError(401, "Sign in using Institute Account");
+    }
 
     let existingUser = await findUserWithEmail(userFromToken.data.mail);
 
     let br = await BR.findOne({ email: userFromToken.data.mail });
+
     if (!existingUser) {
-        const courses = await fetchCourses(userFromToken.data.surname);
-        const department = await getDepartment(AccessToken);
-        const previousCourses = await fetchCoursesForBr(userFromToken.data.surname);
+        const department = await getDepartment(AccessToken, roll);
 
         const userData = {
             name: userFromToken.data.displayName,
             degree: userFromToken.data.jobTitle,
             rollNumber: userFromToken.data.surname,
             email: userFromToken.data.mail,
-            // branch: department, //calculate branch
-            semester: calculateSemester(userFromToken.data.surname), //calculate sem
-            courses: courses,
+            semester: calculateSemester(userFromToken.data.surname),
+            courses: [],
             department: department,
             isBR: br ? true : false,
-            previousCourses: br ? previousCourses : [],
+            previousCourses: br ? [] : [],
             readOnly: [],
         };
 
         const { error } = validateUser(userData);
-        if (error) throw new AppError(500, error.message);
+        if (error) {
+            throw new AppError(500, error.message);
+        }
 
         const user = new User(userData);
         existingUser = await user.save();
+        newUser = true;
     }
 
     let userUpdated = await UserUpdate.findOne({ rollNumber: roll });
-    console.log(userUpdated);
+
     if (existingUser && !userUpdated) {
-        const courses = await fetchCourses(userFromToken.data.surname);
-        existingUser.courses = courses;
-        if (br) {
-            existingUser.previousCourses = await fetchCoursesForBr(userFromToken.data.surname);
-        }
         existingUser.semester = calculateSemester(userFromToken.data.surname);
         await existingUser.save();
         const newUpdation = new UserUpdate({ rollNumber: roll });
@@ -270,6 +519,7 @@ export const redirectHandler = async (req, res, next) => {
     }
 
     const token = existingUser.generateJWT();
+
     await createCourseSnapshotOnce(existingUser);
 
     res.cookie("token", token, {
@@ -280,8 +530,10 @@ export const redirectHandler = async (req, res, next) => {
         httpOnly: true,
     });
 
-    return res.redirect(appConfig.clientURL);
-    // return res.redirect(`${appConfig.clientURL}/login/success?token=${token}`); //to redirect with token
+    if (newUser || (existingUser && !userUpdated)) {
+        return res.redirect(`${appConfig.clientURL}/loading`);
+    }
+    res.redirect(`${appConfig.clientURL}/dashboard`);
 };
 
 export const mobileRedirectHandler = async (req, res, next) => {
@@ -359,7 +611,6 @@ export const mobileRedirectHandler = async (req, res, next) => {
     const token = existingUser.generateJWT();
     await createUserSnapshotHelper(existingUser);
     await createCourseSnapshotOnce(existingUser);
-    //     const encryptedToken = EncryptText(token);
 
     return res.redirect(`${appConfig.mobileURL}://success?token=${token}`);
 };

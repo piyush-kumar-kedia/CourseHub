@@ -80,7 +80,7 @@ const AddCourseModal = ({ handleAddCourse }) => {
                             COURSE CODE :
                         </label>
                         <input
-                            placeholder="Course Code / Name"
+                            placeholder="Course Code"
                             name="course"
                             className="input_course"
                             onChange={(e) => {

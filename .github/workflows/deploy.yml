@@ -42,12 +42,13 @@ jobs:
                     echo "${{ secrets.ONEDRIVE_REFRESH_TOKEN }}" > onedrive-refresh-token.token
                     echo "${{ secrets.ONEDRIVE_ACCESS_TOKEN }}" > onedrive-access-token.token
                     echo "${{ secrets.ONEDRIVE_DEVICE_CODE }}" > onedrive-device-code.token
-
-                    # Decode base64 and write to links.js
-                    echo "${{ secrets.LINKS_JS_FILE_BASE64 }}" | base64 -d > links.js
+                    
+                    echo "${{ secrets.LINKS_JS_FILE }}" > links.js
 
                     cd ~/CourseHub/client/src/api
                     echo "${{ secrets.SERVER_JS_FILE }}" > server.js
+                    cd ~/CourseHub/admin/src/apis
+                    echo "${{ secrets.ADMIN_SERVER_JS_FILE }}" > server.js
                   EOF
 
             - name: SSH - Build Frontend
@@ -65,10 +66,13 @@ jobs:
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
                     set -e
+                    sudo mkdir -p /usr/share/nginx/html
                     echo "🗂️ Backing up old frontend..."
                     timestamp=$(date +%Y%m%d-%H%M%S)
                     sudo mkdir -p /usr/share/nginx/html-backup
-                    sudo cp -r /usr/share/nginx/html /usr/share/nginx/html-backup/html-$timestamp
+                    if [ -d "/usr/share/nginx/html" ] && [ "$(ls -A /usr/share/nginx/html)" ]; then
+                       sudo cp -r /usr/share/nginx/html /usr/share/nginx/html-backup/html-$timestamp
+                    fi
 
                     echo "🚀 Deploying new frontend..."
                     sudo rm -rf /usr/share/nginx/html/*
@@ -76,7 +80,7 @@ jobs:
 
                     echo "🧹 Cleaning up older backups..."
                     cd /usr/share/nginx/html-backup
-                    ls -1tr | head -n -5 | xargs -d '\n' sudo rm -rf --
+                    ls -1tr | head -n -1 | xargs -r -d '\n' sudo rm -rf --
                   EOF
 
             - name: Rollback on Failure
@@ -84,9 +88,59 @@ jobs:
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
                     echo "⚠️ Build failed. Restoring backup..."
-                    latest_backup=$(ls -1tr /usr/share/nginx/html-backup | tail -n 1)
-                    sudo rm -rf /usr/share/nginx/html/*
-                    sudo cp -r /usr/share/nginx/html-backup/$latest_backup/* /usr/share/nginx/html/
+                    latest_backup=$(ls -1tr /usr/share/nginx/html-backup 2>/dev/null | tail -n 1 || true )
+                    if [ -n "$latest_backup" ] && [ -d "/usr/share/nginx/html-backup/$latest_backup" ] && [ "$(ls -A /usr/share/nginx/html-backup/$latest_backup 2>/dev/null)" ]; then
+                      echo "✅ Found backup: $latest_backup. Restoring..."
+                      sudo mkdir -p /usr/share/nginx/html
+                      sudo rm -rf /usr/share/nginx/html/*
+                      sudo cp -r /usr/share/nginx/html-backup/$latest_backup/* /usr/share/nginx/html/
+                    fi
+                  EOF
+
+            - name: SSH - Build Admin_Frontend
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    echo "🧱 Installing and building admin_frontend..."
+                    cd ~/CourseHub/admin
+                    npm install
+                    npm run build
+                  EOF
+
+            - name: SSH - Backup and Deploy Admin_Frontend
+              if: success()
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    sudo mkdir -p /usr/share/nginx/html/admin
+                    echo "🗂️ Backing up old admin_frontend..."
+                    timestamp=$(date +%Y%m%d-%H%M%S)
+                    sudo mkdir -p /usr/share/nginx/html/admin-backup
+                    if [ -d "/usr/share/nginx/html/admin" ] && [ "$(ls -A /usr/share/nginx/html/admin)" ]; then
+                       sudo cp -r /usr/share/nginx/html/admin /usr/share/nginx/html/admin-backup/html-$timestamp
+                    fi
+
+                    echo "🚀 Deploying new admin_frontend..."
+                    sudo rm -rf /usr/share/nginx/html/admin/*
+                    sudo cp -r ~/CourseHub/admin/dist/* /usr/share/nginx/html/admin/
+
+                    echo "🧹 Cleaning up older admin_backups..."
+                    cd /usr/share/nginx/html/admin-backup
+                    ls -1tr | head -n -1 | xargs -r -d '\n' sudo rm -rf --
+                  EOF
+
+            - name: Rollback on Failure
+              if: failure()
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    echo "⚠️ Admin_Build failed. Restoring admin_backup..."
+                    latest_backup=$(ls -1tr /usr/share/nginx/html/admin-backup 2>/dev/null | tail -n 1 || true )
+                    if [ -n "$latest_backup" ] && [ -d "/usr/share/nginx/html/admin-backup/$latest_backup" ] && [ "$(ls -A /usr/share/nginx/html/admin-backup/$latest_backup 2>/dev/null)" ]; then
+                      echo "✅ Found backup: $latest_backup. Restoring..."
+                      sudo mkdir -p /usr/share/nginx/html/admin
+                      sudo rm -rf /usr/share/nginx/html/admin/*
+                      sudo cp -r /usr/share/nginx/html/admin-backup/$latest_backup/* /usr/share/nginx/html/admin/
+                    fi
                   EOF
 
             - name: SSH - Restart Backend with PM2
