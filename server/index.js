@@ -101,9 +101,6 @@ app.use((err, req, res, next) => {
 app.use(express.static("static"));
 
 app.get("*", (req, res) => {
-    if (req.useragent?.isAndroid || req.useragent?.isiPhone) {
-        return res.sendFile(path.resolve(__dirname, "static", "mobile.html"));
-    }
     res.sendFile(path.resolve(__dirname, "static", "index.html"));
 });
 
