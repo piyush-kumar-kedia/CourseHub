@@ -29,8 +29,6 @@ async function GetFolderId(contributionId) {
 
 async function CreateFolder(contributionId) {
     const access_token = await getAccessToken();
-    // const parent_item_id = "014BDXJYPR2LB6XDZPOVFLXKHUJB3GCLD7";
-    // /me/drive/items/{parent-item-id}/children
     const url = `https://graph.microsoft.com/v1.0/me/drive/items/${parent_item_id}/children`;
     const config = {
         headers: {

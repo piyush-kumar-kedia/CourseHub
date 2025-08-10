@@ -21,6 +21,7 @@ const App = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         if (params.get("fresh")) {
+            window.location.href = "/loading";
             return;
         }
 
