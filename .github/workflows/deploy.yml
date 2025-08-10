@@ -61,6 +61,26 @@ jobs:
                     npm run build
                   EOF
 
+            - name: SSH - Setup Server Static Files
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    set -e
+                    echo "📱 Setting up server static files..."
+                    cd ~/CourseHub/server
+                    
+                    # Create/clear static directory
+                    mkdir -p static
+                    rm -rf static/*
+                    
+                    # Copy built files to server static directory
+                    cp -r ~/CourseHub/client/dist/* static/
+                    
+                    # For now, use same file for mobile (you can customize this later)
+                    cp static/index.html static/mobile.html
+                    
+                    echo "✅ Server static files ready"
+                  EOF
+
             - name: SSH - Backup and Deploy Frontend
               if: success()
               run: |
@@ -83,11 +103,11 @@ jobs:
                     ls -1tr | head -n -1 | xargs -r -d '\n' sudo rm -rf --
                   EOF
 
-            - name: Rollback on Failure
+            - name: Rollback Frontend on Failure
               if: failure()
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-                    echo "⚠️ Build failed. Restoring backup..."
+                    echo "⚠️ Build failed. Restoring frontend backup..."
                     latest_backup=$(ls -1tr /usr/share/nginx/html-backup 2>/dev/null | tail -n 1 || true )
                     if [ -n "$latest_backup" ] && [ -d "/usr/share/nginx/html-backup/$latest_backup" ] && [ "$(ls -A /usr/share/nginx/html-backup/$latest_backup 2>/dev/null)" ]; then
                       echo "✅ Found backup: $latest_backup. Restoring..."
@@ -95,45 +115,53 @@ jobs:
                       sudo rm -rf /usr/share/nginx/html/*
                       sudo cp -r /usr/share/nginx/html-backup/$latest_backup/* /usr/share/nginx/html/
                     fi
+                    
+                    # Also restore server static files backup if it exists
+                    cd ~/CourseHub/server
+                    if [ -d "static-backup" ] && [ "$(ls -A static-backup)" ]; then
+                      echo "✅ Restoring server static files backup..."
+                      rm -rf static/*
+                      cp -r static-backup/* static/
+                    fi
                   EOF
 
-            - name: SSH - Build Admin_Frontend
+            - name: SSH - Build Admin Frontend
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
                     set -e
-                    echo "🧱 Installing and building admin_frontend..."
+                    echo "🧱 Installing and building admin frontend..."
                     cd ~/CourseHub/admin
                     npm install
                     npm run build
                   EOF
 
-            - name: SSH - Backup and Deploy Admin_Frontend
+            - name: SSH - Backup and Deploy Admin Frontend
               if: success()
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
                     set -e
                     sudo mkdir -p /usr/share/nginx/html/admin
-                    echo "🗂️ Backing up old admin_frontend..."
+                    echo "🗂️ Backing up old admin frontend..."
                     timestamp=$(date +%Y%m%d-%H%M%S)
                     sudo mkdir -p /usr/share/nginx/html/admin-backup
                     if [ -d "/usr/share/nginx/html/admin" ] && [ "$(ls -A /usr/share/nginx/html/admin)" ]; then
                        sudo cp -r /usr/share/nginx/html/admin /usr/share/nginx/html/admin-backup/html-$timestamp
                     fi
 
-                    echo "🚀 Deploying new admin_frontend..."
+                    echo "🚀 Deploying new admin frontend..."
                     sudo rm -rf /usr/share/nginx/html/admin/*
                     sudo cp -r ~/CourseHub/admin/dist/* /usr/share/nginx/html/admin/
 
-                    echo "🧹 Cleaning up older admin_backups..."
+                    echo "🧹 Cleaning up older admin backups..."
                     cd /usr/share/nginx/html/admin-backup
                     ls -1tr | head -n -1 | xargs -r -d '\n' sudo rm -rf --
                   EOF
 
-            - name: Rollback on Failure
+            - name: Rollback Admin Frontend on Failure
               if: failure()
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-                    echo "⚠️ Admin_Build failed. Restoring admin_backup..."
+                    echo "⚠️ Admin build failed. Restoring admin backup..."
                     latest_backup=$(ls -1tr /usr/share/nginx/html/admin-backup 2>/dev/null | tail -n 1 || true )
                     if [ -n "$latest_backup" ] && [ -d "/usr/share/nginx/html/admin-backup/$latest_backup" ] && [ "$(ls -A /usr/share/nginx/html/admin-backup/$latest_backup 2>/dev/null)" ]; then
                       echo "✅ Found backup: $latest_backup. Restoring..."
@@ -143,16 +171,30 @@ jobs:
                     fi
                   EOF
 
-            - name: SSH - Restart Backend with PM2
+            - name: SSH - Install Server Dependencies and Restart Backend
               run: |
                   ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
                     set -e
-                    echo "🔄 Restarting server..."
+                    echo "📦 Installing server dependencies..."
                     cd ~/CourseHub/server
                     npm install
+                    
+                    echo "🔄 Restarting server with PM2..."
                     pm2 delete server || true
                     pm2 start index.js --name server
                     pm2 save
+                    
+                    # Wait a moment for server to start
+                    sleep 3
+                    
+                    # Check if server is running
+                    if pm2 list | grep -q "server.*online"; then
+                      echo "✅ Server started successfully"
+                    else
+                      echo "❌ Server failed to start"
+                      pm2 logs server --lines 10
+                      exit 1
+                    fi
                   EOF
 
             - name: SSH - Test and Reload Nginx
@@ -164,7 +206,44 @@ jobs:
 
                     echo "♻️ Reloading nginx..."
                     sudo systemctl reload nginx
+                    
+                    echo "🔍 Checking nginx status..."
+                    sudo systemctl is-active nginx
+                  EOF
+
+            - name: SSH - Verify Deployment
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+                    echo "🔍 Verifying deployment..."
+                    
+                    # Check if static files exist
+                    if [ -f "~/CourseHub/server/static/index.html" ] && [ -f "~/CourseHub/server/static/mobile.html" ]; then
+                      echo "✅ Server static files are present"
+                    else
+                      echo "❌ Server static files are missing"
+                    fi
+                    
+                    # Check if nginx files exist
+                    if [ -f "/usr/share/nginx/html/index.html" ]; then
+                      echo "✅ Nginx frontend files are present"
+                    else
+                      echo "❌ Nginx frontend files are missing"
+                    fi
+                    
+                    # Check if admin files exist
+                    if [ -f "/usr/share/nginx/html/admin/index.html" ]; then
+                      echo "✅ Admin frontend files are present"
+                    else
+                      echo "❌ Admin frontend files are missing"
+                    fi
+                    
+                    # Check PM2 status
+                    echo "📊 PM2 Status:"
+                    pm2 list
+                    
+                    echo "🎉 Deployment verification complete!"
                   EOF
 
             - name: Cleanup SSH Key
+              if: always()
               run: rm -f private_key.pem
