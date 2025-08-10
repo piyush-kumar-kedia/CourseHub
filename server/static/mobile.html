@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CourseHub - Not Available</title>
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                background: #111;
+                font-family: "Segoe UI", Arial, sans-serif;
+                padding-top: 7vh;
+            }
+            .message {
+                background: #18181b;
+                padding: 2.5rem 2rem 2rem 2rem;
+                border-radius: 18px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.32);
+                text-align: center;
+                max-width: 90vw;
+                width: 350px;
+                border: 1.5px solid #27272a;
+                position: relative;
+                animation: pop-in 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            }
+            /* Laptop image is now inline, not as ::before */
+            .laptop-img {
+                width: 64px;
+                height: 64px;
+                margin: 0 auto 1.2rem auto;
+                display: block;
+                filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.18));
+            }
+            .message h1 {
+                color: #fff;
+                font-size: 1.5rem;
+                margin-bottom: 0.7rem;
+                margin-top: 2.5rem;
+                font-weight: 600;
+                letter-spacing: 0.01em;
+            }
+            .message p {
+                color: #d1d5db;
+                font-size: 1.08rem;
+                margin-bottom: 0.5rem;
+            }
+            @keyframes pop-in {
+                0% {
+                    transform: scale(0.7);
+                    opacity: 0;
+                }
+                80% {
+                    transform: scale(1.05);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="message">
+            <img
+                src="https://img.icons8.com/fluency/96/000000/laptop.png"
+                alt="Laptop"
+                class="laptop-img"
+            />
+            <h1>CourseHub is only accessible through PC/Laptop</h1>
+            <p>
+                We currently do not support mobile access. Please visit this site from a desktop or
+                laptop device.
+            </p>
+        </div>
+    </body>
+</html>

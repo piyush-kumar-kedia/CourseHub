@@ -101,12 +101,8 @@ app.use((err, req, res, next) => {
 app.use(express.static("static"));
 
 app.get("*", (req, res) => {
-    if (req.useragent?.isAndroid) {
-        return res.redirect(
-            "https://play.google.com/store/apps/details?id=com.codingclub.coursehub"
-        );
-    } else if (req.useragent?.isiPhone) {
-        return res.redirect("https://apps.apple.com/us/app/coursehub/id6447286863");
+    if (req.useragent?.isAndroid || req.useragent?.isiPhone) {
+        return res.sendFile(path.resolve(__dirname, "static", "mobile.html"));
     }
     res.sendFile(path.resolve(__dirname, "static", "index.html"));
 });
