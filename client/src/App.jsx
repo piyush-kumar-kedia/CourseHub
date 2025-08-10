@@ -77,7 +77,7 @@ const App = () => {
                 </Routes>
             </Router>
         </div>
-    ) : ( <MobilePage></MobilePage>
+    ) : (<MobilePage></MobilePage>
     );
 };
 
