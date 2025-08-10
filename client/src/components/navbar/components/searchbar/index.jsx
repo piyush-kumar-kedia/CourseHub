@@ -12,7 +12,7 @@ const SearchBar = ({ type }) => {
     const [loading, setLoading] = useState(false);
     const [fetched, setFetched] = useState({});
     const [error, setError] = useState(false);
-    const courses = useSelector((state) => state.user.user.courses.concat(state.user.user?.previousCourses));
+    const courses = useSelector((state) => state.user.user.courses.concat(state.user.user?.previousCourses).concat(state.user.user?.readOnly));
     const [searchResultStyle, setSearchResultStyle] = useState({
         "max-height": "15%",
     });

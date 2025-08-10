@@ -259,7 +259,7 @@ const BrowseScreen = () => {
                             folderData?.children?.length === 0 ? (
                                 <p className="empty-message">No files available.</p>
                             ) : (
-                                <FileController files={folderData?.children} />
+                                <FileController files={folderData?.children} code={currCourseCode}/>
                             )
                         ) : folderData?.children?.length === 0 ? (
                             <div className="empty-folder">

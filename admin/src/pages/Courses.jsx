@@ -76,7 +76,7 @@ function Courses() {
 
     const filteredCourses = courses.filter((course) => {
         const matchesSearch = course.code?.toLowerCase().includes(search.toLowerCase());
-        const matchesNamelessFilter = showOnlyNameless ? !course.name : true;
+        const matchesNamelessFilter = showOnlyNameless ? (course.name == "Name Unavailable") : true;
         return matchesSearch && matchesNamelessFilter;
     });
 
