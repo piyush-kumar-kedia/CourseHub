@@ -164,12 +164,11 @@ const FileDisplay = ({ file, path, code }) => {
                 onError={() => {
                     async function thumbnailrefresh() {
                         await getThumbnail(file.fileId);
-                        let loadingCourseToastId = toast.loading("Loading course data...");
                         const currCourse = await getCourse(code);
                         const { data } = currCourse;
-                        toast.dismiss(loadingCourseToastId);
                         dispatch(UpdateCourses(data));
-                        location.reload();
+                        dispatch(ChangeCurrentYearData(currYear, data.children[currYear].children));
+                        dispatch(RefreshCurrentFolder());
                     }
                     thumbnailrefresh();
                 }}
@@ -177,9 +176,7 @@ const FileDisplay = ({ file, path, code }) => {
             <div
                 className="img-preview"
                 style={{
-                    background: `url(${file.thumbnail})`,
-                    backgroundSize: "cover",
-                    backgroundRepeat: "no-repeat",
+                    background: `url(${file.thumbnail}) center/cover no-repeat`,
                 }}
             >
                 <div className="top">

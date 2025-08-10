@@ -120,6 +120,7 @@ jobs:
                        sudo cp -r /usr/share/nginx/html/admin /usr/share/nginx/html/admin-backup/html-$timestamp
                     fi
 
+
                     echo "🚀 Deploying new admin_frontend..."
                     sudo rm -rf /usr/share/nginx/html/admin/*
                     sudo cp -r ~/CourseHub/admin/dist/* /usr/share/nginx/html/admin/
@@ -142,6 +143,7 @@ jobs:
                       sudo cp -r /usr/share/nginx/html/admin-backup/$latest_backup/* /usr/share/nginx/html/admin/
                     fi
                   EOF
+    
 
             - name: SSH - Restart Backend with PM2
               run: |
@@ -167,4 +169,5 @@ jobs:
                   EOF
 
             - name: Cleanup SSH Key
+              if: always()
               run: rm -f private_key.pem
