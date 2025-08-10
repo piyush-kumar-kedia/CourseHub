@@ -1,6 +1,6 @@
 import AppError from "../../utils/appError.js";
 import User, { RemoveCourse } from "./user.model.js";
-import { addToFavourites, removeFromFavourites, AddNewCourse , AddReadOnlyCourse } from "./user.model.js";
+import { addToFavourites, removeFromFavourites, AddNewCourse , AddReadOnlyCourse,  RemoveReadOnly } from "./user.model.js";
 import { updateUserData } from "./user.model.js";
 import BR from "../br/br.model.js";
 
@@ -80,6 +80,15 @@ export const deleteCourse = async (req, res, next) => {
 
     return res.status(200).json(updatedUser);
 };
+
+export const deleteReadOnly = async (req, res, next) => {
+    const { code } = req.params;
+    if (!code) return res.sendStatus(400);
+    const updatedUser = await RemoveReadOnly(req.user._id, code);
+
+    return res.status(200).json(updatedUser);
+};
+
 export const removeFromFavouritesController = async (req, res, next) => {
     const { id } = req.params;
     if (!id) return res.sendStatus(400);

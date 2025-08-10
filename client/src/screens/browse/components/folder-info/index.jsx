@@ -117,10 +117,10 @@ const FolderInfo = ({
                                             toast("Added to favourites.");
                                         }}
                                     ></span> */}
-                                    <span
+                                    {/* <span
                                         className="folder-action-icon share"
                                         onClick={handleShare}
-                                    ></span>
+                                    ></span> */}
                                 </>
                             )}
                         </div>
