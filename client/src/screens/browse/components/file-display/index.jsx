@@ -186,7 +186,7 @@ const FileDisplay = ({ file, path, code }) => {
                             <span className="unverify" onClick={handleUnverify} title="Delete"></span>
                         </>
                     )}
-                    <span className="share" onClick={handleShare}></span>
+                    {/* <span className="share" onClick={handleShare}></span> */}
 
                     <span className="download" onClick={handleDownload}></span>
                     {/* <span

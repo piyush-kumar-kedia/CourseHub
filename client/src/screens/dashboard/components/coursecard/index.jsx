@@ -5,8 +5,11 @@ import { useEffect, useState } from "react";
 import { IsCourseAvailable } from "../../../../api/Search";
 import { DeleteCourseAPI } from "../../../../api/User";
 import { toast } from "react-toastify";
-const CourseCard = ({ code, color, name, type, setClicked }) => {
+import { ConfirmDialog } from "./ConfirmDialog";
+const CourseCard = ({ code, color, name, type, setClicked, isReadOnly }) => {
     const [isAvailable, setIsAvailable] = useState(true);
+    const [showConfirm, setShowConfirm] = useState(false);
+
     useEffect(() => {
         async function SetCourseAvailability() {
             try {
@@ -20,6 +23,19 @@ const CourseCard = ({ code, color, name, type, setClicked }) => {
         }
         SetCourseAvailability();
     }, []);
+
+    const handleRemove = async () => {
+        try {
+            const resp = await DeleteCourseAPI(code);
+            location.reload();
+        } catch (error) {
+            toast.error("Something went wrong!");
+        }
+        setShowConfirm(false);
+    };
+
+    const cancelRemove = () => setShowConfirm(false);
+
     return type === "ADD" ? (
         <div className="coursecard ADD" onClick={setClicked}>
             <div className="content">
@@ -28,38 +44,46 @@ const CourseCard = ({ code, color, name, type, setClicked }) => {
             </div>
         </div>
     ) : (
-        <div
-            className={`coursecard ${isAvailable}`}
-            style={{ backgroundColor: color }}
-            // onClick={isAvailable ? setClicked : () => {}}
-        >
-            {/* <span
-                className="remove-course"
-                onClick={async () => {
-                    try {
-                        const resp = await DeleteCourseAPI(code);
-                        location.reload();
-                    } catch (error) {
-                        toast.error("Something went wrong!");
-                    }
-                }}
-            ></span> */}
-            <div className="card-content" onClick={isAvailable ? setClicked : () => {}}>
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                    }}
-                >
-                    <p className="code">{code ? code : "code"}</p>
-                    {!isAvailable && <p className="unavailable">UNAVAILABLE</p>}
-                </div>
-                <div className="name">
-                    <p>{name ? formatLongText(capitalise(name), 39) : "Name Unavailable"}</p>
+        <>
+            <div
+                className={`coursecard ${isAvailable}`}
+                style={{ backgroundColor: color }}
+                // onClick={isAvailable ? setClicked : () => {}}
+            >
+                {isReadOnly && (
+                    <span
+                        className="remove-course"
+                        onClick={() => {
+                            setShowConfirm(true);
+                        }}
+                    ></span>
+                )}
+
+                <div className="card-content" onClick={isAvailable ? setClicked : () => {}}>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
+                        <p className="code">{code ? code : "code"}</p>
+                        {!isAvailable && <p className="unavailable">UNAVAILABLE</p>}
+                    </div>
+                    <div className="name">
+                        <p>{name ? formatLongText(capitalise(name), 39) : "Name Unavailable"}</p>
+                    </div>
                 </div>
             </div>
-        </div>
+            {showConfirm && (
+                <ConfirmDialog
+                    isOpen={showConfirm}
+                    type="delete"
+                    onConfirm={handleRemove}
+                    onCancel={cancelRemove}
+                />
+            )}
+        </>
     );
 };
 

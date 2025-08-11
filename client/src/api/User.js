@@ -26,7 +26,7 @@ export const AddNewCourseAPI = async (code, name) => {
     return resp;
 };
 export const DeleteCourseAPI = async (code) => {
-    const resp = await axios.delete(`${serverRoot}/api/user/course/${code}`);
+    const resp = await axios.delete(`${serverRoot}/api/user/readonly/${code}`);
     // console.log(resp);
     return resp;
 };
