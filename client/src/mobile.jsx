@@ -3,7 +3,7 @@ import "./mobile.css";
 const MobilePage = () => {
     return (
         <div className="box">
-        <div className="message">
+            <div className="message">
                 <img
                     src="https://img.icons8.com/fluency/96/000000/laptop.png"
                     alt="Laptop"

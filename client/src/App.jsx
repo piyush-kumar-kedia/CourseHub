@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import ErrorScreen from "./screens/error";
 import { LoadLocalCourses } from "./actions/user_actions";
+import MobilePage from "./mobile.jsx";
 
 const App = () => {
     const [initial, setInitial] = useState(true);
@@ -77,7 +78,8 @@ const App = () => {
                 </Routes>
             </Router>
         </div>
-    ) : (<MobilePage></MobilePage>    //for mobile view
+    ) : (
+        <MobilePage></MobilePage> //for mobile view
     );
 };
 
