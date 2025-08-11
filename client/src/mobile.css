@@ -1,4 +1,4 @@
-body {
+.box {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -59,7 +59,7 @@ body {
 
 /* Mobile responsiveness */
 @media (max-width: 480px) {
-    body {
+    .box {
         padding-top: 5vh;
         padding-left: 0.5rem;
         padding-right: 0.5rem;

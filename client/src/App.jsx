@@ -77,49 +77,7 @@ const App = () => {
                 </Routes>
             </Router>
         </div>
-    ) : (
-        <div
-            style={{
-                minHeight: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-            }}
-        >
-            <p
-                style={{
-                    fontSize: "1.5rem",
-                    marginBottom: "16px",
-                }}
-            >
-                Get CourseHub now!
-            </p>
-            <div>
-                <a href="https://play.google.com/store/apps/details?id=com.codingclub.coursehub">
-                    <img
-                        src="google-play-badge.png"
-                        alt=""
-                        style={{
-                            width: "180px",
-                            height: "100%",
-                        }}
-                    />
-                </a>
-                <br />
-                <a href="itms-apps://apps.apple.com/us/app/coursehub/id6447286863">
-                    <img
-                        src="app-store-badge.png"
-                        alt=""
-                        style={{
-                            width: "159px",
-                            height: "100%",
-                        }}
-                    />
-                </a>
-            </div>
-        </div>
+    ) : (<MobilePage></MobilePage>    //for mobile view
     );
 };
 

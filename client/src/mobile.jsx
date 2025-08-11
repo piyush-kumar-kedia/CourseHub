@@ -2,8 +2,8 @@ import "./mobile.css";
 
 const MobilePage = () => {
     return (
-        <>
-            <div class="message">
+        <div className="box">
+        <div className="message">
                 <img
                     src="https://img.icons8.com/fluency/96/000000/laptop.png"
                     alt="Laptop"
@@ -15,7 +15,7 @@ const MobilePage = () => {
                     or laptop device.
                 </p>
             </div>
-        </>
+        </div>
     );
 };
 
