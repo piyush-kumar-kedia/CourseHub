@@ -29,3 +29,12 @@ export const deleteFolder = async ({ folder, parentFolderId }) => {
     });
     return data;
 };
+
+export const fetchFolder = async (folderId) => {
+    const response = await API.get(`/folder/content/${folderId}`);
+    if (response.status !== 200) {
+        throw new Error("Failed to fetch folder data");
+    }
+    const data = response.data;
+    return data;
+}
