@@ -193,14 +193,22 @@ const FolderInfo = ({
 
     // Usage function remains the same
     const downloadAndSaveFolder = async (folderId, folderName = "folder") => {
+        let toastId;
         try {
-            toast.info("Preparing to download folder...");
+            // Create a persistent toast that doesn't auto-close
+            toastId = toast.info("Preparing to download folder...", {
+                autoClose: false,
+                closeOnClick: false,
+                closeButton: false,
+                draggable: false,
+            });
 
             // Use either the fixed version or the alternative approach
             const zip = await downloadFolder(folderId);
             // const zip = await downloadFolderAlternative(folderId);
 
             if (!zip) {
+                toast.dismiss(toastId);
                 toast.error("Failed to create folder archive.");
                 return;
             }
@@ -215,9 +223,13 @@ const FolderInfo = ({
             // Save the ZIP file using saveAs
             saveAs(zipBlob, `${folderName}.zip`);
 
+            toast.dismiss(toastId);
             toast.success("Folder Ready for download!");
         } catch (error) {
             console.error("Error in downloadAndSaveFolder:", error);
+            if (toastId) {
+                toast.dismiss(toastId);
+            }
             toast.error("Failed to download folder.");
         }
     };
