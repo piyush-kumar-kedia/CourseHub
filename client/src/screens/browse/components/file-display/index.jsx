@@ -8,7 +8,7 @@ import { UpdateFavourites } from "../../../../actions/user_actions";
 import { getCourse } from "../../../../api/Course.js";
 import { RefreshCurrentFolder, UpdateCourses, ChangeCurrentYearData } from "../../../../actions/filebrowser_actions.js";
 import { downloadFile, previewFile, getThumbnail } from "../../../../api/File";
-import clientRoot from "../../../../api/client";
+import clientRoot from "../../../../api/server";
 import capitalise from "../../../../utils/capitalise.js";
 import Share from "../../../share";
 import { verifyFile, unverifyFile } from "../../../../api/File";
