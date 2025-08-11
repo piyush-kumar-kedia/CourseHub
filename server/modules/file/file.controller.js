@@ -61,3 +61,24 @@ export const getAllFiles = async (req, res) => {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 };
+
+
+export const getFileLink = async (req, res) => {
+    try {
+        const fileId = req.params.id;
+        console.log(fileId);
+        const file = await FileModel.find({_id: fileId}).populate('webUrl');
+        
+        if (!file) {
+            return res.status(404).json({ message: "File not found" });
+        }
+
+        // Fixed: Return the webUrl properly
+        return res.status(200).json({file });
+        
+    } catch (error) {
+        // Added error handling
+        console.error('Error fetching file link:', error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

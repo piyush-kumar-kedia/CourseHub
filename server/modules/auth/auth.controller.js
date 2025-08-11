@@ -543,7 +543,7 @@ export const mobileRedirectHandler = async (req, res, next) => {
         client_secret: clientSecret,
         client_id: clientid,
         //redirect_uri: redirect_uri,
-        redirect_uri: links.COURSEHUB_MOBILE_REDIRECT,
+      redirect_uri: links.COURSEHUB_MOBILE_REDIRECT,
         scope: "user.read",
         grant_type: "authorization_code",
         code: code,
