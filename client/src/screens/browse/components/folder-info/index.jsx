@@ -1,7 +1,7 @@
 import "./styles.scss";
 import { toast } from "react-toastify";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import clientRoot from "../../../../api/client";
+import clientRoot from "../../../../api/server";
 import Share from "../../../share";
 import { useState } from "react";
 import { createFolder } from "../../../../api/Folder";
