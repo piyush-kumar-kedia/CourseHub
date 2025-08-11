@@ -1,41 +1,54 @@
-.folder-info{
+.folder-info {
     height: 80px;
     display: flex;
     justify-content: space-between;
     align-content: center;
     width: 100%;
-    background-color: #FECF6F;
+    background-color: #fecf6f;
     padding: 10px 24px;
-    .info{
+
+    .info {
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        .curr-folder{
+        flex: 1; // Allow info section to take available space
+
+        .path {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .curr-folder {
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            .folder-name{
-                font-family: 'Bold';
+
+            .folder-name {
+                font-family: "Bold";
                 font-size: 1.5rem;
             }
-            .folder-actions{
+
+            .folder-actions {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                .folder-action-icon{
+
+                .folder-action-icon {
                     width: 20px;
                     height: 20px;
                     display: block;
                     cursor: pointer;
-                    &.share{
+
+                    &.share {
                         background: url(./assets/Share.svg), none;
                         background-repeat: no-repeat;
                         background-position: center;
                         background-size: contain;
                         margin-left: 6px;
                     }
-                    &.favs{
+
+                    &.favs {
                         background: url(./assets/Favorites.svg), none;
                         background-repeat: no-repeat;
                         background-size: contain;
@@ -46,11 +59,101 @@
             }
         }
     }
-    .btn-container{
+
+    // Main actions container - holds all buttons
+    .main-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            font-size: 0.68rem;
+            color: #fff;
+            background-color: #000;
+            border: none;
+            cursor: pointer;
+            transition: all 120ms ease;
+            min-width: 80px;
+
+            .icon {
+                width: 20px;
+                height: 20px;
+                margin-bottom: 4px;
+
+                &.download-icon {
+                    background: url(./assets/download.svg);
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: contain;
+                }
+
+                &.plus-icon {
+                    background: url(./assets/plus.svg);
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: contain;
+                }
+            }
+
+            .text {
+                line-height: 1.2;
+                text-align: center;
+            }
+
+            &:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+
+                &:hover {
+                    transform: none;
+                    box-shadow: none;
+                }
+            }
+
+            // Different button variants
+            &.download {
+                background-color: #000; // Black for download
+
+                &:hover {
+                    background-color: #333;
+                }
+            }
+
+            &.primary {
+                background-color: #000;
+
+                &:hover {
+                    background-color: #333;
+                }
+            }
+
+            &.secondary {
+                background-color: #6b7280;
+
+                &:hover {
+                    background-color: #4b5563;
+                }
+            }
+        }
+    }
+
+    // Legacy support for existing btn-container
+    .btn-container {
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        .btn{
+
+        .btn {
             text-align: center;
             padding: 10px 15px;
             font-size: 0.68rem;
@@ -60,38 +163,41 @@
             margin-left: 5px;
             cursor: pointer;
             transition: 120ms;
-            .text{
+
+            .text {
                 display: block;
                 margin-top: 5px;
             }
-            &:hover{
+
+            &:hover {
                 transform: scale(1.02);
             }
         }
-        .icon{
+
+        .icon {
             display: block;
             width: 20px;
             margin: auto;
             height: 20px;
-            &.download-icon{
+
+            &.download-icon {
                 background: url(./assets/download.svg);
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: contain;
-
             }
-            &.plus-icon{
+
+            &.plus-icon {
                 background: url(./assets/plus.svg);
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: contain;
-
             }
         }
     }
 }
 
-.addfolderbuttoncontainer{
+.addfolderbuttoncontainer {
     display: flex;
     gap: 1rem;
 }
@@ -105,7 +211,7 @@
 }
 
 .submitbutton {
-    background-color: #FECF6F !important;
+    background-color: #fecf6f !important;
 }
 
 #bottommarginneeded {

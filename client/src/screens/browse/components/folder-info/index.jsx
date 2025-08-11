@@ -92,7 +92,7 @@ const FolderInfo = ({
                 childType: childType,
             });
             const { data } = await getCourse(courseCode);
-            
+
             dispatch(UpdateCourses(data));
             dispatch(ChangeCurrentYearData(currYear, data.children[currYear].children));
             dispatch(RefreshCurrentFolder());
@@ -105,126 +105,125 @@ const FolderInfo = ({
         setIsAdding(false);
     };
 
-const downloadFolder = async (id, folderPath = "") => {
-    try {
-        const response = await fetch(`${server}/api/folder/content/${id}`);
-        if (!response.ok) {
+    const downloadFolder = async (id, folderPath = "") => {
+        try {
+            const response = await fetch(`${server}/api/folder/content/${id}`);
+            if (!response.ok) {
+                toast.error("Failed to download folder content.");
+                return null;
+            }
+
+            const data = await response.json();
+            const zip = new JSZip();
+
+            // Process all children
+            const childType = data.childType || "File"; // Default to "File" if not specified
+
+            for (const child of data.children) {
+                if (childType === "Folder") {
+                    // Recursive case: child is a folder
+                    const childFolderPath = folderPath ? `${folderPath}/${child.name}` : child.name;
+
+                    // Recursively download the child folder
+                    const childZip = await downloadFolder(child._id, childFolderPath);
+
+                    if (childZip) {
+                        // Add all files from child folder to current zip
+                        // Use async approach to properly extract file content
+                        const promises = [];
+                        childZip.forEach((relativePath, file) => {
+                            // Skip directory entries
+                            if (!file.dir) {
+                                promises.push(
+                                    file
+                                        .async("blob")
+                                        .then((content) => {
+                                            zip.file(relativePath, content);
+                                        })
+                                        .catch((error) => {
+                                            console.error(
+                                                `Error processing file ${relativePath}:`,
+                                                error
+                                            );
+                                        })
+                                );
+                            }
+                        });
+                        await Promise.all(promises);
+                    }
+                } else {
+                    // Base case: child is a file
+                    try {
+                        const fileResponse = await fetch(`${server}/api/files/download`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ url: child.webUrl }),
+                        });
+
+                        if (!fileResponse.ok) {
+                            toast.error(`Failed to download file: ${child.name}`);
+                            continue;
+                        }
+
+                        const fileData = await fileResponse.json();
+                        const downloadLink = fileData.downloadLink;
+
+                        const curfile = await fetch(downloadLink);
+                        const fileBlob = await curfile.blob();
+
+                        // Add file to zip with proper folder structure
+                        const filePath = folderPath ? `${folderPath}/${child.name}` : child.name;
+                        zip.file(filePath, fileBlob);
+                    } catch (error) {
+                        console.error(`Error downloading file ${child.name}:`, error);
+                        toast.error(`Failed to download file: ${child.name}`);
+                    }
+                }
+            }
+
+            return zip;
+        } catch (error) {
+            console.error(`Error downloading folder content:`, error);
             toast.error("Failed to download folder content.");
             return null;
         }
-        
-        const data = await response.json();
-        const zip = new JSZip();
-        
-        // Process all children
-        const childType = data.childType || "File"; // Default to "File" if not specified
-        
-        for (const child of data.children) {
-            if (childType === "Folder") {
-                // Recursive case: child is a folder
-                const childFolderPath = folderPath ? `${folderPath}/${child.name}` : child.name;
-                
-                // Recursively download the child folder
-                const childZip = await downloadFolder(child._id, childFolderPath);
-                
-                if (childZip) {
-                    // Add all files from child folder to current zip
-                    // Use async approach to properly extract file content
-                    const promises = [];
-                    childZip.forEach((relativePath, file) => {
-                        // Skip directory entries
-                        if (!file.dir) {
-                            promises.push(
-                                file.async("blob").then(content => {
-                                    zip.file(relativePath, content);
-                                }).catch(error => {
-                                    console.error(`Error processing file ${relativePath}:`, error);
-                                })
-                            );
-                        }
-                    });
-                    await Promise.all(promises);
-                }
-            } else {
-                // Base case: child is a file
-                try {
-                    
-                    const fileResponse = await fetch(`${server}/api/files/download`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ url: child.webUrl }),
-                    });
-                    
-                    if (!fileResponse.ok) {
-                        toast.error(`Failed to download file: ${child.name}`);
-                        continue;
-                    }
-                    
-                    const fileData = await fileResponse.json();
-                    const downloadLink = fileData.downloadLink;
-                    
-                    const curfile = await fetch(downloadLink);
-                    const fileBlob = await curfile.blob();
-                    
-                    // Add file to zip with proper folder structure
-                    const filePath = folderPath ? `${folderPath}/${child.name}` : child.name;
-                    zip.file(filePath, fileBlob);
-                } catch (error) {
-                    console.error(`Error downloading file ${child.name}:`, error);
-                    toast.error(`Failed to download file: ${child.name}`);
-                }
-            }
-        }
-        
-        return zip;
-    } catch (error) {
-        console.error(`Error downloading folder content:`, error);
-        toast.error("Failed to download folder content.");
-        return null;
-    }
-};
+    };
 
-// Usage function remains the same
-const downloadAndSaveFolder = async (folderId, folderName = "folder") => {
-    try {
-        toast.info("Starting folder download...");
-        
-        // Use either the fixed version or the alternative approach
-        const zip = await downloadFolder(folderId);
-        // const zip = await downloadFolderAlternative(folderId);
-        
-        if (!zip) {
-            toast.error("Failed to create folder archive.");
-            return;
+    // Usage function remains the same
+    const downloadAndSaveFolder = async (folderId, folderName = "folder") => {
+        try {
+            toast.info("Preparing to download folder...");
+
+            // Use either the fixed version or the alternative approach
+            const zip = await downloadFolder(folderId);
+            // const zip = await downloadFolderAlternative(folderId);
+
+            if (!zip) {
+                toast.error("Failed to create folder archive.");
+                return;
+            }
+
+            // Generate the final ZIP blob
+            const zipBlob = await zip.generateAsync({
+                type: "blob",
+                compression: "DEFLATE",
+                compressionOptions: { level: 6 },
+            });
+
+            // Save the ZIP file using saveAs
+            saveAs(zipBlob, `${folderName}.zip`);
+
+            toast.success("Folder Ready for download!");
+        } catch (error) {
+            console.error("Error in downloadAndSaveFolder:", error);
+            toast.error("Failed to download folder.");
         }
-        
-        // Generate the final ZIP blob
-        const zipBlob = await zip.generateAsync({
-            type: "blob",
-            compression: "DEFLATE",
-            compressionOptions: { level: 6 }
-        });
-        
-        // Save the ZIP file using saveAs
-        saveAs(zipBlob, `${folderName}.zip`);
-        
-        toast.success("Folder downloaded successfully!");
-    } catch (error) {
-        console.error("Error in downloadAndSaveFolder:", error);
-        toast.error("Failed to download folder.");
-    }
-};
+    };
     return (
         <>
             <div className="folder-info">
-                <div className="btn-container">
-                        <button className="btn plus" onClick={()=>downloadAndSaveFolder(folderId)}>
-                            <span className="icon download-icon"></span>
-                            <span className="text">Download Folder</span>
-                        </button>
-                    </div>
                 <div className="info">
                     <p className="path">{path}</p>
                     <div className="curr-folder">
@@ -232,53 +231,56 @@ const downloadAndSaveFolder = async (folderId, folderName = "folder") => {
                         <div className="folder-actions">
                             {folderId && courseCode && (
                                 <>
+                                    {/* Uncomment these if you want to add them back */}
                                     {/* <span
-                                        className="folder-action-icon favs"
-                                        onClick={() => {
-                                            toast("Added to favourites.");
-                                        }}
-                                    ></span> */}
-                                    {/* <span
-                                        className="folder-action-icon share"
-                                        onClick={handleShare}
-                                    ></span> */}
+                                    className="folder-action-icon favs"
+                                    onClick={() => {
+                                        toast("Added to favourites.");
+                                    }}
+                                ></span>
+                                <span
+                                    className="folder-action-icon share"
+                                    onClick={handleShare}
+                                ></span> */}
                                 </>
                             )}
                         </div>
                     </div>
                 </div>
-                {!isReadOnlyCourse && canDownload ? (
-                    <div className="btn-container">
-                        {/* <button
-                            className="btn download"
-                            style={{ display: canDownload ? "inline-block" : "none" }}
-                        >
-                            <span className="icon download-icon"></span>
-                            <span className="text">Download All Files</span>
-                        </button> */}
-                        <div className="btn-container">
-                            <button className="btn plus" onClick={contributionHandler}>
-                                <span className="icon plus-icon"></span>
-                                <span className="text">{isBR ? "Add File" : "Contribute"}</span>
-                            </button>
-                        </div>
-                    </div>
-                ) : (
-                    <></>
-                )}
-                {!isReadOnlyCourse && isBR && !canDownload && (
-                    <div className="btn-container">
+
+                {/* Consolidated actions container */}
+                <div className="main-actions">
+                    {/* Download button - always visible */}
+                    <button
+                        className="btn download"
+                        onClick={() => downloadAndSaveFolder(folderId, name)}
+                        title="Download entire folder as ZIP"
+                    >
+                        <span className="icon download-icon"></span>
+                        <span className="text">Download</span>
+                    </button>
+
+                    {/* Conditional action buttons */}
+                    {!isReadOnlyCourse && canDownload && (
+                        <button className="btn primary" onClick={contributionHandler}>
+                            <span className="icon plus-icon"></span>
+                            <span className="text">{isBR ? "Add File" : "Contribute"}</span>
+                        </button>
+                    )}
+
+                    {!isReadOnlyCourse && isBR && !canDownload && (
                         <button
-                            className="btn plus"
+                            className="btn primary"
                             onClick={handleCreateFolder}
                             disabled={isAdding}
                         >
                             <span className="icon plus-icon"></span>
                             <span className="text">{isAdding ? "Creating..." : "Add Folder"}</span>
                         </button>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
+
             <Share link={`${clientRoot}/browse/${courseCode}/${folderId}`} />
             <ConfirmDialog
                 show={showConfirm}
