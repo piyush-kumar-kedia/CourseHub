@@ -53,3 +53,22 @@ export const getThumbnail = async (fileId) => {
     });
     console.log("Thumbnail Refreshed");
 };
+
+export const getFileDownloadLink = async (fileId) => {
+    const response = await fetch( serverRoot + '/api/files/download',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url: fileId }),
+            })
+
+    if (!response.ok) {
+        throw new Error(`Error fetching download link: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.downloadLink;
+};
+
+

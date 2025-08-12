@@ -19,6 +19,7 @@ import { ConfirmDialog } from "./confirmDialog";
 import server from "../../../../api/server";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { fetchFolder } from "../../../../api/Folder";
 
 const FolderInfo = ({
     isBR,
@@ -107,13 +108,8 @@ const FolderInfo = ({
 
     const downloadFolder = async (id, folderPath = "") => {
         try {
-            const response = await fetch(`${server}/api/folder/content/${id}`);
-            if (!response.ok) {
-                toast.error("Failed to download folder content.");
-                return null;
-            }
+            const data = await fetchFolder(id);
 
-            const data = await response.json();
             const zip = new JSZip();
 
             // Process all children

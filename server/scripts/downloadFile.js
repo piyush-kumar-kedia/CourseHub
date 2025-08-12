@@ -15,9 +15,10 @@ const encodeGraphShareUrl = (shareUrl) => {
   return `u!${base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "")}`;
 };
 
- const access = await getAccessToken();
+
 
  export const downloadFiles = async (req, res) => {
+   const access = await getAccessToken();
   try {
     const inputUrl = req.body?.url;
     if (!inputUrl) {
