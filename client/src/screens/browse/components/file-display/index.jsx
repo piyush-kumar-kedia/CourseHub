@@ -14,6 +14,7 @@ import Share from "../../../share";
 import { verifyFile, unverifyFile } from "../../../../api/File";
 import { RemoveFileFromFolder, UpdateFileVerificationStatus } from "../../../../actions/filebrowser_actions.js";
 import ConfirmDialog from "./components/ConfirmDialog.jsx";
+import { getFileDownloadLink } from "../../../../api/File";
 import server from "../../../../api/server.js";
 
 const FileDisplay = ({ file, path, code }) => {
@@ -66,16 +67,7 @@ const FileDisplay = ({ file, path, code }) => {
             return;
         }
 
-        const response = await fetch( server + '/api/files/download',{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ url: file.webUrl }),
-        })
-
-        const data = await response.json();
-        const downloadLink = data.downloadLink;
+        const downloadLink = await getFileDownloadLink(file.webUrl);
 
         if (!downloadLink) {
             toast.error("Failed to generate download link.");
